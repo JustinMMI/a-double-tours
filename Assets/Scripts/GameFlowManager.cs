@@ -1,16 +1,20 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameFlowManager : MonoBehaviour
 {
     public TextMeshProUGUI bobText;
     public Button nextButton;
     public ObstacleGenerator obsGen;
+    public Button duelButton;
 
     void Start()
     {
         ShowObstacles();
+        duelButton.gameObject.SetActive(false);
     }
 
     void ShowObstacles()
@@ -54,6 +58,7 @@ public class GameFlowManager : MonoBehaviour
     {
         bobText.text = "";
         nextButton.gameObject.SetActive(false);
+        duelButton.gameObject.SetActive(true);
     }
 
     [Header("Events Settings")]
@@ -80,4 +85,9 @@ public class GameFlowManager : MonoBehaviour
     }
 
     private int lastEventIndex = -1;
+
+    public void OnDuelClicked()
+    {
+        SceneManager.LoadScene("DuelMenu");
+    }
 }

@@ -304,6 +304,7 @@ MonoBehaviour:
   bobText: {fileID: 205161639}
   nextButton: {fileID: 1503949448}
   obsGen: {fileID: 439300597}
+  duelButton: {fileID: 2034053214}
   randomEvents:
   - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
   - "BOB : 'Je suis d'humeur g\xE9n\xE9reuse... Le joueur actuel gagne 1 PV.'"
@@ -1072,10 +1073,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2057957851}
   - {fileID: 205161638}
   - {fileID: 1503949447}
   - {fileID: 2034053213}
-  - {fileID: 2057957851}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1096,7 +1097,7 @@ GameObject:
   - component: {fileID: 2034053215}
   - component: {fileID: 2034053214}
   m_Layer: 5
-  m_Name: Button
+  m_Name: DuelButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1165,7 +1166,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2034053215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 439300596}
+        m_TargetAssemblyTypeName: GameFlowManager, Assembly-CSharp
+        m_MethodName: OnDuelClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2034053215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1239,8 +1252,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1415.53, y: 527.21}
+  m_AnchoredPosition: {x: -74.38, y: 109.54}
+  m_SizeDelta: {x: 1564.29, y: 746.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2057957852
 MonoBehaviour:
