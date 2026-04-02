@@ -15,5 +15,8 @@ EditorBuildSettings:
     path: Assets/Scenes/DuelMenu.unity
     guid: 4eda13ec327ca384586f3247b5ca8f23
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 8891074c19f252045a58786112f7a5d0, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 75bc786a1db3dde44a8db8f09abe2a57, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: b7d979c904a33ed4495a499926ef0a27, type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
