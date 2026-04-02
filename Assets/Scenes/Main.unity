@@ -202,7 +202,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 43436138}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 43436140}
+        m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
+        m_MethodName: ToggleSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &43436138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,7 +352,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 280501385}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 280501387}
+        m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
+        m_MethodName: ToggleSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &280501385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1388,7 +1412,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1224845632}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1224845634}
+        m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
+        m_MethodName: ToggleSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1224845632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2025,7 +2061,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1739326360}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1739326362}
+        m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
+        m_MethodName: ToggleSelection
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1739326360
 MonoBehaviour:
   m_ObjectHideFlags: 0
