@@ -305,16 +305,7 @@ MonoBehaviour:
   nextButton: {fileID: 1503949448}
   obsGen: {fileID: 439300597}
   duelButton: {fileID: 2034053214}
-  randomEvents:
-  - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
-  - 'BOB : ''Ouverture d''un portail temporel, tout le monde switch de tour !'''
-  - "BOB : 'L'obscurit\xE9 envahit la tour, les joueurs ne se voient plus. Aucun
-    duel ne peut \xEAtre initi\xE9 au prochain tour.'"
-  - "BOB : 'C'est pas un peu long l\xE0 ? Tout le monde monte d'un \xE9tage.'"
-  - "BOB : 'Le joueur en t\xEAte a trop d'avance, il est frapp\xE9 par une mal\xE9diction
-    et redescend de 3 \xE9tages.'"
-  - "BOB : 'Joueur en queue de peloton, une force myst\xE9rieuse te propulse vers
-    le haut, avance de 2 \xE9tages !'"
+  randomEvents: []
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0

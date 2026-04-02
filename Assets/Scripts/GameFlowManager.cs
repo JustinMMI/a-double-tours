@@ -13,8 +13,18 @@ public class GameFlowManager : MonoBehaviour
 
     void Start()
     {
-        ShowObstacles();
-        duelButton.gameObject.SetActive(false);
+        if (PlayerPrefs.GetInt("FromDuel", 0) == 1)
+        {
+            string winnerName = PlayerPrefs.GetString("DuelWinner");
+            bobText.text = "BOB : 'Le duel est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !'";
+            PlayerPrefs.SetInt("FromDuel", 0);
+            nextButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            ShowObstacles();
+            duelButton.gameObject.SetActive(false);
+        }
     }
 
     void ShowObstacles()
@@ -34,7 +44,6 @@ public class GameFlowManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             string pName = PlayerPrefs.GetString("Player_" + i);
-            // Random : Etage 1 ou Etage 16
             int start = (Random.value > 0.5f) ? 1 : 16;
             string tName = (start == 1) ? "Tour 1" : "Tour 2";
 
@@ -81,7 +90,17 @@ public class GameFlowManager : MonoBehaviour
         }
 
         lastEventIndex = randomIndex;
+
+        int EventOrNot = Random.Range(0, 100);
+        if (EventOrNot <= 60)
+        {
+            bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
+            return;
+        }
+        else
+        {
         bobText.text = randomEvents[randomIndex];
+        }
     }
 
     private int lastEventIndex = -1;
@@ -90,4 +109,5 @@ public class GameFlowManager : MonoBehaviour
     {
         SceneManager.LoadScene("DuelMenu");
     }
+
 }
