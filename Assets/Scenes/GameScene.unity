@@ -266,6 +266,8 @@ GameObject:
   m_Component:
   - component: {fileID: 409263092}
   - component: {fileID: 409263093}
+  - component: {fileID: 409263095}
+  - component: {fileID: 409263094}
   m_Layer: 0
   m_Name: Plan de travail 1_0
   m_TagString: Untagged
@@ -347,6 +349,87 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &409263094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409263091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47803de03c5e1c14393b685184a4a119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameFlowManager
+  bobText: {fileID: 205161639}
+  nextButton: {fileID: 1503949448}
+  obsGen: {fileID: 439300597}
+  randomEvents:
+  - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
+  - "BOB : 'L'obscurit\xE9 envahit la tour, les joueurs ne se voient plus. Aucun
+    duel ne peut \xEAtre initi\xE9 au prochain tour.'"
+  - "BOB : 'C'est pas un peu long l\xE0 ? Tout le monde monte d'un \xE9tage.'"
+  - 'BOB : ''Ouverture d''un portail temporel, tout le monde switch de tour !'''
+  - "BOB : 'Le joueur en t\xEAte a trop d'avance, il est frapp\xE9 par une mal\xE9diction
+    et redescend de 3 \xE9tages.'"
+  - "BOB : 'Joueur en queue de peloton, une force myst\xE9rieuse te propulse vers
+    le haut, avance de 2 \xE9tages !'"
+--- !u!114 &409263095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409263091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 409263094}
+        m_TargetAssemblyTypeName: GameFlowManager, Assembly-CSharp
+        m_MethodName: OnBobClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &439300594
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +478,12 @@ MonoBehaviour:
   bobText: {fileID: 205161639}
   nextButton: {fileID: 1503949448}
   obsGen: {fileID: 439300597}
+  randomEvents:
+  - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
+  - "BOB : 'Je suis d'humeur g\xE9n\xE9reuse... Le joueur actuel gagne 1 PV.'"
+  - "BOB : 'L'obscurit\xE9 envahit l'\xE9tage. Vous ne pouvez pas attaquer ce tour-ci.'"
+  - "BOB : 'Une distorsion temporelle ! Rejouez votre lancer de d\xE9.'"
+  - "BOB : 'Vite ! L'\xE9tage s'effondre, montez tous d'un niveau !'"
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0

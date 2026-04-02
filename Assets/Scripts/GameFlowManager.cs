@@ -55,4 +55,20 @@ public class GameFlowManager : MonoBehaviour
         bobText.text = "";
         nextButton.gameObject.SetActive(false);
     }
+
+    [Header("Events Settings")]
+    public string[] randomEvents = {
+    "BOB : 'Un séisme secoue la tour ! Tout le monde recule d'une case.'",
+    "BOB : 'L'obscurité envahit la tour, les joueurs ne se voient plus. Aucun duel ne peut être initié au prochain tour.'",
+    "BOB : 'C'est pas un peu long là ? Tout le monde monte d'un étage.'",
+    "BOB : 'Ouverture d'un portail temporel, tout le monde switch de tour !'",
+    "BOB : 'Le joueur en tête a trop d'avance, il est frappé par une malédiction et redescend de 3 étages.'",
+    "BOB : 'Joueur en queue de peloton, une force mystérieuse te propulse vers le haut, avance de 2 étages !'",
+};
+
+    public void OnBobClicked()
+    {
+        int randomIndex = Random.Range(0, randomEvents.Length);
+        bobText.text = randomEvents[randomIndex];
+    }
 }
