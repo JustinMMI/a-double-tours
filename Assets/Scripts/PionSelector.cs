@@ -1,16 +1,26 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PionSelector : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public string pionName;
+    public bool isSelected = false;
+
+    private Image buttonImage;
+    public Color selectedColor = Color.green;
+    public Color defaultColor = Color.white;
+
+    void Awake()
     {
-        
+        buttonImage = GetComponent<Image>();
+        buttonImage.color = defaultColor;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ToggleSelection()
     {
-        
+        isSelected = !isSelected;
+        buttonImage.color = isSelected ? selectedColor : defaultColor;
+
+        Debug.Log(pionName + " sélectionné : " + isSelected);
     }
 }
