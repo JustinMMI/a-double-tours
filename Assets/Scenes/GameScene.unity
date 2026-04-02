@@ -394,7 +394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   bobText: {fileID: 205161639}
   nextButton: {fileID: 1503949448}
-  obsGen: {fileID: 0}
+  obsGen: {fileID: 439300597}
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0
