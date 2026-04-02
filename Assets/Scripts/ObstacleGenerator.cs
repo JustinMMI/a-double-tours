@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class LevelGenerator : MonoBehaviour
+public class ObstacleGenerator : MonoBehaviour
 {
     void Start()
     {
-        GenerateLevel();
+        GenerateObstacles();
     }
 
-    public void GenerateLevel()
+    public void GenerateObstacles()
     {
         List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
         List<string> selectedObstacles = new List<string>();
@@ -46,16 +46,17 @@ public class LevelGenerator : MonoBehaviour
             BanNeighborsAndMirror(floor, bannedFloors);
         }
 
-        string announcement = "Analyse terminée. Placez les dangers sur le plateau :\n\n";
+        string sentenceObstacle = "Analyse terminée. Placez les dangers sur le plateau :\n\n";
 
         for (int i = 0; i < 3; i++)
         {
             int floor = finalFloors[i];
             string towerName = floor <= 15 ? "Tour 1" : "Tour 2";
-            announcement += "- " + selectedObstacles[i] + " -> " + towerName + ", étage " + floor + "\n";
+            sentenceObstacle += "- " + selectedObstacles[i] + " -> " + towerName + ", étage " + floor + "\n";
         }
 
-        Debug.Log(announcement);
+        _obstacleSentence = sentenceObstacle;
+        Debug.Log(sentenceObstacle);
     }
 
     int GetRandomFloor(List<int> availableFloors, List<int> banned)
@@ -97,4 +98,12 @@ public class LevelGenerator : MonoBehaviour
         banned.Add(mirror - 1);
         banned.Add(mirror + 1);
     }
+
+    public string sentenceObstacle
+    {
+        get { return _obstacleSentence; }
+    }
+
+    private string _obstacleSentence;
 }
+

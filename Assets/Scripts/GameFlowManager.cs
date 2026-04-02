@@ -1,56 +1,55 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections.Generic;
 
 public class GameFlowManager : MonoBehaviour
 {
-    public TextMeshProUGUI BobText;
-    public Button NextButton;
-    public LevelGenerator generator;
+    public TextMeshProUGUI bobText;
+    public Button nextButton;
+    public ObstacleGenerator obsGen;
 
     void Start()
     {
-        ShowObstaclesStep();
+        // Au tout début, Bob annonce les obstacles
+        ShowObstacles();
     }
 
-    // Obstacles
-    void ShowObstaclesStep()
+    void ShowObstacles()
     {
-        generator.GenerateObstacles();
-        BobText.text = generator.obstacleAnnouncement;
+        obsGen.GenerateObstacles();
+        bobText.text = obsGen.sentenceObstacle;
 
-        NextButton.onClick.RemoveAllListeners();
-        NextButton.onClick.AddListener(ShowStartPositionsStep);
+        // On prépare le bouton pour l'étape suivante
+        nextButton.onClick.RemoveAllListeners();
+        nextButton.onClick.AddListener(ShowStartPositions);
     }
 
-    // Positions
-    void ShowStartPositionsStep()
+    void ShowStartPositions()
     {
-        int playerCount = PlayerPrefs.GetInt("PlayerCount", 0);
-        string msg = "BOB : 'Maintenant, placez vos pions au point de départ !'\n\n";
+        // On récupère les joueurs choisis dans le menu
+        int count = PlayerPrefs.GetInt("PlayerCount", 0);
+        string msg = "BOB : 'Bien. Maintenant, placez vos pions en bas des tours :'\n\n";
 
-        for (int i = 0; i < playerCount; i++)
+        for (int i = 0; i < count; i++)
         {
-            string name = PlayerPrefs.GetString("Player_" + i);
-            // Soit étage 1 (T1), soit étage 16 (T2)
-            int startFloor = (Random.value > 0.5f) ? 1 : 16;
-            string tower = (startFloor == 1) ? "Tour 1" : "Tour 2";
+            string pName = PlayerPrefs.GetString("Player_" + i);
+            // Random : Etage 1 ou Etage 16
+            int start = (Random.value > 0.5f) ? 1 : 16;
+            string tName = (start == 1) ? "Tour 1" : "Tour 2";
 
-            msg += "- " + name + " -> " + tower + " (Etage " + startFloor + ")\n";
+            msg += "- " + pName + " -> " + tName + " (Etage " + start + ")\n";
         }
 
-        BobText.text = msg;
+        bobText.text = msg;
 
-        NextButton.onClick.RemoveAllListeners();
-        NextButton.onClick.AddListener(StartGame);
+        // On prépare le bouton pour lancer la partie
+        nextButton.onClick.RemoveAllListeners();
+        nextButton.onClick.AddListener(FinalStart);
     }
 
-    // Partie
-    void StartGame()
+    void FinalStart()
     {
-        BobText.text = "BOB : 'Tout est prêt. Que le premier joueur lance les dés !'";
-        NextButton.gameObject.SetActive(false); // On peut cacher le bouton ou le changer en "Menu"
+        bobText.text = "BOB : 'Le jeu commence. Que la souffrance soit avec vous !'";
+        nextButton.gameObject.SetActive(false); // On cache le bouton
     }
 }
