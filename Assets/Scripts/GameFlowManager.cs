@@ -100,18 +100,18 @@ public class GameFlowManager : MonoBehaviour
 
         switch (EventOrNot)
             {
-                case int n when (n <= 40):
+                case int n when (n <= 30):
                     bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
-                    // 40% de chances de ne rien faire
+                    // 30% de chances de ne rien faire
                     return;
-                case int n when (n <= 60):
+                case int n when (n <= 55):
                     bobText.text = GenerateRandomObstacle();
                     break;
-                // 20% de chances d'avoir un événement obstacle aléatoire
-                case int n when (n <= 80):
+                // 25% de chances d'avoir un événement obstacle aléatoire
+                case int n when (n <= 75):
                     bobText.text = GetRandomClassicEventOrFallback();
                     break;
-                    // 20% de chances d'avoir un événement classique aléatoire
+                    // 25% de chances d'avoir un événement classique aléatoire
                 default:
                     bobText.text = GetRandomMiniGameEventOrFallback();
                     // 20% de chances d'avoir un événement mini-jeu aléatoire
