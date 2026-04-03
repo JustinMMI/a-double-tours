@@ -1,32 +1,51 @@
-using UnityEditor;
 using UnityEngine;
-using UnityEditor.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
-[InitializeOnLoad]
-public class AutoSaveOnFocus
+public class DuelMashing : MonoBehaviour
 {
-    static AutoSaveOnFocus()
+    public Slider barreDuel;
+
+    [Header("FORCE DES COUPS")]
+    public float forceImpact = 15f; // On passe à 15 pour que ça bouge VRAIMENT !
+
+    private float scoreGlobal = 50f;
+
+    void Start()
     {
-        // On s'abonne à l'événement de changement d'état de l'application
-        EditorApplication.delayCall += () =>
+        if (barreDuel != null)
         {
-            Application.focusChanged += OnFocusChanged;
-        };
+            barreDuel.minValue = 0;
+            barreDuel.maxValue = 100;
+            barreDuel.value = 50f;
+            barreDuel.interactable = false;
+        }
     }
 
-    private static void OnFocusChanged(bool focus)
+    void Update()
     {
-        // Si focus est "false", ça veut dire que tu as quitté Unity (Alt-Tab)
-        if (!focus)
-        {
-            // On sauvegarde la scène active
-            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-            {
-                Debug.Log("<color=green>Auto-Save : Scène sauvegardée car Unity a perdu le focus.</color>");
-            }
+        if (barreDuel == null || Keyboard.current == null) return;
 
-            // On sauvegarde aussi les assets (ProjectSettings, Prefabs, etc.)
-            AssetDatabase.SaveAssets();
+        // JOUEUR BLEU (Touche A)
+        if (Keyboard.current.aKey.wasPressedThisFrame)
+        {
+            scoreGlobal -= forceImpact;
+            Debug.Log("BAM ! BLEU : " + scoreGlobal);
         }
+
+        // JOUEUR ROUGE (Touche P)
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            scoreGlobal += forceImpact;
+            Debug.Log("BOOM ! ROUGE : " + scoreGlobal);
+        }
+
+        // Mise à jour DIRECTE (pas de lerp, pas d'attente)
+        scoreGlobal = Mathf.Clamp(scoreGlobal, 0, 100);
+        barreDuel.value = scoreGlobal;
+
+        // Vérification Victoire
+        if (scoreGlobal <= 0) { Debug.Log("BLEU WIN"); this.enabled = false; }
+        if (scoreGlobal >= 100) { Debug.Log("ROUGE WIN"); this.enabled = false; }
     }
 }
