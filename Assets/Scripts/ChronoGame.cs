@@ -1,52 +1,90 @@
 using UnityEngine;
-using TMPro; // Important pour utiliser le texte
+using TMPro;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ChronoGame : MonoBehaviour
 {
-    public TextMeshProUGUI affichage; // On glissera notre texte ici plus tard
+    public TextMeshProUGUI affichage;
+
     private float chrono = 0f;
     private bool tourne = false;
-    private bool fini = false;
+
+    private int joueurActuel = 1;
+    private List<float> scores = new List<float>(); // Liste pour stocker les chronos
+    private bool jeuTermine = false;
 
     void Update()
     {
         if (tourne)
         {
-            chrono += Time.deltaTime; // Le temps s'écoule
-            // On affiche le temps au début, puis des ??? après 3 secondes
-            affichage.text = chrono < 3f ? chrono.ToString("F2") : "???";
+            chrono += Time.deltaTime;
+            affichage.text = "Joueur " + joueurActuel + "\n" + (chrono < 3f ? chrono.ToString("F2") : "???");
         }
     }
 
-    // Cette fonction sera appelée par le bouton
     public void ActionBouton()
     {
-        if (!tourne && !fini)
+        if (jeuTermine)
         {
-            tourne = true; // Démarrer
+            RelancerTout();
+            return;
         }
-        else if (tourne)
+
+        if (!tourne)
         {
-            ArreterJeu(); // Stop
+            tourne = true;
         }
         else
         {
-            Relancer(); // Recommencer
+            ArreterTour();
         }
     }
 
-    void ArreterJeu()
+    void ArreterTour()
     {
         tourne = false;
-        fini = true;
-        float score = Mathf.Abs(10f - chrono);
-        affichage.text = "Temps : " + chrono.ToString("F2") + "s\nEcart : " + score.ToString("F3");
+        scores.Add(chrono); // On enregistre le temps
+
+        if (joueurActuel < 4)
+        {
+            joueurActuel++;
+            chrono = 0f;
+            affichage.text = "Score enregistre !\nAu tour du Joueur " + joueurActuel;
+        }
+        else
+        {
+            AfficherClassement();
+        }
     }
 
-    void Relancer()
+    void AfficherClassement()
     {
+        jeuTermine = true;
+
+        // On calcule l'écart avec 10s pour chaque score
+        var resultats = scores
+            .Select((temps, index) => new { Nom = "J" + (index + 1), Ecart = Mathf.Abs(10f - temps), Temps = temps })
+            .OrderBy(r => r.Ecart) // Le plus petit écart gagne
+            .ToList();
+
+        string texteFinal = "CLASSEMENT FINAL :\n";
+        for (int i = 0; i < resultats.Count; i++)
+        {
+            texteFinal += (i + 1) + ". " + resultats[i].Nom + " (" + resultats[i].Temps.ToString("F2") + "s)\n";
+        }
+
+        texteFinal += "\nCliquez pour rejouer";
+        affichage.text = texteFinal;
+    }
+
+    void RelancerTout()
+    {
+        joueurActuel = 1;
+        scores.Clear();
         chrono = 0f;
-        fini = false;
-        affichage.text = "Pret ?";
+        jeuTermine = false;
+        tourne = false;
+        affichage.text = "Joueur 1 : Pret ?";
     }
 }
