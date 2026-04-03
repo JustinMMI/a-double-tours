@@ -78,7 +78,7 @@ public class GameFlowManager : MonoBehaviour
     "BOB : 'Ouverture d'un portail temporel, tout le monde switch de tour !'",
     "BOB : 'Le joueur en tête a trop d'avance, il est frappé par une malédiction et redescend de 3 étages.'",
     "BOB : 'Joueur en queue de peloton, une force mystérieuse te propulse vers le haut, avance de 2 étages !'",
-};
+    };
 
     public void OnBobClicked()
     {
@@ -108,6 +108,11 @@ public class GameFlowManager : MonoBehaviour
     public void OnDuelClicked()
     {
         SceneManager.LoadScene("DuelMenu");
+    }
+
+    public void OnQuitClicked()
+    {
+        SceneManager.LoadScene("Main");
     }
 
 }
