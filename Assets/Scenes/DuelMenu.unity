@@ -302,6 +302,10 @@ MonoBehaviour:
   - {fileID: 280501387}
   - {fileID: 43436140}
   - {fileID: 1739326362}
+  MiniGamePool:
+  - {fileID: 102900000, guid: 04d0d6bb9624e1d43b7217af48390d29, type: 3}
+  - {fileID: 102900000, guid: c0de2d6dcf2e59c4999e9641151fc113, type: 3}
+  - {fileID: 102900000, guid: 77c7b21fc41987940b3f8c5c88703fc4, type: 3}
 --- !u!4 &98447910
 Transform:
   m_ObjectHideFlags: 0

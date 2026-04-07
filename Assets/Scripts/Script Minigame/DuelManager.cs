@@ -5,6 +5,42 @@ using System.Collections.Generic;
 public class DuelManager : MonoBehaviour
 {
     public List<PionSelector> duelPions;
+    public List<Object> MiniGamePool;
+
+    private int lastMiniGameIndex = -1;
+    private string lastMiniGameSceneName = null;
+
+    public void LoadRandomScene()
+    {
+        if (MiniGamePool != null && MiniGamePool.Count > 0)
+        {
+            int randomIndex = Random.Range(0, MiniGamePool.Count);
+            Object selectedScene = MiniGamePool[randomIndex];
+
+            if (MiniGamePool.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
+            {
+                int safety = 0;
+                while (selectedScene != null && selectedScene.name == lastMiniGameSceneName && safety < 20)
+                {
+                    randomIndex = Random.Range(0, MiniGamePool.Count);
+                    selectedScene = MiniGamePool[randomIndex];
+                    safety++;
+                }
+            }
+
+            lastMiniGameIndex = randomIndex;
+            if (selectedScene != null)
+            {
+                lastMiniGameSceneName = selectedScene.name;
+                SceneManager.LoadScene(selectedScene.name);
+                Debug.Log("BOB charge la scène : " + selectedScene.name);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("La liste est vide, glisse des fichiers de scènes dedans !");
+        }
+    }
 
     public void OnConfirmDuel()
     {
