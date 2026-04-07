@@ -82,12 +82,41 @@ public class GameFlowManager : MonoBehaviour
     }
 
     [Header("Events Settings")]
-    public string[] randomClassicEvent = {
-    };
-    public string[] randomObstaclesEvent = {
-    };
-    public string[] randomMiniGamesEvent = {
-    };
+    public string[] randomClassicEvent;
+    public List<Object> MiniGamePool;
+    // Ici, tu pourras glisser tes fichiers .unity directement !
+
+    public void LoadRandomScene()
+    {
+        if (MiniGamePool != null && MiniGamePool.Count > 0)
+        {
+            int randomIndex = Random.Range(0, MiniGamePool.Count);
+            Object selectedScene = MiniGamePool[randomIndex];
+
+            if (MiniGamePool.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
+            {
+                int safety = 0;
+                while (selectedScene != null && selectedScene.name == lastMiniGameSceneName && safety < 20)
+                {
+                    randomIndex = Random.Range(0, MiniGamePool.Count);
+                    selectedScene = MiniGamePool[randomIndex];
+                    safety++;
+                }
+            }
+
+            lastMiniGameIndex = randomIndex;
+            if (selectedScene != null)
+            {
+                lastMiniGameSceneName = selectedScene.name;
+                SceneManager.LoadScene(selectedScene.name);
+                Debug.Log("BOB charge la scène : " + selectedScene.name);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("La liste est vide, glisse des fichiers de scènes dedans !");
+        }
+    }
 
     public void OnBobClicked()
     {
@@ -96,27 +125,31 @@ public class GameFlowManager : MonoBehaviour
             return;
         }
 
-        int EventOrNot = Random.Range(0, 100);
+        int eventRoll = Random.Range(0, 100); // 0..99
 
-        switch (EventOrNot)
-            {
-                case int n when (n <= 30):
-                    bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
-                    // 30% de chances de ne rien faire
-                    return;
-                case int n when (n <= 55):
-                    bobText.text = GenerateRandomObstacle();
-                    break;
-                // 25% de chances d'avoir un événement obstacle aléatoire
-                case int n when (n <= 75):
-                    bobText.text = GetRandomClassicEventOrFallback();
-                    break;
-                    // 25% de chances d'avoir un événement classique aléatoire
-                default:
-                    bobText.text = GetRandomMiniGameEventOrFallback();
-                    // 20% de chances d'avoir un événement mini-jeu aléatoire
-                    break;
-            }
+        if (eventRoll < 30)
+        {
+            // 30%
+            bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
+            return;
+        }
+
+        if (eventRoll < 55)
+        {
+            // 25%
+            bobText.text = GenerateRandomObstacle();
+            return;
+        }
+
+        if (eventRoll < 80)
+        {
+            // 25%
+            bobText.text = GetRandomClassicEventOrFallback();
+            return;
+        }
+
+        // 20%
+        LoadRandomScene();
     }
 
     private string GetRandomClassicEventOrFallback()
@@ -138,17 +171,6 @@ public class GameFlowManager : MonoBehaviour
 
         lastEventIndex = randomIndex;
         return randomClassicEvent[randomIndex];
-    }
-
-    private string GetRandomMiniGameEventOrFallback()
-    {
-        if (randomMiniGamesEvent == null || randomMiniGamesEvent.Length == 0)
-        {
-            return "BOB : 'Mini-jeu déclenché, mais rien n'est configuré pour l'instant...'";
-        }
-
-        int randomIndex = Random.Range(0, randomMiniGamesEvent.Length);
-        return randomMiniGamesEvent[randomIndex];
     }
 
     private string GenerateRandomObstacle()
@@ -219,6 +241,8 @@ public class GameFlowManager : MonoBehaviour
     }
 
     private int lastEventIndex = -1;
+    private int lastMiniGameIndex = -1;
+    private string lastMiniGameSceneName = null;
 
     public void OnDuelClicked()
     {

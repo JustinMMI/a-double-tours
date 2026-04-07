@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject startPanel;
     public GameObject gamePanel;
     public GameObject resultPanel;
+    public Button button;
 
     public TMP_Text playerTurnText;
     public Slider numberSlider;
@@ -22,17 +25,9 @@ public class GameManager : MonoBehaviour
 
     private int targetNumber;
     private int currentTurnIndex = 0;
-
-    // Indices of the players competing in the current round (may be a subset on tiebreaker rounds).
     private List<int> activePlayers = new List<int>();
-
-    // Shuffled turn order built from activePlayers each round.
     private List<int> playerOrder = new List<int>();
-
-    // Guesses keyed by player index (0-3).
     private Dictionary<int, int> guesses = new Dictionary<int, int>();
-
-    // Players who tied last round; populated only when a tiebreaker is needed.
     private List<int> tiedPlayers = new List<int>();
 
     void Start()
@@ -44,9 +39,6 @@ public class GameManager : MonoBehaviour
         anim?.AnimateStartPanelIn();
     }
 
-    /// <summary>
-    /// Called by the Start Game button. Resets to a full 4-player game.
-    /// </summary>
     public void StartGame()
     {
         activePlayers.Clear();
@@ -66,10 +58,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called by the result panel button.
-    /// If a tie was detected, replays with only the tied players; otherwise returns to the start panel.
-    /// </summary>
     public void RestartGame()
     {
         if (tiedPlayers.Count > 1)
@@ -131,9 +119,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Begins a new round using the current activePlayers list, picking a fresh target number.
-    /// </summary>
     private void StartRound()
     {
         targetNumber = Random.Range(1, 101);
@@ -160,9 +145,6 @@ public class GameManager : MonoBehaviour
         anim?.AnimatePlayerTurnPunch();
     }
 
-    /// <summary>
-    /// Shuffles a list in-place using the Fisher-Yates algorithm.
-    /// </summary>
     private void ShuffleList(List<int> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -193,6 +175,8 @@ public class GameManager : MonoBehaviour
         {
             tiedPlayers.Clear();
             resultText.text = "Bob pensait à " + targetNumber + ".\n" + PlayerNames[winners[0]] + " gagne !";
+            button.gameObject.SetActive(false);
+            StartCoroutine(SendingToMain());
         }
         else
         {
@@ -218,6 +202,11 @@ public class GameManager : MonoBehaviour
         {
             gamePanel.SetActive(false);
             resultPanel.SetActive(true);
-        }
+        }}
+
+        private IEnumerator SendingToMain()
+        {
+            yield return new WaitForSeconds(2.5f);
+            SceneManager.LoadScene("Main");
     }
 }
