@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DuelMenu.unity
     guid: 4eda13ec327ca384586f3247b5ca8f23
+  - enabled: 1
+    path: Assets/Scenes/Minigames/Gonflement ballon.unity
+    guid: 04d0d6bb9624e1d43b7217af48390d29
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 8891074c19f252045a58786112f7a5d0, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 75bc786a1db3dde44a8db8f09abe2a57, type: 2}
