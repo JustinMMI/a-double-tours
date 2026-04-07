@@ -15,12 +15,20 @@ public class ChronoGame : MonoBehaviour
     private List<float> scores = new List<float>();
     private bool jeuTermine = false;
 
-    // La règle affichée en permanence en haut
-    private string regle = "<color=#FFFF00><size=120%>OBJECTIF : 10.000 secondes !</size></color>\n--------------------------\n";
+    // La regle est construite dynamiquement car Generatedtime est initialise a l'execution.
+    private string Regle => "<color=#FFFF00><size=120%>OBJECTIF : " + Generatedtime.ToString("F3") + " secondes !</size></color>\n--------------------------\n";
 
     void Start()
     {
+        GenerateRandomTime();
         AfficherMessage("JOUEUR 1\nCliquez pour LANCER");
+    }
+
+    public float Generatedtime { get; private set; } = 10f; // Valeur par dÃ©faut, sera remplacÃ©e par GenerateRandomTime()
+    public void GenerateRandomTime()
+    {
+        Generatedtime = Random.Range(5, 15);
+        Debug.Log("Temps cible gÃ©nÃ©rÃ© : " + Generatedtime.ToString("F3") + " secondes");
     }
 
     void Update()
@@ -28,7 +36,7 @@ public class ChronoGame : MonoBehaviour
         if (tourne)
         {
             chrono += Time.deltaTime;
-            // Le chrono se cache après 3 secondes
+            // Le chrono se cache aprï¿½s 3 secondes
             string tempsVisible = (chrono < 3f ? chrono.ToString("F3") : "???");
             AfficherMessage("JOUEUR " + joueurActuel + "\n<size=150%>" + tempsVisible + "s</size>");
         }
@@ -75,12 +83,12 @@ public class ChronoGame : MonoBehaviour
     {
         jeuTermine = true;
 
-        // On crée une liste d'objets avec le nom, le temps et l'écart
+        // On crï¿½e une liste d'objets avec le nom, le temps et l'ï¿½cart
         var resultats = scores
             .Select((temps, index) => new {
                 Nom = " - J" + (index + 1),
                 Temps = temps,
-                Ecart = Mathf.Abs(10f - temps)
+                Ecart = Mathf.Abs(Generatedtime - temps)
             })
             .OrderBy(r => r.Ecart) // Le plus proche de 10s en premier
             .ToList();
@@ -92,7 +100,7 @@ public class ChronoGame : MonoBehaviour
             string couleur;
             string prefixe;
 
-            // Attribution des couleurs demandées
+            // Attribution des couleurs demandï¿½es
             if (i == 0) { couleur = "#FFD700"; prefixe = "1er"; }      // Jaune Or
             else if (i == 1) { couleur = "#C0C0C0"; prefixe = "2e"; }  // Gris Argent
             else if (i == 2) { couleur = "#CD7F32"; prefixe = "3e"; }  // Marron Bronze
@@ -107,11 +115,12 @@ public class ChronoGame : MonoBehaviour
 
     void AfficherMessage(string contenu)
     {
-        affichage.text = regle + contenu;
+        affichage.text = Regle + contenu;
     }
 
     void RelancerTout()
     {
+        GenerateRandomTime();
         joueurActuel = 1;
         scores.Clear();
         chrono = 0f;
