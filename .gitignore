@@ -100,3 +100,22 @@ InitTestScene*.unity*
 
 # Recovery folder should never be tracked
 /[Aa]ssets/_Recovery/
+
+#VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+!*.code-workspace
+.vscode\*
+!.vscode\settings.json
+!.vscode\tasks.json
+!.vscode\launch.json
+!.vscode\extensions.json
+!.vscode\*.code-snippets
+!*.code-workspace
+
+# Built Visual Studio Code Extensions
+*.vsix
