@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 public class ObstacleGenerator : MonoBehaviour
 {
-    void Start()
-    {
-        GenerateObstacles();
-    }
-
     public void GenerateObstacles()
     {
         List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
@@ -46,6 +41,9 @@ public class ObstacleGenerator : MonoBehaviour
             BanNeighborsAndMirror(floor, bannedFloors);
         }
 
+        _initialObstacles = selectedObstacles;
+        _initialFloors = finalFloors;
+
         string sentenceObstacle = "Analyse terminée. Placez les dangers sur le plateau :\n\n";
 
         for (int i = 0; i < 3; i++)
@@ -56,6 +54,14 @@ public class ObstacleGenerator : MonoBehaviour
         }
 
         _obstacleSentence = sentenceObstacle;
+
+        Debug.Log("[ObstacleGenerator] selectedObstacles = " + string.Join(", ", selectedObstacles));
+        for (int i = 0; i < selectedObstacles.Count; i++)
+        {
+            bool obstacleIsInSentence = _obstacleSentence.Contains(selectedObstacles[i]);
+            Debug.Log("[ObstacleGenerator] Vérification obstacle " + i + " (" + selectedObstacles[i] + ") présent dans sentenceObstacle = " + obstacleIsInSentence);
+        }
+
         Debug.Log(sentenceObstacle);
     }
 
@@ -105,5 +111,18 @@ public class ObstacleGenerator : MonoBehaviour
     }
 
     private string _obstacleSentence;
+    private List<string> _initialObstacles;
+    private List<int> _initialFloors;
+
+    public List<string> GetInitialObstacles()
+    {
+        return _initialObstacles;
+    }
+
+    public List<int> GetInitialFloors()
+    {
+        return _initialFloors;
+    }
+
 }
 

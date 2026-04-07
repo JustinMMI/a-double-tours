@@ -10,18 +10,21 @@ public class GameFlowManager : MonoBehaviour
     public Button nextButton;
     public ObstacleGenerator obsGen;
     public Button duelButton;
+    private bool canBobRollEvents = false;
 
     void Start()
     {
         if (PlayerPrefs.GetInt("FromDuel", 0) == 1)
         {
+            canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
-            bobText.text = "BOB : 'Le duel est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !'";
+            bobText.text = "BOB : 'Le duel est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + PlayerPrefs.GetString("ConsequenceIndex");
             PlayerPrefs.SetInt("FromDuel", 0);
             nextButton.gameObject.SetActive(false);
         }
         else
         {
+            canBobRollEvents = false;
             ShowObstacles();
             duelButton.gameObject.SetActive(false);
         }
@@ -31,6 +34,13 @@ public class GameFlowManager : MonoBehaviour
     {
         obsGen.GenerateObstacles();
         bobText.text = obsGen.sentenceObstacle;
+
+        List<string> startObstacles = obsGen.GetInitialObstacles();
+        Debug.Log("[GameFlowManager] Bob annonce au début :\n" + bobText.text);
+        if (startObstacles != null)
+        {
+            Debug.Log("[GameFlowManager] Obstacles initiaux reçus depuis ObstacleGenerator = " + string.Join(", ", startObstacles));
+        }
 
         nextButton.onClick.RemoveAllListeners();
         nextButton.onClick.AddListener(ShowStartPositions);
@@ -68,33 +78,144 @@ public class GameFlowManager : MonoBehaviour
         bobText.text = "";
         nextButton.gameObject.SetActive(false);
         duelButton.gameObject.SetActive(true);
+        canBobRollEvents = true;
     }
 
     [Header("Events Settings")]
-    public string[] randomEvents = {
-};
+    public string[] randomClassicEvent = {
+    };
+    public string[] randomObstaclesEvent = {
+    };
+    public string[] randomMiniGamesEvent = {
+    };
 
     public void OnBobClicked()
     {
-        int randomIndex = Random.Range(0, randomEvents.Length);
-
-        while (randomIndex == lastEventIndex)
+        if (!canBobRollEvents)
         {
-            randomIndex = Random.Range(0, randomEvents.Length);
+            return;
+        }
+
+        int EventOrNot = Random.Range(0, 100);
+
+        switch (EventOrNot)
+            {
+                case int n when (n <= 30):
+                    bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
+                    // 30% de chances de ne rien faire
+                    return;
+                case int n when (n <= 55):
+                    bobText.text = GenerateRandomObstacle();
+                    break;
+                // 25% de chances d'avoir un événement obstacle aléatoire
+                case int n when (n <= 75):
+                    bobText.text = GetRandomClassicEventOrFallback();
+                    break;
+                    // 25% de chances d'avoir un événement classique aléatoire
+                default:
+                    bobText.text = GetRandomMiniGameEventOrFallback();
+                    // 20% de chances d'avoir un événement mini-jeu aléatoire
+                    break;
+            }
+    }
+
+    private string GetRandomClassicEventOrFallback()
+    {
+        if (randomClassicEvent == null || randomClassicEvent.Length == 0)
+        {
+            return "BOB : 'Aucun événement classique configuré pour le moment...'";
+        }
+
+        int randomIndex = Random.Range(0, randomClassicEvent.Length);
+
+        if (randomClassicEvent.Length > 1)
+        {
+            while (randomIndex == lastEventIndex)
+            {
+                randomIndex = Random.Range(0, randomClassicEvent.Length);
+            }
         }
 
         lastEventIndex = randomIndex;
+        return randomClassicEvent[randomIndex];
+    }
 
-        int EventOrNot = Random.Range(0, 100);
-        if (EventOrNot <= 60)
+    private string GetRandomMiniGameEventOrFallback()
+    {
+        if (randomMiniGamesEvent == null || randomMiniGamesEvent.Length == 0)
         {
-            bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
-            return;
+            return "BOB : 'Mini-jeu déclenché, mais rien n'est configuré pour l'instant...'";
         }
-        else
+
+        int randomIndex = Random.Range(0, randomMiniGamesEvent.Length);
+        return randomMiniGamesEvent[randomIndex];
+    }
+
+    private string GenerateRandomObstacle()
+    {
+        // Sécurité : vérifier que obsGen existe
+        if (obsGen == null)
         {
-        bobText.text = randomEvents[randomIndex];
+            Debug.LogError("ObstacleGenerator n'est pas assigné !");
+            return "BOB : 'Erreur système...'";
         }
+
+        List<string> initialObstacles = obsGen.GetInitialObstacles();
+        List<int> initialFloors = obsGen.GetInitialFloors();
+
+        // Sécurité : vérifier que les listes ne sont pas nulles
+        if (initialObstacles == null || initialFloors == null)
+        {
+            Debug.LogError("Les obstacles initiaux n'ont pas pu être récupérés !");
+            return "BOB : 'Erreur système...'";
+        }
+
+        List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
+
+        // Exclure les obstacles déjà placés au début
+        foreach (string initialObstacle in initialObstacles)
+        {
+            allObstacles.Remove(initialObstacle);
+        }
+
+        // Sécurité : vérifier qu'il reste des obstacles disponibles
+        if (allObstacles.Count == 0)
+        {
+            Debug.LogWarning("Aucun obstacle disponible pour générer un événement !");
+            return "BOB : 'Tous les dangers sont déjà placés...'";
+        }
+
+        // Sélectionner un obstacle aléatoire parmi les restants
+        string selectedObstacle = allObstacles[Random.Range(0, allObstacles.Count)];
+
+        // Exclure uniquement les positions exactes déjà occupées au début.
+        HashSet<int> occupiedFloors = new HashSet<int>(initialFloors);
+
+        // Étages valides
+        List<int> possibleFloors = new List<int> { 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
+        List<int> availableFloors = new List<int>();
+
+        foreach (int floor in possibleFloors)
+        {
+            if (!occupiedFloors.Contains(floor))
+            {
+                availableFloors.Add(floor);
+            }
+        }
+
+        // Sécurité : vérifier qu'il reste des étages disponibles
+        if (availableFloors.Count == 0)
+        {
+            Debug.LogWarning("Aucun étage disponible pour placer l'obstacle !");
+            return "BOB : 'Tous les étages sont occupés...'";
+        }
+
+        // Sélectionner un étage aléatoire
+        int selectedFloor = availableFloors[Random.Range(0, availableFloors.Count)];
+        string towerName = selectedFloor <= 15 ? "Tour 1" : "Tour 2";
+        int floorDisplay = selectedFloor <= 15 ? selectedFloor : selectedFloor - 15;
+
+        return "BOB : 'Un danger apparaît ! Placez " + selectedObstacle + " à " + towerName + ", étage " + floorDisplay + " !'";
     }
 
     private int lastEventIndex = -1;
