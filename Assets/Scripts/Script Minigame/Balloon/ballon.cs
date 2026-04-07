@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization;
 
 public class ballon : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ballon : MonoBehaviour
     public float airAdded = 50f;
     public float airLoss = 50f;
     public BalloonManager balloonManager;
+    public Button returnButton;
 
     [Header("Identité")]
     public string ownerPlayerName = BalloonManager.FallbackPlayer1;
@@ -22,11 +24,10 @@ public class ballon : MonoBehaviour
     public TextMeshProUGUI victoryText;
 
     private Vector3 originalPosition;
-    private bool isDestroyed = false;
+    private bool isshriking = false;
 
     private void Start()
     {
-        // Fix 5: explicit match check with clear fallback
         if (balloonManager.player1Text.text == ownerPlayerName)
             ownerPlayerName = balloonManager.player1Text.text;
         else if (balloonManager.player2Text.text == ownerPlayerName)
@@ -38,11 +39,14 @@ public class ballon : MonoBehaviour
             transform.localScale += Vector3.one * airAdded;
         });
         StartCoroutine(AirLossVariation(2.5f));
+
+        returnButton.gameObject.SetActive(false);
+        victoryText.text = ""; 
     }
 
     private void Update()
     {
-        if (isDestroyed) return;
+        if (isshriking) return;
 
         transform.localScale -= Vector3.one * Time.deltaTime * airLoss;
 
@@ -63,23 +67,22 @@ public class ballon : MonoBehaviour
 
         if (transform.localScale.x <= 0)
         {
-            AnnounceLoser();
+            WhosWinner();
             return;
         }
 
         if (transform.localScale.x >= 500)
         {
-            AnnounceLoser();
+            WhosWinner();
             return;
         }
     }
 
-    private void AnnounceLoser()
+    private void WhosWinner()
     {
-        if (isDestroyed) return;
+        if (isshriking) return;
         airLoss = 0f;
-        isDestroyed = true;
-        StartCoroutine(ReloadSceneAfterDelay());
+        isshriking = true;
         string winnerName = ownerPlayerName == balloonManager.player1Text.text
             ? balloonManager.player2Text.text
             : balloonManager.player1Text.text;
@@ -87,26 +90,22 @@ public class ballon : MonoBehaviour
 
 
         if (victoryText != null)
-            victoryText.text = "Le gagnant est " + winnerName;
-
-        Destroy(gameObject);
+            victoryText.text = "Le gagnant est " + winnerName + " il a gagné  rajouté une récompense";
+        returnButton.gameObject.SetActive(true);
+        button1.gameObject.SetActive(false);
+        returnButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("Main");
+        });
     }
 
     private IEnumerator AirLossVariation(float interval)
     {
         yield return new WaitForSeconds(interval);
-        if (!isDestroyed)
+        if (!isshriking)
         {
             airLoss = Random.Range(50f, 220f);
             StartCoroutine(AirLossVariation(interval));
         }
-    }
-
-    private IEnumerator ReloadSceneAfterDelay()
-    {
-        Debug.Log("cc");
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("Main");
-
     }
 }
