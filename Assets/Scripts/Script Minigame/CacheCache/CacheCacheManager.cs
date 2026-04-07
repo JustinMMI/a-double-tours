@@ -19,7 +19,6 @@ public class CacheCacheManager : MonoBehaviour
     private List<string> activehiders = new List<string>();
     private HashSet<int> disabledBushes = new HashSet<int>();
 
-    // Nombre total de ratés du chasseur (ne se remet jamais à zéro)
     private int totalMisses = 0;
     private const int MaxMisses = 2;
 
