@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles all LeanTween animations for the Chiffre De Bob minigame.
+/// Attach to the BobChiffreAnim GameObject and wire up the references in the Inspector.
+/// Call the public methods from GameManager at the appropriate moments.
+/// </summary>
 public class BobChiffreAnim : MonoBehaviour
 {
     [Header("Panels")]
@@ -25,6 +30,13 @@ public class BobChiffreAnim : MonoBehaviour
     private const float OffscreenLeft = -1200f;
     private const float OffscreenBottom = -900f;
 
+    // -------------------------------------------------------------------------
+    // Start Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Slides the start panel in from the bottom on game launch.
+    /// </summary>
     public void AnimateStartPanelIn()
     {
         if (startPanel == null) return;
@@ -38,6 +50,9 @@ public class BobChiffreAnim : MonoBehaviour
             .setEase(LeanTweenType.easeOutBack);
     }
 
+    /// <summary>
+    /// Slides the start panel out to the left before the game begins.
+    /// </summary>
     public void AnimateStartPanelOut()
     {
         if (startPanel == null) return;
@@ -47,6 +62,13 @@ public class BobChiffreAnim : MonoBehaviour
             .setOnComplete(() => startPanel.gameObject.SetActive(false));
     }
 
+    // -------------------------------------------------------------------------
+    // Game Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Slides the game panel in from the right. Call when starting a new player turn.
+    /// </summary>
     public void AnimateGamePanelIn()
     {
         if (gamePanel == null) return;
@@ -58,6 +80,9 @@ public class BobChiffreAnim : MonoBehaviour
             .setEase(LeanTweenType.easeOutCubic);
     }
 
+    /// <summary>
+    /// Slides the game panel out to the left. Call after the last player guesses.
+    /// </summary>
     public void AnimateGamePanelOut()
     {
         if (gamePanel == null) return;
@@ -67,6 +92,9 @@ public class BobChiffreAnim : MonoBehaviour
             .setOnComplete(() => gamePanel.gameObject.SetActive(false));
     }
 
+    /// <summary>
+    /// Punch-scales the player name text to draw attention on each new turn.
+    /// </summary>
     public void AnimatePlayerTurnPunch()
     {
         if (playerTurnText == null) return;
@@ -83,6 +111,9 @@ public class BobChiffreAnim : MonoBehaviour
             });
     }
 
+    /// <summary>
+    /// Quick squeeze on the submit button when pressed.
+    /// </summary>
     public void AnimateSubmitButtonBounce()
     {
         if (submitButton == null) return;
@@ -99,6 +130,13 @@ public class BobChiffreAnim : MonoBehaviour
             });
     }
 
+    // -------------------------------------------------------------------------
+    // Result Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Pops the result panel in with a scale animation, then bounces the result text.
+    /// </summary>
     public void AnimateResultPanelIn()
     {
         if (resultPanel == null) return;
@@ -111,6 +149,9 @@ public class BobChiffreAnim : MonoBehaviour
             .setOnComplete(AnimateResultTextBounce);
     }
 
+    /// <summary>
+    /// Shrinks the result panel out. Call at the start of RestartGame.
+    /// </summary>
     public void AnimateResultPanelOut()
     {
         if (resultPanel == null) return;
@@ -127,6 +168,7 @@ public class BobChiffreAnim : MonoBehaviour
         resultText.localScale = new Vector3(0.5f, 0.5f, 1f);
 
         LeanTween.scale(resultText, Vector3.one, punchDuration)
-            .setEase(LeanTweenType.easeOutElastic);
+            .setEase(LeanTweenType.easeOutBack);
     }
 }
+

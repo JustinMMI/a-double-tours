@@ -18,15 +18,21 @@ public class GameManager : MonoBehaviour
     public TMP_Text sliderValueText;
     public TMP_Text resultText;
 
+    public BobChiffreAnim anim;
+
     private int targetNumber;
     private int currentTurnIndex = 0;
 
+    // Indices of the players competing in the current round (may be a subset on tiebreaker rounds).
     private List<int> activePlayers = new List<int>();
 
+    // Shuffled turn order built from activePlayers each round.
     private List<int> playerOrder = new List<int>();
 
+    // Guesses keyed by player index (0-3).
     private Dictionary<int, int> guesses = new Dictionary<int, int>();
 
+    // Players who tied last round; populated only when a tiebreaker is needed.
     private List<int> tiedPlayers = new List<int>();
 
     void Start()
@@ -34,8 +40,13 @@ public class GameManager : MonoBehaviour
         startPanel.SetActive(true);
         gamePanel.SetActive(false);
         resultPanel.SetActive(false);
+
+        anim?.AnimateStartPanelIn();
     }
 
+    /// <summary>
+    /// Called by the Start Game button. Resets to a full 4-player game.
+    /// </summary>
     public void StartGame()
     {
         activePlayers.Clear();
@@ -43,22 +54,57 @@ public class GameManager : MonoBehaviour
             activePlayers.Add(i);
 
         tiedPlayers.Clear();
-        StartRound();
+
+        if (anim != null)
+        {
+            anim.AnimateStartPanelOut();
+            LeanTween.delayedCall(0.45f, () => StartRound());
+        }
+        else
+        {
+            StartRound();
+        }
     }
 
+    /// <summary>
+    /// Called by the result panel button.
+    /// If a tie was detected, replays with only the tied players; otherwise returns to the start panel.
+    /// </summary>
     public void RestartGame()
     {
-        resultPanel.SetActive(false);
-
         if (tiedPlayers.Count > 1)
         {
             activePlayers = new List<int>(tiedPlayers);
             tiedPlayers.Clear();
-            StartRound();
+
+            if (anim != null)
+            {
+                anim.AnimateResultPanelOut();
+                LeanTween.delayedCall(0.36f, () => StartRound());
+            }
+            else
+            {
+                resultPanel.SetActive(false);
+                StartRound();
+            }
         }
         else
         {
-            startPanel.SetActive(true);
+            if (anim != null)
+            {
+                anim.AnimateResultPanelOut();
+                LeanTween.delayedCall(0.36f, () =>
+                {
+                    resultPanel.SetActive(false);
+                    startPanel.SetActive(true);
+                    anim.AnimateStartPanelIn();
+                });
+            }
+            else
+            {
+                resultPanel.SetActive(false);
+                startPanel.SetActive(true);
+            }
         }
     }
 
@@ -69,6 +115,8 @@ public class GameManager : MonoBehaviour
 
     public void SubmitGuess()
     {
+        anim?.AnimateSubmitButtonBounce();
+
         int currentPlayer = playerOrder[currentTurnIndex];
         guesses[currentPlayer] = (int)numberSlider.value;
         currentTurnIndex++;
@@ -83,6 +131,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Begins a new round using the current activePlayers list, picking a fresh target number.
+    /// </summary>
     private void StartRound()
     {
         targetNumber = Random.Range(1, 101);
@@ -95,6 +146,8 @@ public class GameManager : MonoBehaviour
         startPanel.SetActive(false);
         gamePanel.SetActive(true);
         UpdateUI();
+
+        anim?.AnimateGamePanelIn();
     }
 
     private void UpdateUI()
@@ -103,8 +156,13 @@ public class GameManager : MonoBehaviour
         playerTurnText.text = PlayerNames[currentPlayer];
         numberSlider.value = SliderDefaultValue;
         sliderValueText.text = SliderDefaultValue.ToString();
+
+        anim?.AnimatePlayerTurnPunch();
     }
 
+    /// <summary>
+    /// Shuffles a list in-place using the Fisher-Yates algorithm.
+    /// </summary>
     private void ShuffleList(List<int> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -116,9 +174,6 @@ public class GameManager : MonoBehaviour
 
     private void EndGame()
     {
-        gamePanel.SetActive(false);
-        resultPanel.SetActive(true);
-
         int minDifference = int.MaxValue;
         foreach (int player in activePlayers)
         {
@@ -148,6 +203,21 @@ public class GameManager : MonoBehaviour
                 winnerNames.Add(PlayerNames[winner]);
 
             resultText.text = "Bob pensait à " + targetNumber + ".\nÉgalité entre " + string.Join(", ", winnerNames) + " !\nAppuyez sur Rejouer pour les départager.";
+        }
+
+        if (anim != null)
+        {
+            anim.AnimateGamePanelOut();
+            LeanTween.delayedCall(0.45f, () =>
+            {
+                resultPanel.SetActive(true);
+                anim.AnimateResultPanelIn();
+            });
+        }
+        else
+        {
+            gamePanel.SetActive(false);
+            resultPanel.SetActive(true);
         }
     }
 }
