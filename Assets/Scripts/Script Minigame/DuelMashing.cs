@@ -6,12 +6,12 @@ public class DuelMashing : MonoBehaviour
 {
     [Header("Interface UI")]
     public Slider barreDuel;
-    public TextMeshProUGUI texteInfo; // Le texte qui affiche les règles PUIS le gagnant
+    public TextMeshProUGUI texteInfo; // Le texte qui affiche les rï¿½gles PUIS le gagnant
     public Button boutonBleu;
     public Button boutonRouge;
     public GameObject boutonRejouer;
 
-    [Header("Réglages")]
+    [Header("Rï¿½glages")]
     public float scoreGlobal = 50f;
     public float forceImpact = 10f;
 
@@ -22,11 +22,13 @@ public class DuelMashing : MonoBehaviour
 
     public void InitialiserJeu()
     {
+        boutonBleu.gameObject.SetActive(true);
+        boutonRouge.gameObject.SetActive(true);
         scoreGlobal = 50f;
         barreDuel.value = scoreGlobal;
 
-        // On affiche les règles (et elles resteront là pendant tout le duel)
-        texteInfo.text = "RÈGLES : Cliquez le plus vite possible pour gagner !";
+        // On affiche les rï¿½gles (et elles resteront lï¿½ pendant tout le duel)
+        texteInfo.text = "RÃ‰GLES : Cliquez le plus vite possible pour gagner !";
 
         boutonRejouer.SetActive(false);
         ActiverBoutonsJeu(true);
@@ -55,17 +57,19 @@ public class DuelMashing : MonoBehaviour
         scoreGlobal = Mathf.Clamp(scoreGlobal, 0, 100);
         barreDuel.value = scoreGlobal;
 
-        if (scoreGlobal <= 0) TerminerPartie("L'ÉQUIPE BLEUE A GAGNÉ !");
-        if (scoreGlobal >= 100) TerminerPartie("L'ÉQUIPE ROUGE A GAGNÉ !");
+        if (scoreGlobal <= 0) TerminerPartie("L'Ã‰QUIPE BLEUE A GAGNÃ‰ !");
+        if (scoreGlobal >= 100) TerminerPartie("L'Ã‰QUIPE ROUGE A GAGNÃ‰ !");
     }
 
     void TerminerPartie(string messageGagnant)
     {
-        // Le texte des règles est ENFIN remplacé par le message de victoire
+        // Le texte des rï¿½gles est ENFIN remplacï¿½ par le message de victoire
         texteInfo.text = messageGagnant;
 
         boutonRejouer.SetActive(true);
         ActiverBoutonsJeu(false);
+        boutonBleu.gameObject.SetActive(false);
+        boutonRouge.gameObject.SetActive(false);
     }
 
     void ActiverBoutonsJeu(bool etat)
