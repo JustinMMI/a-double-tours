@@ -1443,8 +1443,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Objectif : Bob va penser \xE0 un chiffre entre 1 et 100\nLe plus proche
-    du chiffe de Bob remporte le mini jeu"
+  m_text: "Objectif : Bob va penser \xE0 un chiffre \nentre 1 et 100\nLe plus proche
+    du chiffe de Bob \nremporte le mini jeu"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
   m_sharedMaterial: {fileID: 4113825339491039854, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
@@ -1472,7 +1472,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 105.05
+  m_fontSize: 93.75
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1609,7 +1609,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 120
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1719,10 +1719,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Voir le r\xE9sultat"
+  m_text: Poursuivre
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 4113825339491039854, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2194,7 +2194,7 @@ MonoBehaviour:
   m_text: "Joueur ? a gagn\xE9 !"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 4113825339491039854, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2218,7 +2218,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 120
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2490,7 +2490,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 120
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
