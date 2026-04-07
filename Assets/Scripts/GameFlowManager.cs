@@ -84,7 +84,6 @@ public class GameFlowManager : MonoBehaviour
     [Header("Events Settings")]
     public string[] randomClassicEvent;
     public List<Object> MiniGamePool;
-    // Ici, tu pourras glisser tes fichiers .unity directement !
 
     public void LoadRandomScene()
     {
