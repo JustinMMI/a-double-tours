@@ -148,6 +148,7 @@ public class GameFlowManager : MonoBehaviour
         }
 
         // 20%
+        bobText.text = "BOB : 'Un mini-jeu est lancé !'";
         LoadRandomScene();
     }
 
