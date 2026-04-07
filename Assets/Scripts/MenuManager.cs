@@ -37,10 +37,4 @@ public class MenuManager : MonoBehaviour
             Debug.LogWarning("Il faut au moins 2 pions sélectionnés !");
         }
     }
-
-    public void OnClickedQuitting()
-    {
-        Application.Quit();
-        Debug.Log("FDP");
-    }
 }
