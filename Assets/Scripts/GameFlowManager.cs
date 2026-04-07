@@ -82,12 +82,27 @@ public class GameFlowManager : MonoBehaviour
     }
 
     [Header("Events Settings")]
-    public string[] randomClassicEvent = {
-    };
-    public string[] randomObstaclesEvent = {
-    };
-    public string[] randomMiniGamesEvent = {
-    };
+    public string[] randomClassicEvent;
+    public List<Object> MiniGamePool;
+    // Ici, tu pourras glisser tes fichiers .unity directement !
+
+    public void LoadRandomScene()
+    {
+        if (MiniGamePool.Count > 0)
+        {
+            int randomIndex = Random.Range(0, MiniGamePool.Count);
+            Object selectedScene = MiniGamePool[randomIndex];
+            if (selectedScene != null)
+            {
+                SceneManager.LoadScene(selectedScene.name);
+                Debug.Log("BOB charge la scène : " + selectedScene.name);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("La liste est vide, glisse des fichiers de scènes dedans !");
+        }
+    }
 
     public void OnBobClicked()
     {
@@ -113,7 +128,7 @@ public class GameFlowManager : MonoBehaviour
                     break;
                     // 25% de chances d'avoir un événement classique aléatoire
                 default:
-                    bobText.text = GetRandomMiniGameEventOrFallback();
+                    LoadRandomScene();
                     // 20% de chances d'avoir un événement mini-jeu aléatoire
                     break;
             }
@@ -138,17 +153,6 @@ public class GameFlowManager : MonoBehaviour
 
         lastEventIndex = randomIndex;
         return randomClassicEvent[randomIndex];
-    }
-
-    private string GetRandomMiniGameEventOrFallback()
-    {
-        if (randomMiniGamesEvent == null || randomMiniGamesEvent.Length == 0)
-        {
-            return "BOB : 'Mini-jeu déclenché, mais rien n'est configuré pour l'instant...'";
-        }
-
-        int randomIndex = Random.Range(0, randomMiniGamesEvent.Length);
-        return randomMiniGamesEvent[randomIndex];
     }
 
     private string GenerateRandomObstacle()
