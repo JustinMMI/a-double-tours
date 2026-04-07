@@ -1015,6 +1015,7 @@ MonoBehaviour:
   startPanel: {fileID: 92586632}
   gamePanel: {fileID: 456732987}
   resultPanel: {fileID: 2568284}
+  button: {fileID: 2082003219}
   playerTurnText: {fileID: 1098640137}
   numberSlider: {fileID: 469630994}
   sliderValueText: {fileID: 2101694824}
