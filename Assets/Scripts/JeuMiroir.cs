@@ -1,16 +1,16 @@
 using UnityEngine;
-using TMPro; // Pour gérer les textes
+using TMPro; // Pour gï¿½rer les textes
 using UnityEngine.UI;
 using System.Collections; // Indispensable pour le minuteur (Coroutine)
 
 public class JeuMiroir : MonoBehaviour
 {
     [Header("Configuration UI")]
-    public TMP_Text sequenceAffichée;
+    public TMP_Text sequenceAffichÃ©e;
     public TMP_InputField zoneSaisie;
     public TMP_Text scoreTexte;
 
-    [Header("Réglages du Jeu")]
+    [Header("RÃ©glages du Jeu")]
     public float tempsAffichage = 2.0f; // Temps avant que le texte disparaisse
 
     private string sequenceActuelle = "";
@@ -18,7 +18,7 @@ public class JeuMiroir : MonoBehaviour
 
     void Start()
     {
-        // On prépare la zone de saisie pour qu'elle soit vide au début
+        // On prï¿½pare la zone de saisie pour qu'elle soit vide au dï¿½but
         zoneSaisie.text = "";
         scoreTexte.text = "Score : 0";
         GenererNouvelleSequence();
@@ -26,7 +26,7 @@ public class JeuMiroir : MonoBehaviour
 
     public void GenererNouvelleSequence()
     {
-        // 1. Création d'une suite de 4 lettres au hasard
+        // 1. Crï¿½ation d'une suite de 4 lettres au hasard
         string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         sequenceActuelle = "";
         for (int i = 0; i < 4; i++)
@@ -35,29 +35,29 @@ public class JeuMiroir : MonoBehaviour
         }
 
         // 2. On lance le chrono pour afficher puis cacher
-        StopAllCoroutines(); // Sécurité : on arrête les anciens chronos s'il y en a
+        StopAllCoroutines(); // Sï¿½curitï¿½ : on arrï¿½te les anciens chronos s'il y en a
         StartCoroutine(AfficherPuisCacher());
     }
 
     IEnumerator AfficherPuisCacher()
     {
-        // On affiche la séquence
-        sequenceAffichée.text = "Bob dit : " + sequenceActuelle;
+        // On affiche la sï¿½quence
+        sequenceAffichÃ©e.text = "Bob dit : " + sequenceActuelle;
         zoneSaisie.text = ""; // On vide la zone de saisie pour le nouveau tour
-        zoneSaisie.interactable = false; // Désactive la saisie pendant qu'on montre la réponse
+        zoneSaisie.interactable = false; // Dï¿½sactive la saisie pendant qu'on montre la rï¿½ponse
 
-        // On attend le temps défini (ex: 2 secondes)
+        // On attend le temps dï¿½fini (ex: 2 secondes)
         yield return new WaitForSeconds(tempsAffichage);
 
-        // On cache la séquence et on laisse le joueur écrire
-        sequenceAffichée.text = "À ton tour ! Recopie le code.";
+        // On cache la sï¿½quence et on laisse le joueur ï¿½crire
+        sequenceAffichÃ©e.text = "Ã€ ton tour ! Recopie le code.";
         zoneSaisie.interactable = true;
         zoneSaisie.ActivateInputField(); // Met le curseur directement dans la case
     }
 
     public void VerifierReponse()
     {
-        // ToUpper() sert à accepter "abc" même si Bob a dit "ABC"
+        // ToUpper() sert ï¿½ accepter "abc" mï¿½me si Bob a dit "ABC"
         if (zoneSaisie.text.ToUpper() == sequenceActuelle)
         {
             score++;
@@ -66,8 +66,8 @@ public class JeuMiroir : MonoBehaviour
         }
         else
         {
-            // Si c'est faux, on remet à zéro
-            sequenceAffichée.text = "PERDU ! C'était : " + sequenceActuelle;
+            // Si c'est faux, on remet ï¿½ zï¿½ro
+            sequenceAffichÃ©e.text = "PERDU ! C'Ã©tait : " + sequenceActuelle;
             score = 0;
             scoreTexte.text = "Score : 0";
             // On attend un peu avant de relancer une partie pour que le joueur voit son erreur
