@@ -305,6 +305,9 @@ MonoBehaviour:
   MiniGamePool:
   - {fileID: 102900000, guid: 04d0d6bb9624e1d43b7217af48390d29, type: 3}
   - {fileID: 102900000, guid: c0de2d6dcf2e59c4999e9641151fc113, type: 3}
+  miniGameSceneNames:
+  - Gonflement ballon
+  - Mashing
 --- !u!4 &98447910
 Transform:
   m_ObjectHideFlags: 0
@@ -751,8 +754,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
-  m_sharedMaterial: {fileID: 4113825339491039854, guid: d6ff735a4fdd44cde9242e22635b8d05, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -776,10 +779,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 63.6
-  m_fontSizeBase: 24
+  m_fontSize: 58
+  m_fontSizeBase: 58
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 17
@@ -926,8 +929,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Menu de Duel
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1393,8 +1396,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Kijou ?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
