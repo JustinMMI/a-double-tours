@@ -1958,7 +1958,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u232B"
+  m_text: Back
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4511,6 +4511,12 @@ MonoBehaviour:
   saisieTexte: {fileID: 1996943722}
   scoreTexte: {fileID: 961486354}
   tempsAffichage: 2
+  scoreun: 0
+  scoredeux: 0
+  scoreTrois: 0
+  scoreQuatre: 0
+  defineplayer: 1
+  count: 2
 --- !u!4 &1307425530
 Transform:
   m_ObjectHideFlags: 0
