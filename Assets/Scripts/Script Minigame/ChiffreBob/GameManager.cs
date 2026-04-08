@@ -7,9 +7,11 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    private static readonly string[] PlayerNames = { "Épée", "Jetpack", "Ordinateur", "Casque" };
-    private const int TotalPlayerCount = 4;
+    private static readonly string[] DefaultPlayerNames = { "Épée", "Jetpack", "Ordinateur", "Casque" };
     private const int SliderDefaultValue = 50;
+
+    private string[] playerNames;
+    private int totalPlayerCount;
 
     public GameObject startPanel;
     public GameObject gamePanel;
@@ -32,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        InitializePlayers();
+
         startPanel.SetActive(true);
         gamePanel.SetActive(false);
         resultPanel.SetActive(false);
@@ -39,10 +43,32 @@ public class GameManager : MonoBehaviour
         anim?.AnimateStartPanelIn();
     }
 
+    /// <summary>Charge les joueurs connectés via PlayerPrefs ou utilise des valeurs par défaut.</summary>
+    private void InitializePlayers()
+    {
+        int count = PlayerPrefs.GetInt("PlayerCount", 0);
+
+        if (count < 2)
+        {
+            totalPlayerCount = DefaultPlayerNames.Length;
+            playerNames = (string[])DefaultPlayerNames.Clone();
+            Debug.Log("[ChiffreBob] Aucun joueur connecté, utilisation des noms par défaut.");
+        }
+        else
+        {
+            totalPlayerCount = count;
+            playerNames = new string[totalPlayerCount];
+            for (int i = 0; i < totalPlayerCount; i++)
+                playerNames[i] = PlayerPrefs.GetString("Player_" + i, DefaultPlayerNames[i]);
+        }
+
+        Debug.Log($"[ChiffreBob] {totalPlayerCount} joueur(s) : {string.Join(", ", playerNames)}");
+    }
+
     public void StartGame()
     {
         activePlayers.Clear();
-        for (int i = 0; i < TotalPlayerCount; i++)
+        for (int i = 0; i < totalPlayerCount; i++)
             activePlayers.Add(i);
 
         tiedPlayers.Clear();
@@ -138,7 +164,7 @@ public class GameManager : MonoBehaviour
     private void UpdateUI()
     {
         int currentPlayer = playerOrder[currentTurnIndex];
-        playerTurnText.text = PlayerNames[currentPlayer];
+        playerTurnText.text = playerNames[currentPlayer];
         numberSlider.value = SliderDefaultValue;
         sliderValueText.text = SliderDefaultValue.ToString();
 
@@ -153,6 +179,9 @@ public class GameManager : MonoBehaviour
             (list[i], list[randomIndex]) = (list[randomIndex], list[i]);
         }
     }
+
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuelKey = "FromDuel";
 
     private void EndGame()
     {
@@ -174,8 +203,10 @@ public class GameManager : MonoBehaviour
         if (winners.Count == 1)
         {
             tiedPlayers.Clear();
-            resultText.text = "Bob pensait à " + targetNumber + ".\n" + PlayerNames[winners[0]] + " gagne !";
+            resultText.text = "Bob pensait à " + targetNumber + ".\n" + playerNames[winners[0]] + " gagne !";
             button.gameObject.SetActive(false);
+            PlayerPrefs.SetString(WinnerKey, playerNames[winners[0]]);
+            PlayerPrefs.SetInt(FromDuelKey, 1);
             StartCoroutine(SendingToMain());
         }
         else
@@ -184,7 +215,7 @@ public class GameManager : MonoBehaviour
 
             List<string> winnerNames = new List<string>();
             foreach (int winner in winners)
-                winnerNames.Add(PlayerNames[winner]);
+                winnerNames.Add(playerNames[winner]);
 
             resultText.text = "Bob pensait à " + targetNumber + ".\nÉgalité entre " + string.Join(", ", winnerNames) + " !\nAppuyez sur Rejouer pour les départager.";
         }
@@ -207,6 +238,6 @@ public class GameManager : MonoBehaviour
         private IEnumerator SendingToMain()
         {
             yield return new WaitForSeconds(2.5f);
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("GameScene");
     }
 }

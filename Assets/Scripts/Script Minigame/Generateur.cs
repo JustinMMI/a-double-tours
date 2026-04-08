@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class GenerateurCibles : MonoBehaviour
 {
-    [Header("Réglages Jeu")]
+    private static readonly string[] DefaultPlayerNames = { "Ã‰pÃ©e", "Jetpack", "Ordinateur", "Casque" };
+
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuelKey = "FromDuel";
+
+    [Header("RÃ©glages Jeu")]
     public GameObject prefabCible;
     public float intervalle = 1.2f;
 
@@ -14,28 +19,60 @@ public class GenerateurCibles : MonoBehaviour
     public GameObject panneauFin;
     public TextMeshProUGUI texteClassement;
 
-    // Static pour garder les infos entre les rechargements
     private static int numeroJoueur = 1;
+    private static int totalJoueurs = 0;
+    private static string[] playerNames;
     private static Dictionary<int, float> scores = new Dictionary<int, float>();
-    private static bool jeuEnCours = false; // Pour savoir si on doit lancer les cibles
+    private static bool jeuEnCours = false;
 
     void Start()
     {
-        // Si le jeu n'a pas encore commencé (Attente du bouton PRÊT)
+        if (totalJoueurs == 0)
+            InitializePlayers();
+
         if (!jeuEnCours)
         {
             Time.timeScale = 0;
             panneauFin.SetActive(true);
-            Debug.Log("--- ATTENTE JOUEUR " + numeroJoueur + " ---");
+            texteClassement.text = $"Joueur suivant : <b>{playerNames[numeroJoueur - 1]}</b>\nÃŠtes-vous prÃªt ?";
+            Debug.Log($"[CiblesGame] Attente joueur {numeroJoueur} ({playerNames[numeroJoueur - 1]})");
         }
         else
         {
-            // Le jeu est lancé ! On cache tout et on génère
             Time.timeScale = 1;
             panneauFin.SetActive(false);
-            InvokeRepeating("Apparition", 0.5f, intervalle);
-            Debug.Log("--- JEU LANCÉ POUR J" + numeroJoueur + " ---");
+            InvokeRepeating(nameof(Apparition), 0.5f, intervalle);
+            Debug.Log($"[CiblesGame] Jeu lancÃ© pour {playerNames[numeroJoueur - 1]}");
         }
+    }
+
+    private void InitializePlayers()
+    {
+        int count = PlayerPrefs.GetInt("PlayerCount", 0);
+
+        if (count < 2)
+        {
+            totalJoueurs = DefaultPlayerNames.Length;
+            playerNames = (string[])DefaultPlayerNames.Clone();
+        }
+        else
+        {
+            totalJoueurs = count;
+            playerNames = new string[totalJoueurs];
+            for (int i = 0; i < totalJoueurs; i++)
+                playerNames[i] = PlayerPrefs.GetString("Player_" + i, DefaultPlayerNames[i]);
+        }
+
+        Debug.Log($"[CiblesGame] {totalJoueurs} joueur(s) : {string.Join(", ", playerNames)}");
+    }
+
+    private static void ResetStatics()
+    {
+        numeroJoueur = 1;
+        totalJoueurs = 0;
+        playerNames = null;
+        scores.Clear();
+        jeuEnCours = false;
     }
 
     void Apparition()
@@ -47,7 +84,7 @@ public class GenerateurCibles : MonoBehaviour
     public void RecevoirScore(float score)
     {
         scores[numeroJoueur] = score;
-        jeuEnCours = false; // Le jeu s'arrête
+        jeuEnCours = false;
         Time.timeScale = 0;
         panneauFin.SetActive(true);
         AfficherResultats(score);
@@ -55,33 +92,44 @@ public class GenerateurCibles : MonoBehaviour
 
     void AfficherResultats(float scoreActuel)
     {
-        string recap = $"SCORE J{numeroJoueur} : {scoreActuel.ToString("F2")}s\n\n<b>CLASSEMENT :</b>\n";
-        var tri = scores.OrderBy(x => x.Value);
-        int rang = 1;
-        foreach (var s in tri)
+        string recap = $"Score de <b>{playerNames[numeroJoueur - 1]}</b> : {scoreActuel:F2}s\n\n<b>CLASSEMENT :</b>\n";
+
+        var tri = scores.OrderBy(x => x.Value).ToList();
+        string[] couleurs = { "#FFD700", "#C0C0C0", "#CD7F32", "#FF4500" };
+
+        for (int i = 0; i < tri.Count; i++)
         {
-            recap += $"{rang}. J{s.Key} : {s.Value.ToString("F2")}s\n";
-            rang++;
+            string couleur = i < couleurs.Length ? couleurs[i] : "#FFFFFF";
+            string nom = playerNames[tri[i].Key - 1];
+            recap += $"<color={couleur}>{i + 1}. {nom} : {tri[i].Value:F2}s</color>\n";
         }
+
         texteClassement.text = recap;
     }
 
     public void JoueurSuivantPret()
     {
-        // Si on a déjà un score pour ce joueur, on passe au numéro suivant
         if (scores.ContainsKey(numeroJoueur))
-        {
             numeroJoueur++;
+
+        if (scores.Count >= totalJoueurs)
+        {
+            var gagnant = scores.OrderBy(x => x.Value).First();
+            string nomGagnant = playerNames[gagnant.Key - 1];
+
+            PlayerPrefs.SetString(WinnerKey, nomGagnant);
+            PlayerPrefs.SetInt(FromDuelKey, 1);
+            Debug.Log($"[CiblesGame] Vainqueur : {nomGagnant}");
+
+            Time.timeScale = 1;
+            ResetStatics();
+            SceneManager.LoadScene("GameScene");
+            return;
         }
 
-        jeuEnCours = true; // On autorise le lancement des cibles
-        Debug.Log("Bouton cliqué ! Lancement...");
-
-        // On cache le panneau IMMÉDIATEMENT
+        jeuEnCours = true;
         panneauFin.SetActive(false);
         Time.timeScale = 1;
-
-        // On recharge la scène
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

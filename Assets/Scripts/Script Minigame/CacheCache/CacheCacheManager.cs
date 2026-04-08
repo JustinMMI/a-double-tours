@@ -20,14 +20,16 @@ public class CacheCacheManager : MonoBehaviour
     private HashSet<int> disabledBushes = new HashSet<int>();
 
     private int totalMisses = 0;
-    private const int MaxMisses = 2;
+    private int maxMisses;
+    private int bushCount;
 
     [Header("UI")]
     [SerializeField] private CacheCacheUI ui;
 
-    private const int BushCount = 5;
     private const string ReturnSceneName = "GameScene";
     private const string SeekerIndexKey = "CacheCache_SeekerIndex";
+    private const string WinnerKey = "CacheCacheWinner";
+    private const string FromCacheCacheKey = "FromCacheCache";
     private const float ContinueDelay = 5f;
 
 
@@ -49,6 +51,19 @@ public class CacheCacheManager : MonoBehaviour
             seekerName = "David";
             Debug.Log("Il n'y a pas de vrai joueur.");
             activehiders = new List<string>(hiderNames);
+
+            int totalPlayersDebug = hiderNames.Count + 1;
+            if (totalPlayersDebug <= 2)
+            {
+                bushCount = 2;
+                maxMisses = 1;
+            }
+            else
+            {
+                bushCount = 5;
+                maxMisses = 2;
+            }
+            Debug.Log($"[CacheCache] Mode {totalPlayersDebug} joueurs → {bushCount} buissons, {maxMisses} essai(s)");
             return;
         }
 
@@ -71,12 +86,25 @@ public class CacheCacheManager : MonoBehaviour
 
         activehiders = new List<string>(hiderNames);
         Debug.Log($"[CacheCache] Chasseur : {seekerName} | Cacheurs : {string.Join(", ", hiderNames)}");
+
+        int totalPlayers = hiderNames.Count + 1;
+        if (totalPlayers <= 2)
+        {
+            bushCount = 2;
+            maxMisses = 1;
+        }
+        else
+        {
+            bushCount = 5;
+            maxMisses = 2;
+        }
+        Debug.Log($"[CacheCache] Mode {totalPlayers} joueurs → {bushCount} buissons, {maxMisses} essai(s)");
     }
 
 
     private void InitializeBushOccupancy()
     {
-        for (int i = 0; i < BushCount; i++)
+        for (int i = 0; i < bushCount; i++)
             bushOccupancy[i] = new List<string>();
     }
 
@@ -97,7 +125,7 @@ public class CacheCacheManager : MonoBehaviour
         }
 
         string currentHider = hiderNames[currentHiderIndex];
-        ui.ShowHiderSelection(currentHider, currentHiderIndex, hiderNames.Count, disabledBushes);
+        ui.ShowHiderSelection(currentHider, currentHiderIndex, hiderNames.Count, disabledBushes, bushCount);
     }
 
     public void OnHiderChoseBush(int bushIndex)
@@ -118,8 +146,8 @@ public class CacheCacheManager : MonoBehaviour
     private void BeginSeekerPhase()
     {
         CurrentPhase = GamePhase.SeekerSelection;
-        int missesLeft = MaxMisses - totalMisses;
-        ui.ShowSeekerSelection(seekerName, disabledBushes, missesLeft);
+        int missesLeft = maxMisses - totalMisses;
+        ui.ShowSeekerSelection(seekerName, disabledBushes, missesLeft, bushCount);
     }
 
     public void OnSeekerChoseBush(int bushIndex)
@@ -153,10 +181,26 @@ public class CacheCacheManager : MonoBehaviour
         List<string> escaped = new List<string>(activehiders);
 
         bool seekerWins  = activehiders.Count == 0;
-        bool seekerLoses = totalMisses >= MaxMisses;
+        bool seekerLoses = totalMisses >= maxMisses;
         bool canContinue = !seekerWins && !seekerLoses && HasAvailableBush();
 
-        Debug.Log($"[CacheCache] Ratés totaux : {totalMisses}/{MaxMisses}");
+        Debug.Log($"[CacheCache] Ratés totaux : {totalMisses}/{maxMisses}");
+
+        if (seekerWins)
+        {
+            string winner = seekerName;
+            PlayerPrefs.SetString("DuelWinner", winner);
+            PlayerPrefs.SetInt("FromDuel", 1);
+            Debug.Log($"[CacheCache] Vainqueur : {winner}");
+
+        }
+        else if (seekerLoses)
+        {
+            string winners = string.Join(", ", activehiders);
+            PlayerPrefs.SetString("DuelWinner", winners);
+            PlayerPrefs.SetInt("FromDuel", 1);
+            Debug.Log($"[CacheCache] Vainqueurs : {winners}");
+        }
 
         ui.ShowResult(
             seekerName,
@@ -164,7 +208,7 @@ public class CacheCacheManager : MonoBehaviour
             caught,
             escaped,
             hiderChoices,
-            BushCount,
+            bushCount,
             disabledBushes,
             seekerWins,
             seekerLoses,

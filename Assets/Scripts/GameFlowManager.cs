@@ -11,15 +11,50 @@ public class GameFlowManager : MonoBehaviour
     public ObstacleGenerator obsGen;
     public Button duelButton;
     private bool canBobRollEvents = false;
+    public string consequenceDuel = "Aucune conséquence définie";
+
+    [Header("Consequences Settings")]
+    public string[] randomConsequence;
+
+    private string GetRandomConsequence()
+    {
+        if (randomConsequence == null || randomConsequence.Length == 0)
+        {
+            return "BOB : 'Aucun événement classique configuré pour le moment...'";
+        }
+
+        int randomIndex = Random.Range(0, randomConsequence.Length);
+
+        if (randomConsequence.Length > 1)
+        {
+            while (randomIndex == lastEventIndex)
+            {
+                randomIndex = Random.Range(0, randomConsequence.Length);
+            }
+        }
+
+        lastEventIndex = randomIndex;
+        return randomConsequence[randomIndex];
+    }
 
     void Start()
     {
         if (PlayerPrefs.GetInt("FromDuel", 0) == 1)
         {
+            consequenceDuel = GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
-            bobText.text = "BOB : 'Le duel est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + PlayerPrefs.GetString("ConsequenceIndex");
+            bobText.text = "BOB : 'Le minijeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromDuel", 0);
+            nextButton.gameObject.SetActive(false);
+        }
+        else if (PlayerPrefs.GetInt("FromCacheCache", 0) == 1)
+        {
+            consequenceDuel = GetRandomConsequence();
+            canBobRollEvents = true;
+            string winnerName = PlayerPrefs.GetString("CacheCacheWinner");
+            bobText.text = "BOB : 'Le Cache-Cache est terminé ! Le(s) vainqueur(s) : " + winnerName + " ! La conséquence est : " + consequenceDuel + " !'";
+            PlayerPrefs.SetInt("FromCacheCache", 0);
             nextButton.gameObject.SetActive(false);
         }
         else

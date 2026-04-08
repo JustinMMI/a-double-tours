@@ -305,6 +305,11 @@ MonoBehaviour:
   nextButton: {fileID: 1503949448}
   obsGen: {fileID: 439300597}
   duelButton: {fileID: 2034053214}
+  consequenceDuel: "Aucune cons\xE9quence d\xE9finie"
+  randomConsequence:
+  - Avancer d'une case
+  - "Picoher une carte, votre adversaire a peur de vous et d\xE9cide de vous ignorer"
+  - Faire reculer le joueur de son choix d'une case
   randomClassicEvent:
   - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
   - "BOB : 'L'obscurit\xE9 envahit la tour, les joueurs ne se voient plus. Aucun
@@ -317,11 +322,9 @@ MonoBehaviour:
     le haut, avance de 2 \xE9tages !"
   MiniGamePool:
   - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
-  - {fileID: 102900000, guid: d8613f63caf7641c6a9fadb46a3bdf5c, type: 3}
   - {fileID: 102900000, guid: 65dbe94d6f29d7d459cb189c855e19fc, type: 3}
   miniGameSceneNames:
   - CacheCache
-  - Chiffre De Bob
   - ChronoGame
 --- !u!114 &439300597
 MonoBehaviour:
