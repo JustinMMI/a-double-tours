@@ -1,32 +1,39 @@
 using UnityEngine;
-using TMPro; // Pour g�rer les textes
+using TMPro;
 using UnityEngine.UI;
-using System.Collections; // Indispensable pour le minuteur (Coroutine)
+using System.Collections;
 
 public class JeuMiroir : MonoBehaviour
 {
     [Header("Configuration UI")]
     public TMP_Text sequenceAffichée;
-    public TMP_InputField zoneSaisie;
+    public TMP_Text saisieTexte;
     public TMP_Text scoreTexte;
 
     [Header("Réglages du Jeu")]
-    public float tempsAffichage = 2.0f; // Temps avant que le texte disparaisse
+    public float tempsAffichage = 2.0f;
 
     private string sequenceActuelle = "";
+    private string saisieActuelle = "";
     private int score = 0;
+    private bool saisieActive = false;
 
     void Start()
     {
-        // On pr�pare la zone de saisie pour qu'elle soit vide au d�but
-        zoneSaisie.text = "";
+        if (sequenceAffichée == null || saisieTexte == null || scoreTexte == null)
+        {
+            Debug.LogError("[JeuMiroir] Un ou plusieurs champs UI ne sont pas assignés dans l'Inspector.", this);
+            return;
+        }
+
+        saisieActuelle = "";
+        RefreshSaisie();
         scoreTexte.text = "Score : 0";
         GenererNouvelleSequence();
     }
 
     public void GenererNouvelleSequence()
     {
-        // 1. Cr�ation d'une suite de 4 lettres au hasard
         string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         sequenceActuelle = "";
         for (int i = 0; i < 4; i++)
@@ -34,31 +41,58 @@ public class JeuMiroir : MonoBehaviour
             sequenceActuelle += caracteres[Random.Range(0, caracteres.Length)];
         }
 
-        // 2. On lance le chrono pour afficher puis cacher
-        StopAllCoroutines(); // S�curit� : on arr�te les anciens chronos s'il y en a
+        StopAllCoroutines();
         StartCoroutine(AfficherPuisCacher());
     }
 
     IEnumerator AfficherPuisCacher()
     {
-        // On affiche la s�quence
         sequenceAffichée.text = "Bob dit : " + sequenceActuelle;
-        zoneSaisie.text = ""; // On vide la zone de saisie pour le nouveau tour
-        zoneSaisie.interactable = false; // D�sactive la saisie pendant qu'on montre la r�ponse
+        saisieActuelle = "";
+        RefreshSaisie();
+        saisieActive = false;
 
-        // On attend le temps d�fini (ex: 2 secondes)
         yield return new WaitForSeconds(tempsAffichage);
 
-        // On cache la s�quence et on laisse le joueur �crire
         sequenceAffichée.text = "À ton tour ! Recopie le code.";
-        zoneSaisie.interactable = true;
-        zoneSaisie.ActivateInputField(); // Met le curseur directement dans la case
+        saisieActive = true;
+    }
+
+    /// <summary>Appelée par chaque bouton lettre du clavier.</summary>
+    public void AppuyerLettre(string lettre)
+    {
+        if (!saisieActive) return;
+        if (saisieActuelle.Length >= sequenceActuelle.Length) return;
+        saisieActuelle += lettre;
+        RefreshSaisie();
+
+        if (saisieActuelle.Length == sequenceActuelle.Length)
+            VerifierReponse();
+    }
+
+    /// <summary>Efface la dernière lettre saisie.</summary>
+    public void Effacer()
+    {
+        if (!saisieActive || saisieActuelle.Length == 0) return;
+        saisieActuelle = saisieActuelle.Substring(0, saisieActuelle.Length - 1);
+        RefreshSaisie();
+    }
+
+    /// <summary>Valide manuellement la saisie courante si elle est complète.</summary>
+    public void Valider()
+    {
+        if (!saisieActive || saisieActuelle.Length == 0) return;
+        VerifierReponse();
+    }
+
+    private void RefreshSaisie()
+    {
+        saisieTexte.text = saisieActuelle;
     }
 
     public void VerifierReponse()
     {
-        // ToUpper() sert � accepter "abc" m�me si Bob a dit "ABC"
-        if (zoneSaisie.text.ToUpper() == sequenceActuelle)
+        if (saisieActuelle.ToUpper() == sequenceActuelle)
         {
             score++;
             scoreTexte.text = "Score : " + score;
@@ -66,11 +100,10 @@ public class JeuMiroir : MonoBehaviour
         }
         else
         {
-            // Si c'est faux, on remet � z�ro
+            saisieActive = false;
             sequenceAffichée.text = "PERDU ! C'était : " + sequenceActuelle;
             score = 0;
             scoreTexte.text = "Score : 0";
-            // On attend un peu avant de relancer une partie pour que le joueur voit son erreur
             Invoke("GenererNouvelleSequence", 2.0f);
         }
     }
