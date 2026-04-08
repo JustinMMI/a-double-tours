@@ -1,64 +1,133 @@
 using UnityEngine;
-using TMPro; // Pour g�rer les textes
+using TMPro;
 using UnityEngine.UI;
-using System.Collections; // Indispensable pour le minuteur (Coroutine)
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 
 public class JeuMiroir : MonoBehaviour
 {
     [Header("Configuration UI")]
     public TMP_Text sequenceAffichée;
-    public TMP_InputField zoneSaisie;
+    public TMP_Text saisieTexte;
     public TMP_Text scoreTexte;
 
     [Header("Réglages du Jeu")]
-    public float tempsAffichage = 2.0f; // Temps avant que le texte disparaisse
+    public float tempsAffichage = 2.0f;
 
     private string sequenceActuelle = "";
+    private string saisieActuelle = "";
     private int score = 0;
+    private bool saisieActive = false;
+    public int scoreun = 0;
+    public int scoredeux = 0;
+    public int scoreTrois = 0;
+    public int scoreQuatre = 0;
+    public int defineplayer = 1;
 
     void Start()
     {
-        // On pr�pare la zone de saisie pour qu'elle soit vide au d�but
-        zoneSaisie.text = "";
+        if (sequenceAffichée == null || saisieTexte == null || scoreTexte == null)
+        {
+            defineplayer = 1;
+            Debug.LogError("[JeuMiroir] Un ou plusieurs champs UI ne sont pas assignés dans l'Inspector.", this);
+            return;
+        }
+
+        saisieActuelle = "";
+        RefreshSaisie();
         scoreTexte.text = "Score : 0";
         GenererNouvelleSequence();
     }
 
+    public int count = 2;
     public void GenererNouvelleSequence()
     {
-        // 1. Cr�ation d'une suite de 4 lettres au hasard
         string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         sequenceActuelle = "";
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < count; i++)
         {
             sequenceActuelle += caracteres[Random.Range(0, caracteres.Length)];
         }
 
-        // 2. On lance le chrono pour afficher puis cacher
-        StopAllCoroutines(); // S�curit� : on arr�te les anciens chronos s'il y en a
+        count = count + 1;
+        StopAllCoroutines();
         StartCoroutine(AfficherPuisCacher());
     }
 
     IEnumerator AfficherPuisCacher()
     {
-        // On affiche la s�quence
         sequenceAffichée.text = "Bob dit : " + sequenceActuelle;
-        zoneSaisie.text = ""; // On vide la zone de saisie pour le nouveau tour
-        zoneSaisie.interactable = false; // D�sactive la saisie pendant qu'on montre la r�ponse
+        saisieActuelle = "";
+        RefreshSaisie();
+        saisieActive = false;
 
-        // On attend le temps d�fini (ex: 2 secondes)
         yield return new WaitForSeconds(tempsAffichage);
 
-        // On cache la s�quence et on laisse le joueur �crire
-        sequenceAffichée.text = "À ton tour ! Recopie le code.";
-        zoneSaisie.interactable = true;
-        zoneSaisie.ActivateInputField(); // Met le curseur directement dans la case
+        sequenceAffichée.text = "Joueur " + defineplayer + " à ton tour ! Recopie le code.";
+        saisieActive = true;
+    }
+
+    /// <summary>Appelée par chaque bouton lettre du clavier.</summary>
+    public void AppuyerLettre(string lettre)
+    {
+        if (!saisieActive) return;
+        if (saisieActuelle.Length >= sequenceActuelle.Length) return;
+        saisieActuelle += lettre;
+        RefreshSaisie();
+
+        if (saisieActuelle.Length == sequenceActuelle.Length)
+            VerifierReponse();
+    }
+
+    /// <summary>Efface la dernière lettre saisie.</summary>
+    public void Effacer()
+    {
+        if (!saisieActive || saisieActuelle.Length == 0) return;
+        saisieActuelle = saisieActuelle.Substring(0, saisieActuelle.Length - 1);
+        RefreshSaisie();
+    }
+
+    /// <summary>Valide manuellement la saisie courante si elle est complète.</summary>
+    public void Valider()
+    {
+        if (!saisieActive || saisieActuelle.Length == 0) return;
+        VerifierReponse();
+    }
+
+    private void RefreshSaisie()
+    {
+        saisieTexte.text = saisieActuelle;
+    }
+
+    public void EndGame()
+    {
+        CancelInvoke();
+        StopAllCoroutines();
+
+        var scores = new List<KeyValuePair<int, int>>
+        {
+            new KeyValuePair<int, int>(1, scoreun),
+            new KeyValuePair<int, int>(2, scoredeux),
+            new KeyValuePair<int, int>(3, scoreTrois),
+            new KeyValuePair<int, int>(4, scoreQuatre)
+        };
+        scores.Sort((a, b) => b.Value.CompareTo(a.Value));
+
+        string result = "Résultats :\n";
+        for (int i = 0; i < scores.Count; i++)
+        {
+            result += (i + 1) + ". Joueur " + scores[i].Key + " : " + scores[i].Value + "\n";
+        }
+
+        sequenceAffichée.text = result;
+        saisieActive = false;
+        Time.timeScale = 0f;
     }
 
     public void VerifierReponse()
     {
-        // ToUpper() sert � accepter "abc" m�me si Bob a dit "ABC"
-        if (zoneSaisie.text.ToUpper() == sequenceActuelle)
+        if (saisieActuelle.ToUpper() == sequenceActuelle)
         {
             score++;
             scoreTexte.text = "Score : " + score;
@@ -66,11 +135,30 @@ public class JeuMiroir : MonoBehaviour
         }
         else
         {
-            // Si c'est faux, on remet � z�ro
+            saisieActive = false;
             sequenceAffichée.text = "PERDU ! C'était : " + sequenceActuelle;
+            if (defineplayer == 1)
+            {
+                scoreun = score;
+            }
+            else if (defineplayer == 2)
+            {
+                scoredeux = score;
+            }
+            else if (defineplayer == 3)
+            {
+                scoreTrois = score;
+            }
+            else if (defineplayer == 4)
+            {
+                scoreQuatre = score;
+                EndGame();
+                return;
+            }
+            defineplayer = defineplayer + 1;
+            scoreTexte.text = "Score : " + score;
+            count = 2;
             score = 0;
-            scoreTexte.text = "Score : 0";
-            // On attend un peu avant de relancer une partie pour que le joueur voit son erreur
             Invoke("GenererNouvelleSequence", 2.0f);
         }
     }
