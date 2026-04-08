@@ -180,6 +180,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuelKey = "FromDuel";
+
     private void EndGame()
     {
         int minDifference = int.MaxValue;
@@ -202,6 +205,8 @@ public class GameManager : MonoBehaviour
             tiedPlayers.Clear();
             resultText.text = "Bob pensait à " + targetNumber + ".\n" + playerNames[winners[0]] + " gagne !";
             button.gameObject.SetActive(false);
+            PlayerPrefs.SetString(WinnerKey, playerNames[winners[0]]);
+            PlayerPrefs.SetInt(FromDuelKey, 1);
             StartCoroutine(SendingToMain());
         }
         else
