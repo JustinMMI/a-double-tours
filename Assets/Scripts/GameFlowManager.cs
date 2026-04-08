@@ -87,14 +87,22 @@ public class GameFlowManager : MonoBehaviour
     {
         int count = PlayerPrefs.GetInt("PlayerCount", 0);
         string msg = "BOB : 'Bien. Maintenant, placez vos pions en bas des tours :'\n\n";
+        List<string> playerNames = new List<string>();
 
         for (int i = 0; i < count; i++)
         {
             string pName = PlayerPrefs.GetString("Player_" + i);
+            playerNames.Add(pName);
             int start = (Random.value > 0.5f) ? 1 : 16;
             string tName = (start == 1) ? "Tour 1" : "Tour 2";
 
             msg += "- " + pName + " -> " + tName + "\n";
+        }
+
+        if (playerNames.Count > 0)
+        {
+            string firstPlayer = playerNames[Random.Range(0, playerNames.Count)];
+            msg += "\nBOB : '" + firstPlayer + " commence la partie !'";
         }
 
         bobText.text = msg;
