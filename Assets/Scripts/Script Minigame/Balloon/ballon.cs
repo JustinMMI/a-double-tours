@@ -28,10 +28,6 @@ public class ballon : MonoBehaviour
 
     private void Start()
     {
-        if (balloonManager.player1Text.text == ownerPlayerName)
-            ownerPlayerName = balloonManager.player1Text.text;
-        else if (balloonManager.player2Text.text == ownerPlayerName)
-            ownerPlayerName = balloonManager.player2Text.text;
 
         originalPosition = transform.position;
         button1.onClick.AddListener(() =>
@@ -83,21 +79,33 @@ public class ballon : MonoBehaviour
         if (isshriking) return;
         airLoss = 0f;
         isshriking = true;
+
         string winnerName = ownerPlayerName == balloonManager.player1Text.text
             ? balloonManager.player2Text.text
             : balloonManager.player1Text.text;
 
-
-
         if (victoryText != null)
             victoryText.text = "Le gagnant est " + winnerName + " il a gagné  rajouté une récompense";
+
         returnButton.gameObject.SetActive(true);
         button1.gameObject.SetActive(false);
+
         returnButton.onClick.AddListener(() =>
         {
             SceneManager.LoadScene("Main");
         });
+
+        balloonManager.NotifyOpponent(this);
     }
+
+    public void OnOpponentWon()
+    {
+        isshriking = true;
+        airLoss = 0f;
+        button1.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
 
     private IEnumerator AirLossVariation(float interval)
     {
