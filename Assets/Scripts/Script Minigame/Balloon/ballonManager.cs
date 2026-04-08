@@ -46,4 +46,25 @@ private void Awake()
         if (balloon2 != null && balloon2 != winner)
             balloon2.OnOpponentWon();
     }
+
+        public void ResolveBySize()
+        {
+            ballon[] balloons = FindObjectsOfType<ballon>();
+
+            ballon biggest = null;
+            foreach (ballon b in balloons)
+            {
+                if (biggest == null || b.GetSize() > biggest.GetSize())
+                    biggest = b;
+            }
+
+            if (biggest == null) return;
+
+            string winnerName = biggest.ownerPlayerName == player1Text.text
+                ? player1Text.text
+                : player2Text.text;
+
+            foreach (ballon b in balloons)
+                b.DeclareWinner(winnerName);
+        }
 }
