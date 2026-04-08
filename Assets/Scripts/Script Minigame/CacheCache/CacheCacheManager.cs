@@ -28,6 +28,8 @@ public class CacheCacheManager : MonoBehaviour
 
     private const string ReturnSceneName = "GameScene";
     private const string SeekerIndexKey = "CacheCache_SeekerIndex";
+    private const string WinnerKey = "CacheCacheWinner";
+    private const string FromCacheCacheKey = "FromCacheCache";
     private const float ContinueDelay = 5f;
 
 
@@ -183,6 +185,22 @@ public class CacheCacheManager : MonoBehaviour
         bool canContinue = !seekerWins && !seekerLoses && HasAvailableBush();
 
         Debug.Log($"[CacheCache] Ratés totaux : {totalMisses}/{maxMisses}");
+
+        if (seekerWins)
+        {
+            string winner = seekerName;
+            PlayerPrefs.SetString("DuelWinner", winner);
+            PlayerPrefs.SetInt("FromDuel", 1);
+            Debug.Log($"[CacheCache] Vainqueur : {winner}");
+
+        }
+        else if (seekerLoses)
+        {
+            string winners = string.Join(", ", activehiders);
+            PlayerPrefs.SetString("DuelWinner", winners);
+            PlayerPrefs.SetInt("FromDuel", 1);
+            Debug.Log($"[CacheCache] Vainqueurs : {winners}");
+        }
 
         ui.ShowResult(
             seekerName,
