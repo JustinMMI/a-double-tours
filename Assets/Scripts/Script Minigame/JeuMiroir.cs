@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using System.Threading;
 
 public class JeuMiroir : MonoBehaviour
 {
@@ -32,15 +33,17 @@ public class JeuMiroir : MonoBehaviour
         GenererNouvelleSequence();
     }
 
+    public int count = 2;
     public void GenererNouvelleSequence()
     {
         string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         sequenceActuelle = "";
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < count; i++)
         {
             sequenceActuelle += caracteres[Random.Range(0, caracteres.Length)];
         }
 
+        count = count + 1;
         StopAllCoroutines();
         StartCoroutine(AfficherPuisCacher());
     }
