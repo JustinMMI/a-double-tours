@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System.Runtime.Serialization;
 
 public class ballon : MonoBehaviour
 {
@@ -23,26 +22,62 @@ public class ballon : MonoBehaviour
     [Header("UI Résultat")]
     public TextMeshProUGUI victoryText;
 
+    [Header("Timer")]
+    public TextMeshProUGUI timerText;
+    public float gameDuration = 15f;
+
     private Vector3 originalPosition;
     private bool isshriking = false;
+    private float timer;
+    private bool timerStarted = false;
+
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuel = "FromDuel";
 
     private void Start()
     {
-
         originalPosition = transform.position;
+        timer = gameDuration;
+        timerStarted = true;
+
+
         button1.onClick.AddListener(() =>
         {
             transform.localScale += Vector3.one * airAdded;
+            if (!timerStarted)
+            {
+                StartCoroutine(AirLossVariation(2.5f));
+            }
         });
-        StartCoroutine(AirLossVariation(2.5f));
+        button1.onClick.AddListener(() =>
+        {
+            transform.localScale += Vector3.one * airAdded;
+            if (timerStarted)
+            {
+                StartCoroutine(AirLossVariation(2.5f));
+            }
+        });
 
         returnButton.gameObject.SetActive(false);
-        victoryText.text = ""; 
+        victoryText.text = "";
     }
 
     private void Update()
     {
         if (isshriking) return;
+
+        if (timerStarted)
+        {
+            timer -= Time.deltaTime;
+            if (timerText != null)
+                timerText.text = Mathf.CeilToInt(timer).ToString();
+
+            if (timer <= 0f)
+            {
+                balloonManager.ResolveBySize();
+                return;
+            }
+        }
 
         transform.localScale -= Vector3.one * Time.deltaTime * airLoss;
 
@@ -60,7 +95,6 @@ public class ballon : MonoBehaviour
             transform.position = originalPosition;
         }
 
-
         if (transform.localScale.x <= 0)
         {
             WhosWinner();
@@ -73,9 +107,6 @@ public class ballon : MonoBehaviour
             return;
         }
     }
-
-    private const string WinnerKey = "DuelWinner";
-    private const string FromDuel = "FromDuel";
 
     private void WhosWinner()
     {
@@ -97,13 +128,28 @@ public class ballon : MonoBehaviour
         button1.gameObject.SetActive(false);
         gameObject.SetActive(false);
 
-
-        returnButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("GameScene");
-        });
+        returnButton.onClick.AddListener(() => SceneManager.LoadScene("GameScene"));
 
         balloonManager.NotifyOpponent(this);
+    }
+
+    public void DeclareWinner(string winnerName)
+    {
+        if (isshriking) return;
+        airLoss = 0f;
+        isshriking = true;
+
+        PlayerPrefs.SetString(WinnerKey, winnerName);
+        PlayerPrefs.SetInt(FromDuel, 1);
+
+        if (victoryText != null)
+            victoryText.text = "Le gagnant est " + winnerName + " !";
+
+        returnButton.gameObject.SetActive(true);
+        button1.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+
+        returnButton.onClick.AddListener(() => SceneManager.LoadScene("GameScene"));
     }
 
     public void OnOpponentWon()
@@ -114,12 +160,14 @@ public class ballon : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public float GetSize() => transform.localScale.x;
 
     private IEnumerator AirLossVariation(float interval)
     {
         yield return new WaitForSeconds(interval);
         if (!isshriking)
         {
+            Debug.Log("cc");
             airLoss = Random.Range(50f, 220f);
             StartCoroutine(AirLossVariation(interval));
         }
