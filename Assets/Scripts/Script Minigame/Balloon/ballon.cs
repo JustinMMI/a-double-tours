@@ -95,6 +95,8 @@ public class ballon : MonoBehaviour
 
         returnButton.gameObject.SetActive(true);
         button1.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+
 
         returnButton.onClick.AddListener(() =>
         {
