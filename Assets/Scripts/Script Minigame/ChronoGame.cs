@@ -1,34 +1,61 @@
 using UnityEngine;
-using TMPro;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ChronoGame : MonoBehaviour
 {
+    private static readonly string[] DefaultPlayerNames = { "Épée", "Jetpack", "Ordinateur", "Casque" };
+
     public TextMeshProUGUI affichage;
+    public Button button1;
+    public Button button2;
 
     private float chrono = 0f;
     private bool tourne = false;
     private bool enAttente = true;
 
     private int joueurActuel = 1;
+    private int totalJoueurs;
+    private string[] playerNames;
     private List<float> scores = new List<float>();
-    private bool jeuTermine = false;
 
-    // La regle est construite dynamiquement car Generatedtime est initialise a l'execution.
     private string Regle => "<color=#FFFF00><size=120%>OBJECTIF : " + Generatedtime.ToString("F3") + " secondes !</size></color>\n--------------------------\n";
 
     void Start()
     {
+        InitializePlayers();
         GenerateRandomTime();
-        AfficherMessage("JOUEUR 1\nCliquez pour LANCER");
+        AfficherMessage(playerNames[0] + "\nCliquez pour LANCER");
+        button1.gameObject.SetActive(true);
+        button2.gameObject.SetActive(false);
     }
 
-    public float Generatedtime { get; private set; } = 10f; // Valeur par défaut, sera remplacée par GenerateRandomTime()
+    private void InitializePlayers()
+    {
+        int count = PlayerPrefs.GetInt("PlayerCount", 0);
+
+        if (count < 2)
+        {
+            totalJoueurs = DefaultPlayerNames.Length;
+            playerNames = (string[])DefaultPlayerNames.Clone();
+        }
+        else
+        {
+            totalJoueurs = count;
+            playerNames = new string[totalJoueurs];
+            for (int i = 0; i < totalJoueurs; i++)
+                playerNames[i] = PlayerPrefs.GetString("Player_" + i, DefaultPlayerNames[i]);
+        }
+    }
+
+    public float Generatedtime { get; private set; } = 10f;
+
     public void GenerateRandomTime()
     {
         Generatedtime = Random.Range(5, 15);
-        Debug.Log("Temps cible généré : " + Generatedtime.ToString("F3") + " secondes");
     }
 
     void Update()
@@ -36,20 +63,13 @@ public class ChronoGame : MonoBehaviour
         if (tourne)
         {
             chrono += Time.deltaTime;
-            // Le chrono se cache apr�s 3 secondes
             string tempsVisible = (chrono < 3f ? chrono.ToString("F3") : "???");
-            AfficherMessage("JOUEUR " + joueurActuel + "\n<size=150%>" + tempsVisible + "s</size>");
+            AfficherMessage(playerNames[joueurActuel - 1] + "\n<size=150%>" + tempsVisible + "s</size>");
         }
     }
 
     public void ActionBouton()
     {
-        if (jeuTermine)
-        {
-            RelancerTout();
-            return;
-        }
-
         if (enAttente)
         {
             enAttente = false;
@@ -67,11 +87,11 @@ public class ChronoGame : MonoBehaviour
         tourne = false;
         scores.Add(chrono);
 
-        if (joueurActuel < 4)
+        if (joueurActuel < totalJoueurs)
         {
             joueurActuel++;
             enAttente = true;
-            AfficherMessage("SCORE ENREGISTRE !\n\nJOUEUR " + joueurActuel + "\nCliquez quand vous etes PRET");
+            AfficherMessage("SCORE ENREGISTRÉ !\n\n" + playerNames[joueurActuel - 1] + "\nCliquez quand vous êtes PRÊT");
         }
         else
         {
@@ -81,52 +101,36 @@ public class ChronoGame : MonoBehaviour
 
     void AfficherClassement()
     {
-        jeuTermine = true;
-
-        // On cr�e une liste d'objets avec le nom, le temps et l'�cart
         var resultats = scores
             .Select((temps, index) => new {
-                Nom = " - J" + (index + 1),
+                Nom = " - " + playerNames[index],
                 Temps = temps,
                 Ecart = Mathf.Abs(Generatedtime - temps)
             })
-            .OrderBy(r => r.Ecart) // Le plus proche de 10s en premier
+            .OrderBy(r => r.Ecart)
             .ToList();
+
+        string[] couleurs = { "#FFD700", "#C0C0C0", "#CD7F32", "#FF4500" };
+        string[] prefixes = { "1er", "2e", "3e", "4e" };
 
         string podium = "CLASSEMENT FINAL :\n";
 
         for (int i = 0; i < resultats.Count; i++)
         {
-            string couleur;
-            string prefixe;
-
-            // Attribution des couleurs demand�es
-            if (i == 0) { couleur = "#FFD700"; prefixe = "1er"; }      // Jaune Or
-            else if (i == 1) { couleur = "#C0C0C0"; prefixe = "2e"; }  // Gris Argent
-            else if (i == 2) { couleur = "#CD7F32"; prefixe = "3e"; }  // Marron Bronze
-            else { couleur = "#FF4500"; prefixe = "4e"; }              // Rouge
-
+            string couleur = i < couleurs.Length ? couleurs[i] : "#FF4500";
+            string prefixe = i < prefixes.Length ? prefixes[i] : $"{i + 1}e";
             podium += $"<color={couleur}>{prefixe}{resultats[i].Nom} : {resultats[i].Temps:F3}s (Ecart: {resultats[i].Ecart:F3}s)</color>\n";
         }
 
-        podium += "\n<size=80%>Cliquez pour REJOUER</size>";
+        podium += "\n<size=80%>Cliquez pour Quitter</size>";
         AfficherMessage(podium);
+        button1.gameObject.SetActive(false);
+        button2.gameObject.SetActive(true);
+        button2.onClick.AddListener(() => SceneManager.LoadScene("GameScene"));
     }
 
     void AfficherMessage(string contenu)
     {
         affichage.text = Regle + contenu;
-    }
-
-    void RelancerTout()
-    {
-        GenerateRandomTime();
-        joueurActuel = 1;
-        scores.Clear();
-        chrono = 0f;
-        jeuTermine = false;
-        tourne = false;
-        enAttente = true;
-        AfficherMessage("JOUEUR 1\nCliquez pour LANCER");
     }
 }

@@ -92,7 +92,7 @@ public class ballon : MonoBehaviour
 
         returnButton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("GameScene");
         });
 
         balloonManager.NotifyOpponent(this);
