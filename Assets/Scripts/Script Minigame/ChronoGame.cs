@@ -99,6 +99,9 @@ public class ChronoGame : MonoBehaviour
         }
     }
 
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuel = "FromDuel";
+
     void AfficherClassement()
     {
         var resultats = scores
@@ -126,7 +129,12 @@ public class ChronoGame : MonoBehaviour
         AfficherMessage(podium);
         button1.gameObject.SetActive(false);
         button2.gameObject.SetActive(true);
-        button2.onClick.AddListener(() => SceneManager.LoadScene("GameScene"));
+        button2.onClick.AddListener(() =>
+        {
+            PlayerPrefs.SetString(WinnerKey, resultats[0].Nom.Trim(' ', '-'));
+            PlayerPrefs.SetInt(FromDuel, 1);
+            SceneManager.LoadScene("GameScene");
+        });
     }
 
     void AfficherMessage(string contenu)
