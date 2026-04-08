@@ -55,6 +55,8 @@ public class ObstacleGenerator : MonoBehaviour
 
         _obstacleSentence = sentenceObstacle;
 
+        SaveObstaclesToPrefs();
+
         Debug.Log("[ObstacleGenerator] selectedObstacles = " + string.Join(", ", selectedObstacles));
         for (int i = 0; i < selectedObstacles.Count; i++)
         {
@@ -122,6 +124,31 @@ public class ObstacleGenerator : MonoBehaviour
     public List<int> GetInitialFloors()
     {
         return _initialFloors;
+    }
+
+    private void SaveObstaclesToPrefs()
+    {
+        PlayerPrefs.SetInt("SavedObsCount", _initialObstacles.Count);
+        for (int i = 0; i < _initialObstacles.Count; i++)
+        {
+            PlayerPrefs.SetString("SavedObsName_" + i, _initialObstacles[i]);
+            PlayerPrefs.SetInt("SavedObsFloor_" + i, _initialFloors[i]);
+        }
+        PlayerPrefs.SetString("SavedObsSentence", _obstacleSentence);
+    }
+
+    public void LoadObstaclesFromPrefs()
+    {
+        int count = PlayerPrefs.GetInt("SavedObsCount", 0);
+        _initialObstacles = new List<string>();
+        _initialFloors = new List<int>();
+
+        for (int i = 0; i < count; i++)
+        {
+            _initialObstacles.Add(PlayerPrefs.GetString("SavedObsName_" + i));
+            _initialFloors.Add(PlayerPrefs.GetInt("SavedObsFloor_" + i));
+        }
+        _obstacleSentence = PlayerPrefs.GetString("SavedObsSentence");
     }
 
 }

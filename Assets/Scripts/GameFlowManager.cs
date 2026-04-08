@@ -41,6 +41,7 @@ public class GameFlowManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt("FromDuel", 0) == 1)
         {
+            obsGen.LoadObstaclesFromPrefs();
             consequenceDuel = GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
@@ -50,6 +51,7 @@ public class GameFlowManager : MonoBehaviour
         }
         else if (PlayerPrefs.GetInt("FromCacheCache", 0) == 1)
         {
+            obsGen.LoadObstaclesFromPrefs();
             consequenceDuel = GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("CacheCacheWinner");
@@ -99,6 +101,8 @@ public class GameFlowManager : MonoBehaviour
 
         nextButton.onClick.RemoveAllListeners();
         nextButton.onClick.AddListener(FinalStart);
+
+        
     }
 
     void FinalStart()
@@ -244,7 +248,7 @@ public class GameFlowManager : MonoBehaviour
         if (initialObstacles == null || initialFloors == null)
         {
             Debug.LogError("Les obstacles initiaux n'ont pas pu être récupérés !");
-            return "BOB : 'Erreur système...'";
+            return "BOB : 'Erreur système... Initial'";
         }
 
         List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
