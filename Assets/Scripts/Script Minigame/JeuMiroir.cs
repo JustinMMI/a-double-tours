@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 
 public class JeuMiroir : MonoBehaviour
@@ -18,11 +19,17 @@ public class JeuMiroir : MonoBehaviour
     private string saisieActuelle = "";
     private int score = 0;
     private bool saisieActive = false;
+    public int scoreun = 0;
+    public int scoredeux = 0;
+    public int scoreTrois = 0;
+    public int scoreQuatre = 0;
+    public int defineplayer = 1;
 
     void Start()
     {
         if (sequenceAffichée == null || saisieTexte == null || scoreTexte == null)
         {
+            defineplayer = 1;
             Debug.LogError("[JeuMiroir] Un ou plusieurs champs UI ne sont pas assignés dans l'Inspector.", this);
             return;
         }
@@ -57,7 +64,7 @@ public class JeuMiroir : MonoBehaviour
 
         yield return new WaitForSeconds(tempsAffichage);
 
-        sequenceAffichée.text = "À ton tour ! Recopie le code.";
+        sequenceAffichée.text = "Joueur " + defineplayer + " à ton tour ! Recopie le code.";
         saisieActive = true;
     }
 
@@ -93,6 +100,31 @@ public class JeuMiroir : MonoBehaviour
         saisieTexte.text = saisieActuelle;
     }
 
+    public void EndGame()
+    {
+        CancelInvoke();
+        StopAllCoroutines();
+
+        var scores = new List<KeyValuePair<int, int>>
+        {
+            new KeyValuePair<int, int>(1, scoreun),
+            new KeyValuePair<int, int>(2, scoredeux),
+            new KeyValuePair<int, int>(3, scoreTrois),
+            new KeyValuePair<int, int>(4, scoreQuatre)
+        };
+        scores.Sort((a, b) => b.Value.CompareTo(a.Value));
+
+        string result = "Résultats (triés) :\n";
+        for (int i = 0; i < scores.Count; i++)
+        {
+            result += (i + 1) + ". Joueur " + scores[i].Key + " : " + scores[i].Value + "\n";
+        }
+
+        sequenceAffichée.text = result;
+        saisieActive = false;
+        Time.timeScale = 0f;
+    }
+
     public void VerifierReponse()
     {
         if (saisieActuelle.ToUpper() == sequenceActuelle)
@@ -105,8 +137,28 @@ public class JeuMiroir : MonoBehaviour
         {
             saisieActive = false;
             sequenceAffichée.text = "PERDU ! C'était : " + sequenceActuelle;
+            if (defineplayer == 1)
+            {
+                scoreun = score;
+            }
+            else if (defineplayer == 2)
+            {
+                scoredeux = score;
+            }
+            else if (defineplayer == 3)
+            {
+                scoreTrois = score;
+            }
+            else if (defineplayer == 4)
+            {
+                scoreQuatre = score;
+                EndGame();
+                return;
+            }
+            defineplayer = defineplayer + 1;
+            scoreTexte.text = "Score : " + score;
+            count = 2;
             score = 0;
-            scoreTexte.text = "Score : 0";
             Invoke("GenererNouvelleSequence", 2.0f);
         }
     }
