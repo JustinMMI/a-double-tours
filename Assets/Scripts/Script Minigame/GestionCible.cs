@@ -3,23 +3,24 @@ using UnityEngine;
 public class GestionCible : MonoBehaviour
 {
     public float tempsAffichage = 1.0f;
+    private float tempsApparition;
 
     void Start()
     {
-        // La cible disparaît seule après un certain temps
+        tempsApparition = Time.time;
         Destroy(gameObject, tempsAffichage);
     }
 
     void OnMouseDown()
     {
-        // Affiche un message de victoire dans la console
-        Debug.Log("GAGNÉ ! Le jeu s'arrête.");
+        float score = Time.time - tempsApparition;
 
-        // --- LA MAGIE EST ICI ---
-        // On fige le temps : tout s'arrête (les scripts, les apparitions, etc.)
-        Time.timeScale = 0;
-
-        // On détruit quand même la cible sur laquelle on a cliqué
+        // Utilisation de la méthode moderne 2026
+        GenerateurCibles gen = Object.FindAnyObjectByType<GenerateurCibles>();
+        if (gen != null)
+        {
+            gen.RecevoirScore(score);
+        }
         Destroy(gameObject);
     }
 }
