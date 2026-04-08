@@ -53,7 +53,7 @@ public class GameFlowManager : MonoBehaviour
             consequenceDuel = GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("CacheCacheWinner");
-            bobText.text = "BOB : 'Le minijeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " ! La conséquence est : " + consequenceDuel + " !'";
+            bobText.text = "BOB : 'Le Cache-Cache est terminé ! Le(s) vainqueur(s) : " + winnerName + " ! La conséquence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromCacheCache", 0);
             nextButton.gameObject.SetActive(false);
         }

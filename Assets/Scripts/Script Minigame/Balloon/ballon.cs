@@ -74,6 +74,9 @@ public class ballon : MonoBehaviour
         }
     }
 
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuel = "FromDuel";
+
     private void WhosWinner()
     {
         if (isshriking) return;
@@ -84,8 +87,11 @@ public class ballon : MonoBehaviour
             ? balloonManager.player2Text.text
             : balloonManager.player1Text.text;
 
+        PlayerPrefs.SetString(WinnerKey, winnerName);
+        PlayerPrefs.SetInt(FromDuel, 1);
+
         if (victoryText != null)
-            victoryText.text = "Le gagnant est " + winnerName + " il a gagné  rajouté une récompense";
+            victoryText.text = "Le gagnant est " + winnerName + " !";
 
         returnButton.gameObject.SetActive(true);
         button1.gameObject.SetActive(false);
