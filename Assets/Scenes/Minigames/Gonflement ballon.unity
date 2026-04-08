@@ -232,7 +232,7 @@ MonoBehaviour:
   airLoss: 50
   balloonManager: {fileID: 439300596}
   returnButton: {fileID: 1756230119}
-  ownerPlayerName: Joueur
+  ownerPlayerName: Joueur 1
   victoryText: {fileID: 2016829410}
 --- !u!1 &439300594
 GameObject:
@@ -280,6 +280,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   player1Text: {fileID: 1903000962}
   player2Text: {fileID: 502153419}
+  balloon1: {fileID: 15138927}
+  balloon2: {fileID: 1980005607}
 --- !u!1 &440342889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,7 +1589,7 @@ MonoBehaviour:
   airLoss: 50
   balloonManager: {fileID: 439300596}
   returnButton: {fileID: 1756230119}
-  ownerPlayerName: Joueur
+  ownerPlayerName: Joueur 2
   victoryText: {fileID: 2016829410}
 --- !u!212 &1980005608
 SpriteRenderer:

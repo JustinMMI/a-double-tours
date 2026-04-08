@@ -83,32 +83,52 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Events Settings")]
     public string[] randomClassicEvent;
+
+    /// <summary>
+    /// Assign SceneAsset objects here in the Inspector. Scene names are synced automatically for runtime use.
+    /// </summary>
     public List<Object> MiniGamePool;
+
+    // Stores scene names extracted from MiniGamePool in the Editor, serialized for use in builds.
+    [SerializeField] private List<string> miniGameSceneNames = new List<string>();
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        miniGameSceneNames.Clear();
+        if (MiniGamePool == null) return;
+        foreach (Object obj in MiniGamePool)
+        {
+            if (obj != null)
+                miniGameSceneNames.Add(obj.name);
+        }
+    }
+#endif
 
     public void LoadRandomScene()
     {
-        if (MiniGamePool != null && MiniGamePool.Count > 0)
+        if (miniGameSceneNames != null && miniGameSceneNames.Count > 0)
         {
-            int randomIndex = Random.Range(0, MiniGamePool.Count);
-            Object selectedScene = MiniGamePool[randomIndex];
+            int randomIndex = Random.Range(0, miniGameSceneNames.Count);
+            string selectedScene = miniGameSceneNames[randomIndex];
 
-            if (MiniGamePool.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
+            if (miniGameSceneNames.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
             {
                 int safety = 0;
-                while (selectedScene != null && selectedScene.name == lastMiniGameSceneName && safety < 20)
+                while (selectedScene == lastMiniGameSceneName && safety < 20)
                 {
-                    randomIndex = Random.Range(0, MiniGamePool.Count);
-                    selectedScene = MiniGamePool[randomIndex];
+                    randomIndex = Random.Range(0, miniGameSceneNames.Count);
+                    selectedScene = miniGameSceneNames[randomIndex];
                     safety++;
                 }
             }
 
             lastMiniGameIndex = randomIndex;
-            if (selectedScene != null)
+            if (!string.IsNullOrEmpty(selectedScene))
             {
-                lastMiniGameSceneName = selectedScene.name;
-                SceneManager.LoadScene(selectedScene.name);
-                Debug.Log("BOB charge la scène : " + selectedScene.name);
+                lastMiniGameSceneName = selectedScene;
+                SceneManager.LoadScene(selectedScene);
+                Debug.Log("BOB charge la scène : " + selectedScene);
             }
         }
         else

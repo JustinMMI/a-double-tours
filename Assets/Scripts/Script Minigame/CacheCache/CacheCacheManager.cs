@@ -47,7 +47,7 @@ public class CacheCacheManager : MonoBehaviour
         {
             hiderNames = new List<string> { "Alice", "Bob", "Charlie" };
             seekerName = "David";
-            Debug.Log("Il n'y a pas de vrai joueur, j'utilise donc des faux joueurs.");
+            Debug.Log("Il n'y a pas de vrai joueur.");
             activehiders = new List<string>(hiderNames);
             return;
         }
