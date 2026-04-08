@@ -114,7 +114,7 @@ public class JeuMiroir : MonoBehaviour
         };
         scores.Sort((a, b) => b.Value.CompareTo(a.Value));
 
-        string result = "Résultats (triés) :\n";
+        string result = "Résultats :\n";
         for (int i = 0; i < scores.Count; i++)
         {
             result += (i + 1) + ". Joueur " + scores[i].Key + " : " + scores[i].Value + "\n";
