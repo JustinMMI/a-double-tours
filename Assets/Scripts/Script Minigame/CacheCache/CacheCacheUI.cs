@@ -35,6 +35,8 @@ public class CacheCacheUI : MonoBehaviour
     private void Awake()
     {
         if (countdownText != null) countdownText.gameObject.SetActive(false);
+        
+        returnButton.gameObject.SetActive(false);
 
         returnButton.onClick.AddListener(manager.ReturnToGame);
 
@@ -58,7 +60,7 @@ public class CacheCacheUI : MonoBehaviour
 
         instructionText.text =
             $"Cacheur {hiderIndex + 1}/{totalHiders}\n" +
-            $"<b>{hiderName}</b>, choisis ton buisson !";
+            $"<b>{hiderName}</b>, choisis ta cachette !";
     }
 
     public void ShowSeekerSelection(string seekerName, HashSet<int> disabledBushes, int attemptsLeft, int bushCount)
@@ -76,7 +78,7 @@ public class CacheCacheUI : MonoBehaviour
 
         instructionText.text =
             $"C'est au tour du chasseur !\n" +
-            $"<b>{seekerName}</b>, dans quel buisson cherches-tu ?" +
+            $"<b>{seekerName}</b>, dans quelle cachette cherches-tu ?" +
             attemptsWarning;
     }
 
@@ -119,23 +121,27 @@ public class CacheCacheUI : MonoBehaviour
         if (caught.Count > 0)
             sb.AppendLine($" <b>{string.Join(", ", caught)}</b> à été éliminé(s)");
         else
-            sb.AppendLine("Il n'y a personne dans ce buisson !");
+            sb.AppendLine("Il n'y a personne dans cette cachette !");
 
-        if (escaped.Count > 1)
-            sb.AppendLine($"<b>{string.Join(", ", escaped)}</b> sont encore cachés");
-        else
-            sb.AppendLine($"<b>{string.Join(", ", escaped)}</b> est encore caché");
+        if (!seekerWins)
+        {
+            if (escaped.Count > 1)
+                sb.AppendLine($"<b>{string.Join(", ", escaped)}</b> sont encore cachés");
+            else
+                sb.AppendLine($"<b>{string.Join(", ", escaped)}</b> est encore caché");
+        }
 
         if (seekerWins){
             sb.AppendLine("\n<b>Le chasseur a trouvé tout le monde !</b>");
             instructionText.gameObject.SetActive(false);
             resultPanel.gameObject.SetActive(false);
-
+            returnButton.gameObject.SetActive(true);
         }
         else if (seekerLoses){
             sb.AppendLine("\n<b>Les cacheurs ont gagné !</b>");
             instructionText.gameObject.SetActive(false);
             resultPanel.gameObject.SetActive(false);
+            returnButton.gameObject.SetActive(true);
 
     
         }
@@ -143,6 +149,7 @@ public class CacheCacheUI : MonoBehaviour
             sb.AppendLine("\n<b>Les cacheurs restants ont gagné !</b>");
         resultText.text = sb.ToString();
         resultPanel.SetActive(true);
+
 
         if (canContinue && countdownText != null)
         {
@@ -229,7 +236,6 @@ public class CacheCacheUI : MonoBehaviour
             btn.interactable = interactable;
     }
 
-    /// <summary>Active uniquement les boutons buissons nécessaires selon le nombre de joueurs.</summary>
     private void ApplyBushCount(int activeBushCount)
     {
         for (int i = 0; i < bushButtons.Length; i++)

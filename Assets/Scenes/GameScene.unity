@@ -308,8 +308,17 @@ MonoBehaviour:
   consequenceDuel: "Aucune cons\xE9quence d\xE9finie"
   randomConsequence:
   - Avancer d'une case
-  - "Picoher une carte, votre adversaire a peur de vous et d\xE9cide de vous ignorer"
+  - "Piocher une carte, votre adversaire a peur de vous et d\xE9cide de vous ignorer"
   - Faire reculer le joueur de son choix d'une case
+  - "Voir les deux prochaines cartes de la pioche, votre adversaire a peur de vous
+    et d\xE9cide de vous ignorer"
+  - "Voler la carte d'un joueur, votre adversaire a peur de vous et d\xE9cide de
+    vous ignorer"
+  - "D\xE9fausser la carte d'un joueur, votre adversaire a peur de vous et d\xE9cide
+    de vous ignorer"
+  - Avancer de 2 cases
+  - Faire reculer le joueur de son choix de 2 cases
+  - Faire switch un joueur de son choix
   randomClassicEvent:
   - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
   - "BOB : 'L'obscurit\xE9 envahit la tour, les joueurs ne se voient plus. Aucun
