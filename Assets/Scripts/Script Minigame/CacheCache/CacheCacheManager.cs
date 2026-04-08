@@ -58,6 +58,11 @@ public class CacheCacheManager : MonoBehaviour
                 bushCount = 2;
                 maxMisses = 1;
             }
+            else if (totalPlayersDebug == 3)
+            {
+                bushCount = 4;
+                maxMisses = 2;
+            }
             else
             {
                 bushCount = 5;
@@ -92,6 +97,11 @@ public class CacheCacheManager : MonoBehaviour
         {
             bushCount = 2;
             maxMisses = 1;
+        }
+        else if (totalPlayers == 3)
+        {
+            bushCount = 4;
+            maxMisses = 2;
         }
         else
         {
