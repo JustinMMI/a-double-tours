@@ -247,7 +247,7 @@ public class GameFlowManager : MonoBehaviour
             return "BOB : 'Erreur système...'";
         }
 
-        List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
+        List<string> allObstacles = new List<string> { "Surcharge", "Eboulement", "Inondation", "Incendie", "Tentacule de BOB", "Serpents" };
 
         // Exclure les obstacles déjà placés au début
         foreach (string initialObstacle in initialObstacles)
@@ -301,7 +301,7 @@ public class GameFlowManager : MonoBehaviour
 
     public void OnDuelClicked()
     {
-        SceneManager.LoadScene("Gonflement ballon");
+        SceneManager.LoadScene("DuelMenu");
     }
 
     public void OnQuitClicked()

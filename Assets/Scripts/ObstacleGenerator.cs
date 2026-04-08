@@ -5,7 +5,7 @@ public class ObstacleGenerator : MonoBehaviour
 {
     public void GenerateObstacles()
     {
-        List<string> allObstacles = new List<string> { "Énergie", "Pierre", "Inondation", "Feu", "Tentacule de BOB", "Serpents" };
+        List<string> allObstacles = new List<string> { "Surcharge", "Eboulement", "Inondation", "Incendie", "Tentacule de BOB", "Serpents" };
         List<string> selectedObstacles = new List<string>();
 
         for (int i = 0; i < 3; i++)
