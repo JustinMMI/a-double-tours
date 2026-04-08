@@ -301,7 +301,7 @@ public class GameFlowManager : MonoBehaviour
 
     public void OnDuelClicked()
     {
-        SceneManager.LoadScene("Gonflement ballon");
+        SceneManager.LoadScene("DuelMenu");
     }
 
     public void OnQuitClicked()

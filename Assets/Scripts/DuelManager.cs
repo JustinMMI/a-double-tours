@@ -111,10 +111,15 @@ public class DuelManager : MonoBehaviour
 
         Debug.Log("4. TOUT EST OK ! Lancement du duel...");
 
-        string winner = selectedForDuel[Random.Range(0, 2)];
-        PlayerPrefs.SetString("DuelWinner", winner);
+        // Sauvegarde les pions sélectionnés dans PlayerPrefs pour la scène mini-jeu
+        PlayerPrefs.SetInt("DuelPlayerCount", selectedForDuel.Count);
+        for (int i = 0; i < selectedForDuel.Count; i++)
+        {
+            PlayerPrefs.SetString("DuelPlayer_" + i, selectedForDuel[i]);
+        }
         PlayerPrefs.SetInt("FromDuel", 1);
+        PlayerPrefs.Save();
 
-        SceneManager.LoadScene("GameScene");
+        LoadRandomScene();
     }
 }
