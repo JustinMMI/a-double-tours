@@ -454,6 +454,7 @@ MonoBehaviour:
   - Avancer de 2 cases
   - Faire reculer le joueur de son choix de 2 cases
   - Faire switch un joueur de son choix
+  consequenceSwitch: 0
   randomClassicEvent:
   - "BOB : 'Un s\xE9isme secoue la tour ! Tout le monde recule d'une case.'"
   - "BOB : 'L'obscurit\xE9 envahit la tour, les joueurs ne se voient plus. Aucun
@@ -465,11 +466,13 @@ MonoBehaviour:
   - "BOB : 'Joueur en queue de peloton, une force myst\xE9rieuse te propulse vers
     le haut, avance de 2 \xE9tages !"
   MiniGamePool:
-  - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
   - {fileID: 102900000, guid: 65dbe94d6f29d7d459cb189c855e19fc, type: 3}
+  - {fileID: 102900000, guid: d8613f63caf7641c6a9fadb46a3bdf5c, type: 3}
+  - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
   miniGameSceneNames:
-  - CacheCache
   - ChronoGame
+  - Chiffre De Bob
+  - CacheCache
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -857,7 +860,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 66.1
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1848,6 +1851,8 @@ RectTransform:
   - {fileID: 1315226977}
   - {fileID: 1600510586}
   - {fileID: 205161638}
+  - {fileID: 100485376}
+  - {fileID: 2006871057}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2018,7 +2023,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.70000005, y: 0.70000005, z: 0.70000005}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 1169078987}
   m_Father: {fileID: 1600510586}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
