@@ -320,5 +320,4 @@ public class GameFlowManager : MonoBehaviour
     {
         SceneManager.LoadScene("Main");
     }
-
 }

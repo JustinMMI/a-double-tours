@@ -437,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ffc6694afee254c9b58d6889782367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PionSelector
-  pionName: Sword
+  pionName: "\xC9p\xE9e"
   isSelected: 0
   selectedColor: {r: 0, g: 1, b: 0, a: 1}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1578,7 +1578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ffc6694afee254c9b58d6889782367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PionSelector
-  pionName: Ordinator
+  pionName: Ordinateur
   isSelected: 0
   selectedColor: {r: 0, g: 1, b: 0, a: 1}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
