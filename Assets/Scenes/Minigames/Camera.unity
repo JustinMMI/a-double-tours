@@ -304,56 +304,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &469197409
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 469197411}
-  - component: {fileID: 469197410}
-  m_Layer: 0
-  m_Name: ColorCatcherGame
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &469197410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469197409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 054876b03fd45f341bda6f41c4380922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ColorCatcherGame
-  cameraDisplay: {fileID: 0}
-  instructionText: {fileID: 0}
-  timerText: {fileID: 0}
-  colorPreview: {fileID: 0}
-  timeLimit: 10
-  tolerance: 0.35
---- !u!4 &469197411
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469197409}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.20303, y: 0, z: 16.9089}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &921143061
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,4 +939,3 @@ SceneRoots:
   - {fileID: 1104857410}
   - {fileID: 72730240}
   - {fileID: 122979154}
-  - {fileID: 469197411}

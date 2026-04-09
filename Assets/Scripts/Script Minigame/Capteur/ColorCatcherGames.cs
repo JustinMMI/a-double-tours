@@ -11,6 +11,8 @@ using System.Collections; // Nécessaire pour utiliser les Coroutines (fonctions 
 // Pourquoi System. ? 
 // System.Collections est un espace de noms qui contient des classes et des interfaces pour gérer les collections de données (comme les listes, les tableaux, etc.) et aussi pour les Coroutines dans Unity.
 // Oui mais System et Collections ? 
+// System est un espace de noms de base en C# qui contient des classes fondamentales pour le langage, tandis que
+// Collections est un sous-espace de noms qui se concentre sur les structures de données.
 
 
 // Coroutines : fonctions spéciales qui permettent d'attendre un certain temps ou de faire des actions en plusieurs étapes sans bloquer le jeu.
@@ -59,7 +61,7 @@ public class ColorCatcherGame : MonoBehaviour // Cette classe gère le mini-jeu d
     private Color targetColor;           // La couleur que le joueur doit trouver
     private float currentTime;           // Chronomètre actuel
     private bool isGameActive = false;   // État du jeu (en cours ou en pause)
-
+    
     void Start() // Fonction appelée automatiquement par Unity au lancement du jeu
     {
         // 1. GESTION DES PERMISSIONS ANDROID
@@ -120,42 +122,50 @@ public class ColorCatcherGame : MonoBehaviour // Cette classe gère le mini-jeu d
                 webcamTexture.Play(); // Allume la caméra
 
                 // Correction de la rotation : sur mobile, l'image est souvent tournée à 90°
-                cameraDisplay.rectTransform.localEulerAngles = new Vector3(0, 0, -webcamTexture.videoRotationAngle); // Ajuste la rotation de l'affichage pour que
-                                                                                                                     // l'image soit droite, même si la caméra est physiquement tournée (ex: portrait vs paysage)
-                                                                                                                     // Pourquoi ? Parce que sur les smartphones, 
-                                                                                                                     // la caméra peut être orientée différemment selon la façon dont l'utilisateur tient son appareil.
+                cameraDisplay.rectTransform.localEulerAngles = new Vector3(0, 0, -webcamTexture.videoRotationAngle); // Pourquoi cette ligne ?
+                    // Ajuste la rotation de l'affichage pour que
+                    // l'image soit droite, même si la caméra est physiquement tournée (ex: portrait vs paysage)
+                    // Pourquoi ? Parce que sur les smartphones, 
+                    // la caméra peut être orientée différemment selon la façon dont l'utilisateur tient son appareil.
 
                 // Lancement de la première manche
                 StartNewRound(); // Démarre la première manche du jeu en choisissant une couleur et en lançant le chrono
             }
         }
-        else
+        else // Si aucune caméra n'est détectée
         {
             // Message d'erreur si aucune caméra n'est branchée (ex: sur PC sans webcam)
             if (instructionText != null) instructionText.text = "Caméra non détectée !";
         }
     }
 
-    void Update()
+    void Update() // Fonction appelée automatiquement par Unity à chaque frame (image) du jeu
+                  // Pourquoi ? Parce que Update est le cœur de la logique de jeu en temps réel. 
+                  // C'est ici que nous allons gérer le chronomètre, vérifier les couleurs capturées par la caméra, 
+                  // et réagir aux actions du joueur à chaque instant du jeu.
     {
         // Si le jeu est fini ou en pause, on ne fait rien
-        if (!isGameActive) return;
+        if (!isGameActive) return; // Si le jeu n'est pas actif, on quitte la fonction
+                                   // Update pour éviter de faire des calculs inutiles
+                                   // (comme vérifier la couleur ou mettre à jour le chrono) lorsque le joueur a déjà gagné ou perdu.
 
         // --- GESTION DU CHRONOMÈTRE ---
         currentTime -= Time.deltaTime; // On soustrait le temps écoulé depuis la dernière image
 
-        if (timerText != null)
+        if (timerText != null) // Vérifie que le texte du timer est bien assigné dans l'inspecteur
             // Affiche le temps arrondi au chiffre supérieur (ex: 14.2s devient 15s)
             timerText.text = "Temps : " + Mathf.Max(0, Mathf.Ceil(currentTime)) + "s"; // Aussi on met max à 0 car on évite signe négatif en bas
 
         // Si le temps est écoulé
-        if (currentTime <= 0)
+        if (currentTime <= 0) // Si le temps est écoulé, le joueur a perdu
         {
             EndGame(false); // Fin de partie : Perdu
         }
 
         // Vérifie à chaque image si la couleur visée est la bonne
-        CheckColor();
+        CheckColor(); // Appelle la fonction qui compare la couleur capturée par la caméra avec
+                      // la couleur cible pour voir si le joueur a réussi à trouver la bonne couleur
+                      // avant que le temps ne soit écoulé.
     }
 
     void StartNewRound() // Fonction qui démarre une nouvelle manche en choisissant une nouvelle couleur à trouver et en réinitialisant le temps
