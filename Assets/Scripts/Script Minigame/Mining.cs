@@ -7,11 +7,14 @@ using UnityEngine.SceneManagement; // Pour retourner au HUB
 
 public class MultiMiner : MonoBehaviour
 {
+    private const string fromRerollKey = "fromRerollKey";
+
     [Header("UI Elements")]
     public TextMeshProUGUI texteEcran;
     public GameObject panneauClassement;
     public TextMeshProUGUI texteClassement;
     public Button boutonPret;
+    public Button boutonReroll;
 
     [Header("Réglages")]
     public float tempsInitial = 10f;
@@ -34,6 +37,14 @@ public class MultiMiner : MonoBehaviour
     }
     List<Resultat> resultats = new List<Resultat>();
 
+    public void OnRerollClicked()
+    {
+        // Réinitialiser les données pour un nouveau jeu
+        Debug.Log("Reroll cliqué, réinitialisation du jeu.");
+        PlayerPrefs.SetInt(fromRerollKey, 1); // Indique au HUB que c'est un reroll
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("GameScene");
+    }
     void Awake()
     {
         // 1. On récupère AUTOMATIQUEMENT les joueurs envoyés par le DuelManager

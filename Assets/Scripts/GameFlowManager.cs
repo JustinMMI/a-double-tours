@@ -96,6 +96,11 @@ public class GameFlowManager : MonoBehaviour
             okButton.gameObject.SetActive(true);
             consequenceSwitch = true;
         }
+        else if (PlayerPrefs.GetInt("fromRerollKey", 0) == 1)
+        {
+            PlayerPrefs.SetInt("fromRerollKey", 0);
+            LoadRandomScene();
+        }
         else
         {
             canBobRollEvents = false;
