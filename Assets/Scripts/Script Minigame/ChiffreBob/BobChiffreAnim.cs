@@ -1,11 +1,20 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles all LeanTween animations for the Chiffre De Bob minigame.
+/// Attach to BobChiffreAnim and wire references in the Inspector.
+/// Call the public methods from GameManager at the appropriate moments.
+/// </summary>
 public class BobChiffreAnim : MonoBehaviour
 {
     [Header("Panels")]
     public RectTransform startPanel;
     public RectTransform gamePanel;
     public RectTransform resultPanel;
+
+    [Header("Start Panel Elements")]
+    public RectTransform startButton;
+    public RectTransform rulesText;
 
     [Header("Game Panel Elements")]
     public RectTransform playerTurnText;
@@ -15,60 +24,109 @@ public class BobChiffreAnim : MonoBehaviour
 
     [Header("Result Panel Elements")]
     public RectTransform resultText;
+    public RectTransform resultButton;
 
     [Header("Timing")]
-    public float panelSlideDuration = 0.45f;
+    public float panelDuration = 0.4f;
     public float punchDuration = 0.35f;
     public float buttonBounceDuration = 0.15f;
 
-    private const float OffscreenRight = 1200f;
-    private const float OffscreenLeft = -1200f;
-    private const float OffscreenBottom = -900f;
+    // Base scales cached at Start to handle buttons whose localScale != (1,1,1).
+    private Vector3 startButtonBaseScale;
+    private Vector3 submitButtonBaseScale;
+    private Vector3 resultButtonBaseScale;
 
+    void Start()
+    {
+        if (startButton != null)  startButtonBaseScale  = startButton.localScale;
+        if (submitButton != null) submitButtonBaseScale = submitButton.localScale;
+        if (resultButton != null) resultButtonBaseScale = resultButton.localScale;
+    }
 
+    // -------------------------------------------------------------------------
+    // Start Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Reveals the start panel by sliding its children up from below.
+    /// </summary>
     public void AnimateStartPanelIn()
     {
         if (startPanel == null) return;
 
         startPanel.gameObject.SetActive(true);
+        startPanel.localScale = Vector3.one;
 
-        Vector2 origin = startPanel.anchoredPosition;
-        startPanel.anchoredPosition = new Vector2(origin.x, OffscreenBottom);
+        if (rulesText != null)
+        {
+            rulesText.localScale = new Vector3(1f, 0f, 1f);
+            LeanTween.scaleY(rulesText.gameObject, 1f, panelDuration)
+                .setEase(LeanTweenType.easeOutBack);
+        }
 
-        LeanTween.move(startPanel, new Vector2(origin.x, 0f), panelSlideDuration)
-            .setEase(LeanTweenType.easeOutBack);
+        if (startButton != null)
+        {
+            Vector3 target = startButtonBaseScale;
+            startButton.localScale = new Vector3(target.x, 0f, target.z);
+            LeanTween.scaleY(startButton.gameObject, target.y, panelDuration)
+                .setEase(LeanTweenType.easeOutBack)
+                .setDelay(0.07f);
+        }
     }
 
+    /// <summary>
+    /// Collapses the start panel before the game begins.
+    /// </summary>
     public void AnimateStartPanelOut()
     {
         if (startPanel == null) return;
 
-        LeanTween.move(startPanel, new Vector2(OffscreenLeft, startPanel.anchoredPosition.y), panelSlideDuration)
+        LeanTween.scale(startPanel, new Vector3(1f, 0f, 1f), panelDuration * 0.8f)
             .setEase(LeanTweenType.easeInBack)
-            .setOnComplete(() => startPanel.gameObject.SetActive(false));
+            .setOnComplete(() =>
+            {
+                startPanel.localScale = Vector3.one;
+                startPanel.gameObject.SetActive(false);
+            });
     }
 
+    // -------------------------------------------------------------------------
+    // Game Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Pops the game panel in. Call when starting a new player turn.
+    /// </summary>
     public void AnimateGamePanelIn()
     {
         if (gamePanel == null) return;
 
         gamePanel.gameObject.SetActive(true);
-        gamePanel.anchoredPosition = new Vector2(OffscreenRight, gamePanel.anchoredPosition.y);
+        gamePanel.localScale = new Vector3(0.85f, 0.85f, 1f);
 
-        LeanTween.move(gamePanel, new Vector2(0f, gamePanel.anchoredPosition.y), panelSlideDuration)
-            .setEase(LeanTweenType.easeOutCubic);
+        LeanTween.scale(gamePanel, Vector3.one, panelDuration)
+            .setEase(LeanTweenType.easeOutBack);
     }
 
-
+    /// <summary>
+    /// Collapses the game panel. Call after the last player guesses.
+    /// </summary>
     public void AnimateGamePanelOut()
     {
         if (gamePanel == null) return;
 
-        LeanTween.move(gamePanel, new Vector2(OffscreenLeft, gamePanel.anchoredPosition.y), panelSlideDuration)
-            .setEase(LeanTweenType.easeInCubic)
-            .setOnComplete(() => gamePanel.gameObject.SetActive(false));
+        LeanTween.scale(gamePanel, new Vector3(0.85f, 0.85f, 1f), panelDuration * 0.8f)
+            .setEase(LeanTweenType.easeInBack)
+            .setOnComplete(() =>
+            {
+                gamePanel.localScale = Vector3.one;
+                gamePanel.gameObject.SetActive(false);
+            });
     }
 
+    /// <summary>
+    /// Punch-scales the player name text on each new turn.
+    /// </summary>
     public void AnimatePlayerTurnPunch()
     {
         if (playerTurnText == null) return;
@@ -85,22 +143,34 @@ public class BobChiffreAnim : MonoBehaviour
             });
     }
 
+    /// <summary>
+    /// Squeeze bounce on the submit button when pressed.
+    /// Respects the button's base localScale (which may differ from Vector3.one).
+    /// </summary>
     public void AnimateSubmitButtonBounce()
     {
         if (submitButton == null) return;
 
         LeanTween.cancel(submitButton.gameObject);
-        submitButton.localScale = Vector3.one;
 
-        LeanTween.scale(submitButton, new Vector3(0.88f, 0.88f, 1f), buttonBounceDuration)
+        Vector3 squeezed = submitButtonBaseScale * 0.85f;
+
+        LeanTween.scale(submitButton, squeezed, buttonBounceDuration)
             .setEase(LeanTweenType.easeInQuad)
             .setOnComplete(() =>
             {
-                LeanTween.scale(submitButton, Vector3.one, buttonBounceDuration)
+                LeanTween.scale(submitButton, submitButtonBaseScale, buttonBounceDuration)
                     .setEase(LeanTweenType.easeOutBack);
             });
     }
 
+    // -------------------------------------------------------------------------
+    // Result Panel
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Pops the result panel in then bounces the result text and button.
+    /// </summary>
     public void AnimateResultPanelIn()
     {
         if (resultPanel == null) return;
@@ -108,28 +178,44 @@ public class BobChiffreAnim : MonoBehaviour
         resultPanel.gameObject.SetActive(true);
         resultPanel.localScale = Vector3.zero;
 
-        LeanTween.scale(resultPanel, Vector3.one, panelSlideDuration)
+        LeanTween.scale(resultPanel, Vector3.one, panelDuration)
             .setEase(LeanTweenType.easeOutBack)
-            .setOnComplete(AnimateResultTextBounce);
+            .setOnComplete(AnimateResultChildren);
     }
 
+    /// <summary>
+    /// Collapses the result panel. Call at the start of RestartGame.
+    /// </summary>
     public void AnimateResultPanelOut()
     {
         if (resultPanel == null) return;
 
-        LeanTween.scale(resultPanel, Vector3.zero, panelSlideDuration * 0.8f)
+        LeanTween.scale(resultPanel, Vector3.zero, panelDuration * 0.8f)
             .setEase(LeanTweenType.easeInBack)
-            .setOnComplete(() => resultPanel.gameObject.SetActive(false));
+            .setOnComplete(() =>
+            {
+                resultPanel.localScale = Vector3.one;
+                resultPanel.gameObject.SetActive(false);
+            });
     }
 
-    private void AnimateResultTextBounce()
+    private void AnimateResultChildren()
     {
-        if (resultText == null) return;
+        if (resultText != null)
+        {
+            resultText.localScale = new Vector3(0.5f, 0.5f, 1f);
+            LeanTween.scale(resultText, Vector3.one, punchDuration)
+                .setEase(LeanTweenType.easeOutElastic);
+        }
 
-        resultText.localScale = new Vector3(0.5f, 0.5f, 1f);
-
-        LeanTween.scale(resultText, Vector3.one, punchDuration)
-            .setEase(LeanTweenType.easeOutBack);
+        if (resultButton != null)
+        {
+            Vector3 target = resultButtonBaseScale;
+            resultButton.localScale = new Vector3(target.x, 0f, target.z);
+            LeanTween.scaleY(resultButton.gameObject, target.y, panelDuration)
+                .setEase(LeanTweenType.easeOutBack)
+                .setDelay(0.1f);
+        }
     }
 }
 

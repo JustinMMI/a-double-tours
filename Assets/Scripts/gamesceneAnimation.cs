@@ -8,32 +8,45 @@ using UnityEngine;
 /// </summary>
 public class gamesceneAnimation : MonoBehaviour
 {
+    [Header("Bob Group")]
+    public RectTransform bob;         // Parent of Image + DuelButton
+    public RectTransform bobImage;    // Canvas/Bob/Image  (has Button)
+    public RectTransform duelButton;  // Canvas/Bob/DuelButton
+
     [Header("UI Elements")]
-    public RectTransform bobImage;
     public RectTransform bobText;
     public RectTransform nextButton;
-    public RectTransform duelButton;
     public RectTransform quitButton;
+    public RectTransform okButton;
+    public RectTransform rerollButton;
 
     [Header("Timing")]
     public float introDuration = 0.45f;
     public float staggerDelay = 0.07f;
     public float buttonBounceDuration = 0.12f;
 
-    private const float OffscreenRight = 600f;
-    private const float OffscreenLeft = -600f;
-    private const float OffscreenTop = 300f;
-    private const float OffscreenBottom = -300f;
+    // Base scales cached at Start — handles elements whose localScale != (1,1,1).
+    private Vector3 bobImageBaseScale;
+    private Vector3 duelButtonBaseScale;
+    private Vector3 okButtonBaseScale;
+    private Vector3 rerollButtonBaseScale;
+    private Vector3 nextButtonBaseScale;
+    private Vector3 quitButtonBaseScale;
 
-    private Vector2 bobImageOrigin;
+    // anchoredPosition origins for elements that use move().
     private Vector2 bobTextOrigin;
     private Vector2 nextButtonOrigin;
-    private Vector2 duelButtonOrigin;
     private Vector2 quitButtonOrigin;
+    private Vector2 okButtonOrigin;
+    private Vector2 rerollButtonOrigin;
+
+    private const float OffscreenRight = 600f;
+    private const float OffscreenBottom = -300f;
+    private const float OffscreenTop = 300f;
 
     void Start()
     {
-        CacheOrigins();
+        CacheOriginsAndScales();
         AnimateIntro();
     }
 
@@ -46,30 +59,31 @@ public class gamesceneAnimation : MonoBehaviour
     /// </summary>
     public void AnimateIntro()
     {
-        AnimateBobImageIn();
+        AnimateBobIn();
         AnimateBobTextIn();
         AnimateNextButtonIn();
-        AnimateDuelButtonIn();
         AnimateQuitButtonIn();
+        AnimateOkButtonIn();
+        AnimateRerollButtonIn();
     }
 
     // -------------------------------------------------------------------------
-    // Bob Image
+    // Bob group  (parent pop → children settle)
     // -------------------------------------------------------------------------
 
-    private void AnimateBobImageIn()
+    private void AnimateBobIn()
     {
-        if (bobImage == null) return;
+        if (bob == null) return;
 
-        bobImage.localScale = Vector3.zero;
+        bob.localScale = Vector3.zero;
 
-        LeanTween.scale(bobImage, Vector3.one, introDuration)
+        LeanTween.scale(bob, Vector3.one, introDuration)
             .setEase(LeanTweenType.easeOutBack);
     }
 
     /// <summary>
-    /// Squeeze + bounce on Bob's image when clicked.
-    /// Wire this to the Image Button's OnClick event.
+    /// Squeeze + elastic pop on Bob's image when clicked.
+    /// Wire to Canvas/Bob/Image Button OnClick.
     /// </summary>
     public void AnimateBobImageClick()
     {
@@ -77,20 +91,36 @@ public class gamesceneAnimation : MonoBehaviour
 
         LeanTween.cancel(bobImage.gameObject);
 
-        // Squish down
-        LeanTween.scale(bobImage, new Vector3(0.88f, 0.88f, 1f), buttonBounceDuration)
+        Vector3 squeezed = bobImageBaseScale * 0.85f;
+        Vector3 overshot = bobImageBaseScale * 1.1f;
+
+        LeanTween.scale(bobImage, squeezed, buttonBounceDuration)
             .setEase(LeanTweenType.easeInQuad)
             .setOnComplete(() =>
             {
-                // Pop back with overshoot
-                LeanTween.scale(bobImage, new Vector3(1.12f, 1.12f, 1f), buttonBounceDuration)
+                LeanTween.scale(bobImage, overshot, buttonBounceDuration)
                     .setEase(LeanTweenType.easeOutQuad)
                     .setOnComplete(() =>
                     {
-                        LeanTween.scale(bobImage, Vector3.one, 0.2f)
+                        LeanTween.scale(bobImage, bobImageBaseScale, 0.2f)
                             .setEase(LeanTweenType.easeOutElastic);
                     });
             });
+    }
+
+    // -------------------------------------------------------------------------
+    // BobText
+    // -------------------------------------------------------------------------
+
+    private void AnimateBobTextIn()
+    {
+        if (bobText == null) return;
+
+        bobText.anchoredPosition = new Vector2(bobTextOrigin.x, bobTextOrigin.y + OffscreenBottom);
+
+        LeanTween.move(bobText, bobTextOrigin, introDuration)
+            .setEase(LeanTweenType.easeOutCubic)
+            .setDelay(staggerDelay);
     }
 
     /// <summary>
@@ -108,19 +138,8 @@ public class gamesceneAnimation : MonoBehaviour
     }
 
     // -------------------------------------------------------------------------
-    // Buttons
+    // NextButton
     // -------------------------------------------------------------------------
-
-    private void AnimateBobTextIn()
-    {
-        if (bobText == null) return;
-
-        bobText.anchoredPosition = new Vector2(bobTextOrigin.x, bobTextOrigin.y + OffscreenBottom);
-
-        LeanTween.move(bobText, bobTextOrigin, introDuration)
-            .setEase(LeanTweenType.easeOutCubic)
-            .setDelay(staggerDelay);
-    }
 
     private void AnimateNextButtonIn()
     {
@@ -139,28 +158,12 @@ public class gamesceneAnimation : MonoBehaviour
     public void AnimateNextButtonPress()
     {
         if (nextButton == null) return;
-        AnimateButtonPress(nextButton);
+        AnimateButtonPress(nextButton, nextButtonBaseScale);
     }
 
-    private void AnimateDuelButtonIn()
-    {
-        if (duelButton == null) return;
-
-        duelButton.anchoredPosition = new Vector2(duelButtonOrigin.x + OffscreenLeft, duelButtonOrigin.y);
-
-        LeanTween.move(duelButton, duelButtonOrigin, introDuration)
-            .setEase(LeanTweenType.easeOutBack)
-            .setDelay(staggerDelay * 3);
-    }
-
-    /// <summary>
-    /// Squeeze bounce on the Duel button. Wire to its OnClick event.
-    /// </summary>
-    public void AnimateDuelButtonPress()
-    {
-        if (duelButton == null) return;
-        AnimateButtonPress(duelButton);
-    }
+    // -------------------------------------------------------------------------
+    // Quit button
+    // -------------------------------------------------------------------------
 
     private void AnimateQuitButtonIn()
     {
@@ -179,33 +182,90 @@ public class gamesceneAnimation : MonoBehaviour
     public void AnimateQuitButtonPress()
     {
         if (quitButton == null) return;
-        AnimateButtonPress(quitButton);
+        AnimateButtonPress(quitButton, quitButtonBaseScale);
+    }
+
+    // -------------------------------------------------------------------------
+    // okButton
+    // -------------------------------------------------------------------------
+
+    private void AnimateOkButtonIn()
+    {
+        if (okButton == null) return;
+
+        okButton.localScale = Vector3.zero;
+
+        LeanTween.scale(okButton, okButtonBaseScale, introDuration)
+            .setEase(LeanTweenType.easeOutBack)
+            .setDelay(staggerDelay * 3);
+    }
+
+    /// <summary>
+    /// Squeeze bounce on the OK button. Wire to its OnClick event.
+    /// </summary>
+    public void AnimateOkButtonPress()
+    {
+        if (okButton == null) return;
+        AnimateButtonPress(okButton, okButtonBaseScale);
+    }
+
+    // -------------------------------------------------------------------------
+    // rerollButton
+    // -------------------------------------------------------------------------
+
+    private void AnimateRerollButtonIn()
+    {
+        if (rerollButton == null) return;
+
+        rerollButton.localScale = Vector3.zero;
+
+        LeanTween.scale(rerollButton, rerollButtonBaseScale, introDuration)
+            .setEase(LeanTweenType.easeOutBack)
+            .setDelay(staggerDelay * 4);
+    }
+
+    /// <summary>
+    /// Squeeze bounce on the Reroll button. Wire to its OnClick event.
+    /// </summary>
+    public void AnimateRerollButtonPress()
+    {
+        if (rerollButton == null) return;
+        AnimateButtonPress(rerollButton, rerollButtonBaseScale);
     }
 
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
 
-    private void AnimateButtonPress(RectTransform button)
+    private void AnimateButtonPress(RectTransform button, Vector3 baseScale)
     {
         LeanTween.cancel(button.gameObject);
 
-        LeanTween.scale(button, new Vector3(0.88f, 0.88f, 1f), buttonBounceDuration)
+        Vector3 squeezed = baseScale * 0.85f;
+
+        LeanTween.scale(button, squeezed, buttonBounceDuration)
             .setEase(LeanTweenType.easeInQuad)
             .setOnComplete(() =>
             {
-                LeanTween.scale(button, Vector3.one, buttonBounceDuration)
+                LeanTween.scale(button, baseScale, buttonBounceDuration)
                     .setEase(LeanTweenType.easeOutBack);
             });
     }
 
-    private void CacheOrigins()
+    private void CacheOriginsAndScales()
     {
-        if (bobImage != null) bobImageOrigin = bobImage.anchoredPosition;
-        if (bobText != null) bobTextOrigin = bobText.anchoredPosition;
-        if (nextButton != null) nextButtonOrigin = nextButton.anchoredPosition;
-        if (duelButton != null) duelButtonOrigin = duelButton.anchoredPosition;
-        if (quitButton != null) quitButtonOrigin = quitButton.anchoredPosition;
+        if (bobImage != null)    bobImageBaseScale    = bobImage.localScale;
+        if (duelButton != null)  duelButtonBaseScale  = duelButton.localScale;
+        if (okButton != null)    okButtonBaseScale    = okButton.localScale;
+        if (rerollButton != null) rerollButtonBaseScale = rerollButton.localScale;
+        if (nextButton != null)  nextButtonBaseScale  = nextButton.localScale;
+        if (quitButton != null)  quitButtonBaseScale  = quitButton.localScale;
+
+        if (bobText != null)     bobTextOrigin     = bobText.anchoredPosition;
+        if (nextButton != null)  nextButtonOrigin  = nextButton.anchoredPosition;
+        if (quitButton != null)  quitButtonOrigin  = quitButton.anchoredPosition;
+        if (okButton != null)    okButtonOrigin    = okButton.anchoredPosition;
+        if (rerollButton != null) rerollButtonOrigin = rerollButton.anchoredPosition;
     }
 }
 

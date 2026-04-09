@@ -214,6 +214,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 863121740}
+        m_TargetAssemblyTypeName: gamesceneAnimation, Assembly-CSharp
+        m_MethodName: AnimateOkButtonPress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &100485378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,14 +477,13 @@ MonoBehaviour:
     et redescend de 3 \xE9tages.'"
   - "BOB : 'Joueur en queue de peloton, une force myst\xE9rieuse te propulse vers
     le haut, avance de 2 \xE9tages !"
-  MiniGamePool:
-  - {fileID: 102900000, guid: 65dbe94d6f29d7d459cb189c855e19fc, type: 3}
-  - {fileID: 102900000, guid: d8613f63caf7641c6a9fadb46a3bdf5c, type: 3}
-  - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
   miniGameSceneNames:
-  - ChronoGame
-  - Chiffre De Bob
   - CacheCache
+  - Chiffre De Bob
+  - ChronoGame
+  - Miner
+  - MiroirGames
+  - Roue
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,6 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 863121739}
+  - component: {fileID: 863121740}
   m_Layer: 0
   m_Name: gamesceneAnim
   m_TagString: Untagged
@@ -697,6 +709,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &863121740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863121738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1933094b26d14e9eba801767931dd74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::gamesceneAnimation
+  bob: {fileID: 1600510586}
+  bobImage: {fileID: 2057957851}
+  duelButton: {fileID: 2034053213}
+  bobText: {fileID: 205161638}
+  nextButton: {fileID: 1503949447}
+  quitButton: {fileID: 1315226977}
+  okButton: {fileID: 100485376}
+  rerollButton: {fileID: 2006871057}
+  introDuration: 0.45
+  staggerDelay: 0.07
+  buttonBounceDuration: 0.12
 --- !u!1 &890262707
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,6 +1125,18 @@ MonoBehaviour:
       - m_Target: {fileID: 439300596}
         m_TargetAssemblyTypeName: GameFlowManager, Assembly-CSharp
         m_MethodName: OnQuitClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 863121740}
+        m_TargetAssemblyTypeName: gamesceneAnimation, Assembly-CSharp
+        m_MethodName: AnimateQuitButtonPress
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1630,7 +1677,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1503949449}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 863121740}
+        m_TargetAssemblyTypeName: gamesceneAnimation, Assembly-CSharp
+        m_MethodName: AnimateNextButtonPress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1503949449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1900,6 +1959,18 @@ MonoBehaviour:
       - m_Target: {fileID: 439300596}
         m_TargetAssemblyTypeName: GameFlowManager, Assembly-CSharp
         m_MethodName: RerollConsequence
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 863121740}
+        m_TargetAssemblyTypeName: gamesceneAnimation, Assembly-CSharp
+        m_MethodName: AnimateRerollButtonPress
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

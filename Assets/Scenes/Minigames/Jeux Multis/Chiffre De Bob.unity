@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2568285
 RectTransform:
   m_ObjectHideFlags: 0
@@ -224,7 +224,7 @@ RectTransform:
   m_GameObject: {fileID: 20811578}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 835207416}
@@ -232,7 +232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3, y: 0}
   m_AnchorMax: {x: 0.7, y: 0}
-  m_AnchoredPosition: {x: 0, y: 120}
+  m_AnchoredPosition: {x: 0, y: 140}
   m_SizeDelta: {x: -500, y: 82}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &20811580
@@ -425,7 +425,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &92586633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1836,7 +1836,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3, y: 0}
   m_AnchorMax: {x: 0.7, y: 0}
-  m_AnchoredPosition: {x: -0.000030518, y: 60}
+  m_AnchoredPosition: {x: -0.000061035156, y: 60}
   m_SizeDelta: {x: -500, y: 82}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1277200314
@@ -1980,12 +1980,15 @@ MonoBehaviour:
   startPanel: {fileID: 92586633}
   gamePanel: {fileID: 456732988}
   resultPanel: {fileID: 2568285}
+  startButton: {fileID: 0}
+  rulesText: {fileID: 0}
   playerTurnText: {fileID: 1098640136}
   sliderValueText: {fileID: 2101694823}
   slider: {fileID: 469630993}
   submitButton: {fileID: 1277200313}
   resultText: {fileID: 2568285}
-  panelSlideDuration: 0.45
+  resultButton: {fileID: 0}
+  panelDuration: 0.4
   punchDuration: 0.35
   buttonBounceDuration: 0.15
 --- !u!1 &1439413359
