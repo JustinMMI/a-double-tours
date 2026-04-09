@@ -466,11 +466,13 @@ MonoBehaviour:
   - "BOB : 'Joueur en queue de peloton, une force myst\xE9rieuse te propulse vers
     le haut, avance de 2 \xE9tages !"
   MiniGamePool:
-  - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
   - {fileID: 102900000, guid: 65dbe94d6f29d7d459cb189c855e19fc, type: 3}
+  - {fileID: 102900000, guid: d8613f63caf7641c6a9fadb46a3bdf5c, type: 3}
+  - {fileID: 102900000, guid: 285ee860805a1dd44a58cda1883386bc, type: 3}
   miniGameSceneNames:
-  - CacheCache
   - ChronoGame
+  - Chiffre De Bob
+  - CacheCache
 --- !u!114 &439300597
 MonoBehaviour:
   m_ObjectHideFlags: 0
