@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "A Double Tours.slnx",
+    "dotnet.defaultSolution": "A-Double-Tours.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
