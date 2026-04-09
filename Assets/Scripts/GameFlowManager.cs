@@ -17,6 +17,7 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Consequences Settings")]
     public string[] randomConsequence;
+    public bool consequenceSwitch = false;
 
     public void GetRandomConsequence()
     {
@@ -53,6 +54,7 @@ public class GameFlowManager : MonoBehaviour
             nextButton.gameObject.SetActive(false);
             rerollButton.gameObject.SetActive(true);
             okButton.gameObject.SetActive(true);
+            consequenceSwitch = true;
         }
         else if (PlayerPrefs.GetInt("FromCacheCache", 0) == 1)
         {
@@ -65,6 +67,7 @@ public class GameFlowManager : MonoBehaviour
             nextButton.gameObject.SetActive(false);
             rerollButton.gameObject.SetActive(true);
             okButton.gameObject.SetActive(true);
+            consequenceSwitch = true;
         }
         else
         {
@@ -78,8 +81,14 @@ public class GameFlowManager : MonoBehaviour
 
     public void RerollConsequence()
     {
-        GetRandomConsequence();
-        bobText.text = "BOB : 'La nouvelle conséquence du duel est : " + consequenceDuel + " !'";
+        if (consequenceSwitch == true)        {
+            GetRandomConsequence();
+            bobText.text = "BOB : 'La nouvelle conséquence est : " + consequenceDuel + " !'";
+        }
+        else
+        {
+            OnBobClicked();
+        }
     }
 
     public void OkConsequence()
@@ -87,6 +96,7 @@ public class GameFlowManager : MonoBehaviour
         bobText.text = "";
         rerollButton.gameObject.SetActive(false);
         okButton.gameObject.SetActive(false);
+        consequenceSwitch = false;
     }
 
     void ShowObstacles()
