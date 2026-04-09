@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class ObstacleGenerator : MonoBehaviour
 {
+
+    private string lastPickedObstacle = "";
+    private int lastPickedFloor = -1;
+
     public void GenerateObstacles()
     {
         List<string> allObstacles = new List<string> { "Surcharge", "Eboulement", "Inondation", "Incendie", "Tentacule de BOB", "Serpents" };
@@ -11,7 +15,16 @@ public class ObstacleGenerator : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             int randomIndex = Random.Range(0, allObstacles.Count);
+            if (allObstacles.Count > 1)
+            {
+                while (allObstacles[randomIndex] == lastPickedObstacle)
+                {
+                    randomIndex = Random.Range(0, allObstacles.Count);
+                }
+            }
+
             selectedObstacles.Add(allObstacles[randomIndex]);
+            lastPickedObstacle = allObstacles[randomIndex];
             allObstacles.RemoveAt(randomIndex);
         }
 
@@ -77,11 +90,18 @@ public class ObstacleGenerator : MonoBehaviour
             int index = Random.Range(0, availableFloors.Count);
             testedFloor = availableFloors[index];
 
+            if (availableFloors.Count > 1 && testedFloor == lastPickedFloor)
+            {
+                continue;
+            }
+
             if (banned.Contains(testedFloor) == false)
             {
                 found = true;
             }
         }
+
+        lastPickedFloor = testedFloor;
 
         return testedFloor;
     }

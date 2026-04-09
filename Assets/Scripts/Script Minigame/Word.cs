@@ -6,23 +6,24 @@ public class Word : MonoBehaviour
 {
     public TextMeshProUGUI[] textesBoutons; // Toujours glisser tes 4 textes ici une seule fois
 
-    // On définit les familles de mots directement ici (plus besoin de l'inspecteur !)
+    // On dï¿½finit les familles de mots directement ici (plus besoin de l'inspecteur !)
     private string[][] familles = new string[][] {
         new string[] {"Lion", "Chat", "Chien", "Tigre", "Loup", "Ours"}, // Animaux
         new string[] {"Pomme", "Banane", "Fraise", "Poire", "Kiwi", "Cerise"}, // Fruits
-        new string[] {"Voiture", "Avion", "Vélo", "Bateau", "Train", "Bus"}, // Transport
+        new string[] {"Voiture", "Avion", "Vï¿½lo", "Bateau", "Train", "Bus"}, // Transport
         new string[] {"Rouge", "Bleu", "Vert", "Violet", "Blanc", "Noir"}, // Couleur
-        new string[] {"Soleil", "Pluie", "Neige", "Orage", "Nuage", "Vent"}, // Météo
-        new string[] {"Table", "Chaise", "Lit", "Armoire", "Canapé", "Bureau"}, // Meubles
+        new string[] {"Soleil", "Pluie", "Neige", "Orage", "Nuage", "Vent"}, // Mï¿½tï¿½o
+        new string[] {"Table", "Chaise", "Lit", "Armoire", "Canapï¿½", "Bureau"}, // Meubles
         new string[] {"Paris", "Londres", "Rome", "Tokyo", "Berlin", "Madrid"}, // Capitales
-        new string[] {"Pizza", "Burger", "Sushis", "Pâtes", "Salade", "Tacos"}, // Plats
+        new string[] {"Pizza", "Burger", "Sushis", "Pï¿½tes", "Salade", "Tacos"}, // Plats
         new string[] {"Football", "Tennis", "Basket", "Judo", "Rugby", "Golf"}, // Sports
-        new string[] {"Maman", "Papa", "Frère", "Sœur", "Oncle", "Tante"}, // Famille
-        new string[] {"Couteau", "Fourchette", "Cuillère", "Assiette", "Bol", "Verre"}, // Vaisselle
-        new string[] {"Mars", "Jupiter", "Vénus", "Saturne", "Terre", "Neptune"} // Planètes
+        new string[] {"Maman", "Papa", "Frï¿½re", "Sï¿½ur", "Oncle", "Tante"}, // Famille
+        new string[] {"Couteau", "Fourchette", "Cuillï¿½re", "Assiette", "Bol", "Verre"}, // Vaisselle
+        new string[] {"Mars", "Jupiter", "Vï¿½nus", "Saturne", "Terre", "Neptune"} // Planï¿½tes
     };
 
     private int indexCorrect;
+    private int lastIntrusWordIndex = -1;
 
     void Start()
     {
@@ -44,10 +45,10 @@ public class Word : MonoBehaviour
 
         string[] familleIntrus = familles[indexFamilleIntrus];
 
-        // 3. Préparer la liste finale de 4 mots
+        // 3. Prï¿½parer la liste finale de 4 mots
         List<string> motsDuJeu = new List<string>();
 
-        // On prend 3 mots différents dans la famille principale
+        // On prend 3 mots diffï¿½rents dans la famille principale
         List<int> indicesUtilises = new List<int>();
         while (motsDuJeu.Count < 3)
         {
@@ -60,11 +61,21 @@ public class Word : MonoBehaviour
         }
 
         // On ajoute 1 mot au hasard de la famille intrus
-        motsDuJeu.Add(familleIntrus[Random.Range(0, familleIntrus.Length)]);
+        int intrusIndex = Random.Range(0, familleIntrus.Length);
+        if (familleIntrus.Length > 1)
+        {
+            while (intrusIndex == lastIntrusWordIndex)
+            {
+                intrusIndex = Random.Range(0, familleIntrus.Length);
+            }
+        }
 
-        // 4. Mélanger les 4 mots et retenir la position de l'intrus
+        lastIntrusWordIndex = intrusIndex;
+        motsDuJeu.Add(familleIntrus[intrusIndex]);
+
+        // 4. Mï¿½langer les 4 mots et retenir la position de l'intrus
         indexCorrect = Random.Range(0, 4);
-        string motIntrus = motsDuJeu[3]; // L'intrus était le dernier ajouté
+        string motIntrus = motsDuJeu[3]; // L'intrus ï¿½tait le dernier ajoutï¿½
         motsDuJeu[3] = motsDuJeu[indexCorrect];
         motsDuJeu[indexCorrect] = motIntrus;
 
@@ -79,8 +90,8 @@ public class Word : MonoBehaviour
     {
         if (indexClique == indexCorrect)
         {
-            Debug.Log("BRAVO ! C'était l'intrus.");
-            NouvellePartie(); // Relance automatiquement un nouveau défi
+            Debug.Log("BRAVO ! C'ï¿½tait l'intrus.");
+            NouvellePartie(); // Relance automatiquement un nouveau dï¿½fi
         }
         else
         {
