@@ -83,8 +83,13 @@ public class RoueManager : MonoBehaviour
         if (gameOver) return;
 
         buttonStop.interactable = false;
+        textInstructions.text = "La roue ralentit...";
 
-        RoueSection section = roue.Stop();
+        roue.Decelerate(OnRoueArretee);
+    }
+
+    private void OnRoueArretee(RoueSection section)
+    {
         string currentPlayer = playerNames[currentPlayerIndex];
         scores[currentPlayer] += section.points;
 
@@ -121,19 +126,41 @@ public class RoueManager : MonoBehaviour
         gameOver = true;
 
         var tri = scores.OrderByDescending(x => x.Value).ToList();
-        string winner = tri[0].Key;
+        int topScore = tri[0].Value;
 
-        PlayerPrefs.SetString(WinnerKey, winner);
+        // Récupère tous les joueurs à égalité au sommet
+        List<string> winners = tri
+            .Where(x => x.Value == topScore)
+            .Select(x => x.Key)
+            .ToList();
+
+        string winnerLabel = string.Join(", ", winners);
+        PlayerPrefs.SetString(WinnerKey, winnerLabel);
         PlayerPrefs.SetInt(FromDuelKey, 1);
-        Debug.Log($"[Roue] Vainqueur : {winner}");
+        PlayerPrefs.Save();
+        Debug.Log($"[Roue] Vainqueur(s) : {winnerLabel}");
 
         string[] couleurs = { "#FFD700", "#C0C0C0", "#CD7F32", "#FF4500" };
         string recap = "<b>CLASSEMENT FINAL</b>\n\n";
 
-        for (int i = 0; i < tri.Count; i++)
+        int rang = 1;
+        int i = 0;
+        while (i < tri.Count)
         {
-            string c = i < couleurs.Length ? couleurs[i] : "#FFFFFF";
-            recap += $"<color={c}>{i + 1}. {tri[i].Key}  —  {tri[i].Value} pt(s)</color>\n";
+            // Regroupe les joueurs à égalité sur le même rang
+            int score = tri[i].Value;
+            List<string> groupe = tri
+                .Skip(i)
+                .TakeWhile(x => x.Value == score)
+                .Select(x => x.Key)
+                .ToList();
+
+            string c = (rang - 1) < couleurs.Length ? couleurs[rang - 1] : "#FFFFFF";
+            string noms = string.Join(" & ", groupe);
+            recap += $"<color={c}>{rang}. {noms}  —  {score} pt(s)</color>\n";
+
+            i += groupe.Count;
+            rang += groupe.Count;
         }
 
         textResultatFinal.text = recap;

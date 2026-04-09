@@ -31,6 +31,8 @@ public class GenerateurCibles : MonoBehaviour
     void Start()
     {
         ButtonQuitter.gameObject.SetActive(false);
+        ButtonRejouer.gameObject.SetActive(true);
+
         if (totalJoueurs == 0)
             InitializePlayers();
 
@@ -107,10 +109,12 @@ public class GenerateurCibles : MonoBehaviour
             string nom = playerNames[tri[i].Key - 1];
             recap += $"<color={couleur}>{i + 1}. {nom} : {tri[i].Value:F2}s</color>\n";
         }
-            ButtonQuitter.gameObject.SetActive(true);
-            ButtonRejouer.gameObject.SetActive(false);
 
         texteClassement.text = recap;
+
+        bool tousOntJoue = scores.Count >= totalJoueurs;
+        ButtonQuitter.gameObject.SetActive(tousOntJoue);
+        ButtonRejouer.gameObject.SetActive(!tousOntJoue);
     }
 
     public void JoueurSuivantPret()
@@ -120,7 +124,6 @@ public class GenerateurCibles : MonoBehaviour
 
         if (scores.Count >= totalJoueurs)
         {
-
             var gagnant = scores.OrderBy(x => x.Value).First();
             string nomGagnant = playerNames[gagnant.Key - 1];
 
@@ -133,7 +136,6 @@ public class GenerateurCibles : MonoBehaviour
             SceneManager.LoadScene("GameScene");
             return;
         }
-
 
         jeuEnCours = true;
         panneauFin.SetActive(false);
