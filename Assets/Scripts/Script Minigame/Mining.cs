@@ -1,98 +1,150 @@
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.InputSystem; // Requis pour le nouveau système
+using System.Linq;
+using UnityEngine.SceneManagement; // Pour retourner au HUB
 
-public class Mining : MonoBehaviour
+public class MultiMiner : MonoBehaviour
 {
-    [Header("Réglages de Détection")]
-    [Tooltip("Force minimale du mouvement (1.5 - 3.0 est une bonne base)")]
-    public float threshold = 2.0f;
-    [Tooltip("Temps en secondes pour accumuler l'énergie du geste")]
-    public float detectionWindow = 0.5f;
+    [Header("UI Elements")]
+    public TextMeshProUGUI texteEcran;
+    public GameObject panneauClassement;
+    public TextMeshProUGUI texteClassement;
+    public Button boutonPret;
 
-    [Header("Cible et Portée")]
-    public LayerMask wallLayer;
-    public float reachDistance = 3.0f;
+    [Header("RÃ©glages")]
+    public float tempsInitial = 10f;
+    public int scoreObjectif = 30;
 
-    private List<float> accelerationHistory = new List<float>();
-    private float timer = 0f;
+    private float tempsRestant;
+    private int scoreActuel;
+    private bool jeuEnCours = false;
+    private bool peutFrapper = true;
 
-    void Start()
+    // --- SYSTÃˆME AUTOMATIQUE ---
+    private List<string> nomsDesDuellistes = new List<string>();
+    private int indexJoueurActuel = 0;
+
+    struct Resultat
     {
-        // TRÈS IMPORTANT : Activer l'accéléromètre sur le nouveau système
-        if (Accelerometer.current != null)
+        public string nom;
+        public float temps;
+        public bool succes;
+    }
+    List<Resultat> resultats = new List<Resultat>();
+
+    void Awake()
+    {
+        // 1. On rÃ©cupÃ¨re AUTOMATIQUEMENT les joueurs envoyÃ©s par le DuelManager
+        int count = PlayerPrefs.GetInt("DuelPlayerCount", 0);
+        if (count == 0)
         {
-            InputSystem.EnableDevice(Accelerometer.current);
-            Debug.Log("Accéléromètre activé");
+            Debug.LogError("Aucun joueur trouvÃ© dans PlayerPrefs !");
+            nomsDesDuellistes.Add("Joueur 1");
+            nomsDesDuellistes.Add("Joueur 2");
         }
         else
         {
-            Debug.LogWarning("Aucun accéléromètre détecté sur cet appareil.");
+            for (int i = 0; i < count; i++)
+            {
+                nomsDesDuellistes.Add(PlayerPrefs.GetString("DuelPlayer_" + i));
+            }
         }
+    }
+
+    void Start()
+    {
+        panneauClassement.SetActive(false);
+        boutonPret.onClick.AddListener(DemarrerManche);
+        AfficherPretSuivant();
+    }
+
+    void AfficherPretSuivant()
+    {
+        texteEcran.text = $"Ã€ TON TOUR :\n<color=yellow>{nomsDesDuellistes[indexJoueurActuel]}</color>";
+        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "JE SUIS PRÃŠT !";
+    }
+
+    void DemarrerManche()
+    {
+        scoreActuel = 0;
+        tempsRestant = tempsInitial;
+        jeuEnCours = true;
+        boutonPret.gameObject.SetActive(false);
+        panneauClassement.SetActive(false);
     }
 
     void Update()
     {
-        // 1. GESTION DE L'ACCÉLÉRATION
-        Vector3 accelValue = Vector3.zero;
-        if (Accelerometer.current != null)
+        if (!jeuEnCours) return;
+
+        tempsRestant -= Time.deltaTime;
+        float force = Input.acceleration.magnitude;
+
+        if (force > 2.5f && peutFrapper)
         {
-            accelValue = Accelerometer.current.acceleration.ReadValue();
+            scoreActuel++;
+            peutFrapper = false;
         }
+        if (force < 1.8f) peutFrapper = true;
 
-        // On calcule la force du mouvement (magnitude)
-        // La valeur est souvent autour de 1.0 au repos (gravité), on soustrait donc 1
-        float currentForce = Mathf.Max(0, accelValue.magnitude - 1.0f);
+        texteEcran.text = $"{nomsDesDuellistes[indexJoueurActuel]}\nScore: {scoreActuel}/{scoreObjectif}\nTemps: {tempsRestant:F1}s";
 
-        // 2. CALCUL SUR L'INTERVALLE DE TEMPS
-        timer += Time.deltaTime;
-        accelerationHistory.Add(currentForce);
-
-        // On nettoie les anciennes valeurs pour rester dans la fenêtre de temps
-        if (timer > detectionWindow)
+        if (scoreActuel >= scoreObjectif || tempsRestant <= 0)
         {
-            if (accelerationHistory.Count > 0)
-            {
-                accelerationHistory.RemoveAt(0);
-            }
+            FinDeManche(scoreActuel >= scoreObjectif);
         }
-
-        // Calcul de la moyenne cumulée
-        float averageForce = 0;
-        if (accelerationHistory.Count > 0)
-        {
-            foreach (float f in accelerationHistory) averageForce += f;
-            averageForce /= accelerationHistory.Count;
-        }
-
-        // 3. DÉTECTION DU COUP (MOBILE OU PC)
-        bool spacePressed = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
-
-        if (averageForce > threshold || spacePressed)
-        {
-            TryBreakWall(averageForce > 0 ? averageForce : 10f); // 10f est une force par défaut pour le test PC
-            accelerationHistory.Clear(); // Évite les déclenchements multiples
-        }
-
-        // Visualisation du rayon dans l'éditeur
-        Debug.DrawRay(transform.position, transform.forward * reachDistance, Color.cyan);
     }
 
-    void TryBreakWall(float power)
+    void FinDeManche(bool victoire)
     {
-        RaycastHit hit;
-        // Lance un rayon depuis le centre de l'écran ou l'objet vers l'avant
-        if (Physics.Raycast(transform.position, transform.forward, out hit, reachDistance, wallLayer))
+        jeuEnCours = false;
+        resultats.Add(new Resultat
         {
-            Debug.Log("<color=green>MUR TOUCHÉ !</color> Force appliquée : " + power);
+            nom = nomsDesDuellistes[indexJoueurActuel],
+            temps = tempsInitial - tempsRestant,
+            succes = victoire
+        });
 
-            // Option simple : destruction
-            Destroy(hit.collider.gameObject);
+        indexJoueurActuel++;
 
-            // Vibration
-#if UNITY_ANDROID || UNITY_IOS
-                Handheld.Vibrate();
-#endif
+        if (indexJoueurActuel < nomsDesDuellistes.Count)
+        {
+            // Joueur suivant
+            boutonPret.gameObject.SetActive(true);
+            AfficherPretSuivant();
         }
+        else
+        {
+            // Tout le monde a fini
+            TerminerLeJeuComplet();
+        }
+    }
+
+    void TerminerLeJeuComplet()
+    {
+        panneauClassement.SetActive(true);
+        // Tri : Les gagnants d'abord, puis les plus rapides
+        var classement = resultats.OrderByDescending(r => r.succes).ThenBy(r => r.temps).ToList();
+
+        string str = "FIN DU DUEL !\n\n";
+        for (int i = 0; i < classement.Count; i++)
+        {
+            str += $"{i + 1}. {classement[i].nom} : {(classement[i].succes ? classement[i].temps.ToString("F2") + "s" : "Ã‰CHEC")}\n";
+        }
+        texteClassement.text = str;
+
+        // --- RETOUR AUTOMATIQUE AU HUB ---
+        boutonPret.gameObject.SetActive(true);
+        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "RETOURNER AU HUB";
+        boutonPret.onClick.RemoveAllListeners();
+        boutonPret.onClick.AddListener(() => {
+            // On informe qui a gagnÃ© pour le HUB (Bob)
+            PlayerPrefs.SetString("DuelWinner", classement[0].nom);
+            PlayerPrefs.SetInt("FromDuel", 1);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("GameScene"); // Mets ici le nom de ta scÃ¨ne HUB
+        });
     }
 }

@@ -49,7 +49,7 @@ private void Awake()
 
         public void ResolveBySize()
         {
-            ballon[] balloons = FindObjectsOfType<ballon>();
+            ballon[] balloons = FindObjectsByType<ballon>();
 
             ballon biggest = null;
             foreach (ballon b in balloons)
