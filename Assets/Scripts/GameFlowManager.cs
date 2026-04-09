@@ -10,17 +10,21 @@ public class GameFlowManager : MonoBehaviour
     public Button nextButton;
     public ObstacleGenerator obsGen;
     public Button duelButton;
+    public Button rerollButton;
+    public Button okButton;
     private bool canBobRollEvents = false;
     public string consequenceDuel = "Aucune conséquence définie";
 
     [Header("Consequences Settings")]
     public string[] randomConsequence;
+    public bool consequenceSwitch = false;
 
-    private string GetRandomConsequence()
+    public void GetRandomConsequence()
     {
         if (randomConsequence == null || randomConsequence.Length == 0)
         {
-            return "BOB : 'Aucun événement classique configuré pour le moment...'";
+            consequenceDuel = "BOB : 'Aucun événement classique configuré pour le moment...'";
+            return;
         }
 
         int randomIndex = Random.Range(0, randomConsequence.Length);
@@ -34,7 +38,7 @@ public class GameFlowManager : MonoBehaviour
         }
 
         lastEventIndex = randomIndex;
-        return randomConsequence[randomIndex];
+        consequenceDuel = randomConsequence[randomIndex];
     }
 
     void Start()
@@ -42,29 +46,57 @@ public class GameFlowManager : MonoBehaviour
         if (PlayerPrefs.GetInt("FromDuel", 0) == 1)
         {
             obsGen.LoadObstaclesFromPrefs();
-            consequenceDuel = GetRandomConsequence();
+            GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
             bobText.text = "BOB : 'Le minijeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromDuel", 0);
             nextButton.gameObject.SetActive(false);
+            rerollButton.gameObject.SetActive(true);
+            okButton.gameObject.SetActive(true);
+            consequenceSwitch = true;
         }
         else if (PlayerPrefs.GetInt("FromCacheCache", 0) == 1)
         {
             obsGen.LoadObstaclesFromPrefs();
-            consequenceDuel = GetRandomConsequence();
+            GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("CacheCacheWinner");
             bobText.text = "BOB : 'Le Cache-Cache est terminé ! Le(s) vainqueur(s) : " + winnerName + " ! La conséquence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromCacheCache", 0);
             nextButton.gameObject.SetActive(false);
+            rerollButton.gameObject.SetActive(true);
+            okButton.gameObject.SetActive(true);
+            consequenceSwitch = true;
         }
         else
         {
             canBobRollEvents = false;
             ShowObstacles();
             duelButton.gameObject.SetActive(false);
+            rerollButton.gameObject.SetActive(false);
+            okButton.gameObject.SetActive(false);
         }
+    }
+
+    public void RerollConsequence()
+    {
+        if (consequenceSwitch == true)        {
+            GetRandomConsequence();
+            bobText.text = "BOB : 'La nouvelle conséquence est : " + consequenceDuel + " !'";
+        }
+        else
+        {
+            OnBobClicked();
+        }
+    }
+
+    public void OkConsequence()
+    {
+        bobText.text = "";
+        rerollButton.gameObject.SetActive(false);
+        okButton.gameObject.SetActive(false);
+        consequenceSwitch = false;
     }
 
     void ShowObstacles()
@@ -190,6 +222,9 @@ public class GameFlowManager : MonoBehaviour
 
         int eventRoll = Random.Range(0, 100); 
 
+        rerollButton.gameObject.SetActive(true);
+        okButton.gameObject.SetActive(true);
+
         if (eventRoll < 30)
         {
             bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
@@ -304,5 +339,4 @@ public class GameFlowManager : MonoBehaviour
     {
         SceneManager.LoadScene("Main");
     }
-
 }
