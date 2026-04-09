@@ -21,6 +21,7 @@ public class ChronoGame : MonoBehaviour
     private int totalJoueurs;
     private string[] playerNames;
     private List<float> scores = new List<float>();
+    private int lastGeneratedTime = -1;
 
     private string Regle => "<color=#FFFF00><size=120%>OBJECTIF : " + Generatedtime.ToString("F3") + " secondes !</size></color>\n--------------------------\n";
 
@@ -55,7 +56,14 @@ public class ChronoGame : MonoBehaviour
 
     public void GenerateRandomTime()
     {
-        Generatedtime = Random.Range(5, 15);
+        int generated = Random.Range(5, 15);
+        while (generated == lastGeneratedTime)
+        {
+            generated = Random.Range(5, 15);
+        }
+
+        lastGeneratedTime = generated;
+        Generatedtime = generated;
     }
 
     void Update()

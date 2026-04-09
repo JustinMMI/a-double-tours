@@ -59,6 +59,7 @@ public class LogiquePendu : MonoBehaviour
     private int joueurActuel = 1;
     private List<string> lettresRatees = new List<string>();
     private bool partieTerminee = false;
+    private int lastWordIndex = -1;
 
     void Start()
     {
@@ -68,6 +69,15 @@ public class LogiquePendu : MonoBehaviour
     void NouvellePartie()
     {
         int indexAleatoire = Random.Range(0, listeDeMots.Length);
+        if (listeDeMots.Length > 1)
+        {
+            while (indexAleatoire == lastWordIndex)
+            {
+                indexAleatoire = Random.Range(0, listeDeMots.Length);
+            }
+        }
+
+        lastWordIndex = indexAleatoire;
         motA_Deviner = listeDeMots[indexAleatoire].ToUpper();
 
         motCache = "";

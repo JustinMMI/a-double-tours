@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     private List<int> playerOrder = new List<int>();
     private Dictionary<int, int> guesses = new Dictionary<int, int>();
     private List<int> tiedPlayers = new List<int>();
+    private int lastTargetNumber = -1;
+    private readonly Dictionary<int, int> lastShuffleIndexByStep = new Dictionary<int, int>();
 
     void Start()
     {
@@ -148,6 +150,12 @@ public class GameManager : MonoBehaviour
     private void StartRound()
     {
         targetNumber = Random.Range(1, 101);
+        while (targetNumber == lastTargetNumber)
+        {
+            targetNumber = Random.Range(1, 101);
+        }
+        lastTargetNumber = targetNumber;
+
         currentTurnIndex = 0;
         guesses.Clear();
 
@@ -176,6 +184,15 @@ public class GameManager : MonoBehaviour
         for (int i = list.Count - 1; i > 0; i--)
         {
             int randomIndex = Random.Range(0, i + 1);
+            if (i + 1 > 1 && lastShuffleIndexByStep.ContainsKey(i))
+            {
+                while (randomIndex == lastShuffleIndexByStep[i])
+                {
+                    randomIndex = Random.Range(0, i + 1);
+                }
+            }
+
+            lastShuffleIndexByStep[i] = randomIndex;
             (list[i], list[randomIndex]) = (list[randomIndex], list[i]);
         }
     }

@@ -1,6 +1,6 @@
-// BalloonManager.cs
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class BalloonManager : MonoBehaviour
 {
@@ -11,26 +11,30 @@ public class BalloonManager : MonoBehaviour
     [Header("Balloon References")]
     [SerializeField] public ballon balloon1;
     [SerializeField] public ballon balloon2;
+    public Button QuitterPanelButton;
+    public GameObject Panel;
 
     public const string FallbackPlayer1 = "Joueur 1";
     public const string FallbackPlayer2 = "Joueur 2";
 
+    public void Start()
+    {
+        if (QuitterPanelButton != null)
+            QuitterPanelButton.onClick.AddListener(() =>
+            {
+                Panel.SetActive(false);
+            });
+    }
 private void Awake()
 {
-    if (player1Text == null || player2Text == null)
-    {
-        Debug.LogError("[BalloonManager] Player text references are not assigned in the Inspector.");
-        return;
-    }
-
-    int playerCount = PlayerPrefs.GetInt("PlayerCount", 0);
+    int playerCount = PlayerPrefs.GetInt("DuelPlayerCount", 0);
 
     player1Text.text = playerCount > 0
-        ? PlayerPrefs.GetString("Player_0", FallbackPlayer1)
+        ? PlayerPrefs.GetString("DuelPlayer_0", FallbackPlayer1)
         : FallbackPlayer1;
 
     player2Text.text = playerCount > 1
-        ? PlayerPrefs.GetString("Player_1", FallbackPlayer2)
+        ? PlayerPrefs.GetString("DuelPlayer_1", FallbackPlayer2)
         : FallbackPlayer2;
 
     if (balloon1 != null) balloon1.ownerPlayerName = player1Text.text;

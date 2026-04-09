@@ -6,6 +6,24 @@ using System.Collections.Generic;
 
 public class GameFlowManager : MonoBehaviour
 {
+    private enum BobEventType
+    {
+        None,
+        Obstacle,
+        Classic,
+        MiniGame
+    }
+
+    private enum ClassicEventStyle
+    {
+        Any,
+        Leader,
+        Last,
+        AllPlayers,
+        DuelPlayers,
+        SinglePlayer
+    }
+
     public TextMeshProUGUI bobText;
     public Button nextButton;
     public ObstacleGenerator obsGen;
@@ -19,6 +37,16 @@ public class GameFlowManager : MonoBehaviour
     public string[] randomConsequence;
     public bool consequenceSwitch = false;
 
+    private int lastConsequenceIndex = -1;
+    private int lastMiniGameIndex = -1;
+    private int lastEventRoll = -1;
+    private int lastClassicEventIndex = -1;
+    private int lastObstacleIndex = -1;
+    private int lastObstacleFloor = -1;
+    private BobEventType lastBobEventType = BobEventType.None;
+    private const float bobClickCooldown = 2f;
+    private float lastBobClickTime = -10f;
+
     public void GetRandomConsequence()
     {
         if (randomConsequence == null || randomConsequence.Length == 0)
@@ -28,16 +56,15 @@ public class GameFlowManager : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, randomConsequence.Length);
-
         if (randomConsequence.Length > 1)
         {
-            while (randomIndex == lastEventIndex)
+            while (randomIndex == lastConsequenceIndex)
             {
                 randomIndex = Random.Range(0, randomConsequence.Length);
             }
         }
 
-        lastEventIndex = randomIndex;
+        lastConsequenceIndex = randomIndex;
         consequenceDuel = randomConsequence[randomIndex];
     }
 
@@ -87,8 +114,41 @@ public class GameFlowManager : MonoBehaviour
         }
         else
         {
-            OnBobClicked();
+            RerollSameStyleEvent();
         }
+    }
+
+    private void RerollSameStyleEvent()
+    {
+        if (lastBobEventType == BobEventType.Obstacle)
+        {
+            bobText.text = GenerateRandomObstacle();
+            return;
+        }
+
+        if (lastBobEventType == BobEventType.Classic)
+        {
+            bobText.text = GetRandomClassicEventSameStyleOrFallback();
+            return;
+        }
+
+        // Mini-jeux exclus du reroll style : on force un event non-minijeu
+        int forcedRoll = Random.Range(0, 80);
+        if (forcedRoll < 30)
+        {
+            bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
+            return;
+        }
+
+        if (forcedRoll < 55)
+        {
+            lastBobEventType = BobEventType.Obstacle;
+            bobText.text = GenerateRandomObstacle();
+            return;
+        }
+
+        lastBobEventType = BobEventType.Classic;
+        bobText.text = GetRandomClassicEventOrFallback();
     }
 
     public void OkConsequence()
@@ -186,23 +246,19 @@ public class GameFlowManager : MonoBehaviour
         if (miniGameSceneNames != null && miniGameSceneNames.Count > 0)
         {
             int randomIndex = Random.Range(0, miniGameSceneNames.Count);
-            string selectedScene = miniGameSceneNames[randomIndex];
-
-            if (miniGameSceneNames.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
+            if (miniGameSceneNames.Count > 1)
             {
-                int safety = 0;
-                while (selectedScene == lastMiniGameSceneName && safety < 20)
+                while (randomIndex == lastMiniGameIndex)
                 {
                     randomIndex = Random.Range(0, miniGameSceneNames.Count);
-                    selectedScene = miniGameSceneNames[randomIndex];
-                    safety++;
                 }
             }
 
             lastMiniGameIndex = randomIndex;
+            string selectedScene = miniGameSceneNames[randomIndex];
+
             if (!string.IsNullOrEmpty(selectedScene))
             {
-                lastMiniGameSceneName = selectedScene;
                 SceneManager.LoadScene(selectedScene);
                 Debug.Log("BOB charge la scène : " + selectedScene);
             }
@@ -215,12 +271,24 @@ public class GameFlowManager : MonoBehaviour
 
     public void OnBobClicked()
     {
+        if (Time.time - lastBobClickTime < bobClickCooldown)
+        {
+            return;
+        }
+
         if (!canBobRollEvents)
         {
             return;
         }
 
-        int eventRoll = Random.Range(0, 100); 
+        lastBobClickTime = Time.time;
+
+        int eventRoll = Random.Range(0, 100);
+        while (eventRoll == lastEventRoll)
+        {
+            eventRoll = Random.Range(0, 100);
+        }
+        lastEventRoll = eventRoll;
 
         rerollButton.gameObject.SetActive(true);
         okButton.gameObject.SetActive(true);
@@ -233,18 +301,73 @@ public class GameFlowManager : MonoBehaviour
 
         if (eventRoll < 55)
         {
+            lastBobEventType = BobEventType.Obstacle;
             bobText.text = GenerateRandomObstacle();
             return;
         }
 
         if (eventRoll < 80)
         {
+            lastBobEventType = BobEventType.Classic;
             bobText.text = GetRandomClassicEventOrFallback();
             return;
         }
 
+        lastBobEventType = BobEventType.MiniGame;
         bobText.text = "BOB : 'Un mini-jeu est lancé !'";
         LoadRandomScene();
+    }
+
+    private string GetRandomClassicEventSameStyleOrFallback()
+    {
+        if (randomClassicEvent == null || randomClassicEvent.Length == 0)
+        {
+            return "BOB : 'Aucun événement classique configuré pour le moment...'";
+        }
+
+        if (lastClassicEventIndex < 0 || lastClassicEventIndex >= randomClassicEvent.Length)
+        {
+            return GetRandomClassicEventOrFallback();
+        }
+
+        ClassicEventStyle wantedStyle = DetectClassicEventStyle(randomClassicEvent[lastClassicEventIndex]);
+        List<int> candidates = new List<int>();
+
+        for (int i = 0; i < randomClassicEvent.Length; i++)
+        {
+            if (i == lastClassicEventIndex) continue;
+
+            ClassicEventStyle currentStyle = DetectClassicEventStyle(randomClassicEvent[i]);
+            if (currentStyle == wantedStyle)
+            {
+                candidates.Add(i);
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            return GetRandomClassicEventOrFallback();
+        }
+
+        int picked = candidates[Random.Range(0, candidates.Count)];
+        lastClassicEventIndex = picked;
+        return randomClassicEvent[picked];
+    }
+
+    private ClassicEventStyle DetectClassicEventStyle(string evt)
+    {
+        if (string.IsNullOrEmpty(evt)) return ClassicEventStyle.Any;
+
+        string t = evt.ToLower();
+
+        // petite detection simple, on touche pas les listes
+        if (t.Contains("tete") || t.Contains("1er") || t.Contains("premier")) return ClassicEventStyle.Leader;
+        if (t.Contains("dernier") || t.Contains("retard")) return ClassicEventStyle.Last;
+        if (t.Contains("tous") || t.Contains("tout le monde")) return ClassicEventStyle.AllPlayers;
+        if (t.Contains("duel") || t.Contains("combat") || t.Contains("2 joueurs")) return ClassicEventStyle.DuelPlayers;
+        if (t.Contains("un joueur") || t.Contains("joueur choisi") || t.Contains("au hasard")) return ClassicEventStyle.SinglePlayer;
+
+        return ClassicEventStyle.Any;
     }
 
     private string GetRandomClassicEventOrFallback()
@@ -255,16 +378,15 @@ public class GameFlowManager : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, randomClassicEvent.Length);
-
         if (randomClassicEvent.Length > 1)
         {
-            while (randomIndex == lastEventIndex)
+            while (randomIndex == lastClassicEventIndex)
             {
                 randomIndex = Random.Range(0, randomClassicEvent.Length);
             }
         }
 
-        lastEventIndex = randomIndex;
+        lastClassicEventIndex = randomIndex;
         return randomClassicEvent[randomIndex];
     }
 
@@ -298,9 +420,32 @@ public class GameFlowManager : MonoBehaviour
             return "BOB : 'Tous les dangers sont déjà placés...'";
         }
 
-        string selectedObstacle = allObstacles[Random.Range(0, allObstacles.Count)];
+        int obstacleIndex = Random.Range(0, allObstacles.Count);
+        if (allObstacles.Count > 1)
+        {
+            while (obstacleIndex == lastObstacleIndex)
+            {
+                obstacleIndex = Random.Range(0, allObstacles.Count);
+            }
+        }
+
+        lastObstacleIndex = obstacleIndex;
+        string selectedObstacle = allObstacles[obstacleIndex];
 
         HashSet<int> occupiedFloors = new HashSet<int>(initialFloors);
+
+        // exclusion etage au dessus
+        foreach (int initialFloor in initialFloors)
+        {
+            int floorAbove = initialFloor + 1;
+            bool sameTower1 = initialFloor <= 15 && floorAbove <= 15;
+            bool sameTower2 = initialFloor >= 21 && floorAbove <= 30;
+
+            if (sameTower1 || sameTower2)
+            {
+                occupiedFloors.Add(floorAbove);
+            }
+        }
 
         List<int> possibleFloors = new List<int> { 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
         List<int> availableFloors = new List<int>();
@@ -320,15 +465,20 @@ public class GameFlowManager : MonoBehaviour
         }
 
         int selectedFloor = availableFloors[Random.Range(0, availableFloors.Count)];
+        if (availableFloors.Count > 1)
+        {
+            while (selectedFloor == lastObstacleFloor)
+            {
+                selectedFloor = availableFloors[Random.Range(0, availableFloors.Count)];
+            }
+        }
+
+        lastObstacleFloor = selectedFloor;
         string towerName = selectedFloor <= 15 ? "Tour 1" : "Tour 2";
         int floorDisplay = selectedFloor <= 15 ? selectedFloor : selectedFloor - 15;
 
         return "BOB : 'Un danger apparaît ! Placez " + selectedObstacle + " à " + towerName + ", étage " + floorDisplay + " !'";
     }
-
-    private int lastEventIndex = -1;
-    private int lastMiniGameIndex = -1;
-    private string lastMiniGameSceneName = null;
 
     public void OnDuelClicked()
     {

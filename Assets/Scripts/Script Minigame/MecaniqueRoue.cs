@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class MecaniqueRoue : MonoBehaviour
 {
-    [Header("Réglages")]
+    [Header("Rï¿½glages")]
     public float friction = 0.98f;
     public float forceMin = 800f;
     public float forceMax = 1500f;
@@ -39,13 +39,13 @@ public class MecaniqueRoue : MonoBehaviour
         vitesseActuelle = 0;
         estEnTrainDeTourner = false;
 
-        // On récupère l'angle 2D (Z)
+        // On rï¿½cupï¿½re l'angle 2D (Z)
         float angleFinal = transform.eulerAngles.z;
 
         // On arrondit pour avoir un chiffre propre
         int resultatFinal = Mathf.RoundToInt(angleFinal);
 
-        Debug.Log(" ARRÊT 2D ! Angle : " + resultatFinal + " degrés.");
+        Debug.Log(" ARRï¿½T 2D ! Angle : " + resultatFinal + " degrï¿½s.");
 
         LogiqueGain(resultatFinal);
     }

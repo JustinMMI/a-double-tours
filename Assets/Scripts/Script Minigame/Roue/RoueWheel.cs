@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class RoueWheel : MonoBehaviour
@@ -5,6 +6,10 @@ public class RoueWheel : MonoBehaviour
     [Header("Vitesse de rotation")]
     public float vitesseMin = 200f;
     public float vitesseMax = 400f;
+
+    [Header("Décélération")]
+    [Tooltip("Perte de vitesse par seconde après avoir appuyé sur STOP (degrés/s²).")]
+    public float deceleration = 120f;
 
     [Header("Sections (dans le sens horaire depuis le haut)")]
     public RoueSection[] sections = new RoueSection[]
@@ -19,6 +24,7 @@ public class RoueWheel : MonoBehaviour
 
     private float vitesseActuelle;
     private bool isStopped = false;
+    private bool isDecelerating = false;
 
     public bool IsStopped => isStopped;
 
@@ -34,18 +40,41 @@ public class RoueWheel : MonoBehaviour
         transform.Rotate(0f, 0f, -vitesseActuelle * Time.deltaTime);
     }
 
-    /// <summary>Arrête la roue et retourne la section en face de l'indicateur.</summary>
-    public RoueSection Stop()
+    /// <summary>
+    /// Décélère progressivement la roue jusqu'à l'arrêt complet,
+    /// puis appelle onArretee avec la section finale.
+    /// </summary>
+    public void Decelerate(System.Action<RoueSection> onArretee)
     {
-        isStopped = true;
-        return GetCurrentSection();
+        if (isDecelerating || isStopped) return;
+        StartCoroutine(DecelerationRoutine(onArretee));
     }
 
-    /// <summary>Remet la roue en rotation avec une vitesse aléatoire.</summary>
+    private IEnumerator DecelerationRoutine(System.Action<RoueSection> onArretee)
+    {
+        isDecelerating = true;
+
+        while (vitesseActuelle > 0f)
+        {
+            vitesseActuelle -= deceleration * Time.deltaTime;
+            vitesseActuelle = Mathf.Max(vitesseActuelle, 0f);
+            yield return null;
+        }
+
+        isStopped = true;
+        isDecelerating = false;
+
+        onArretee?.Invoke(GetCurrentSection());
+    }
+
+    /// <summary>Remet la roue en rotation avec une vitesse et un angle de départ aléatoires.</summary>
     public void Restart()
     {
+        StopAllCoroutines();
         isStopped = false;
+        isDecelerating = false;
         vitesseActuelle = Random.Range(vitesseMin, vitesseMax);
+        transform.eulerAngles = new Vector3(0f, 0f, Random.Range(0f, 360f));
     }
 
     /// <summary>Retourne la section actuellement pointée par l'indicateur (haut = 0°).</summary>

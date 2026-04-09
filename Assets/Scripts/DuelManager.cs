@@ -5,13 +5,8 @@ using System.Collections.Generic;
 public class DuelManager : MonoBehaviour
 {
     public List<PionSelector> duelPions;
-
-    /// <summary>
-    /// Assign SceneAsset objects here in the Inspector. Scene names are synced automatically for runtime use.
-    /// </summary>
     public List<Object> MiniGamePool;
 
-    // Stores scene names extracted from MiniGamePool in the Editor, serialized for use in builds.
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
 
 #if UNITY_EDITOR
@@ -28,30 +23,25 @@ public class DuelManager : MonoBehaviour
 #endif
 
     private int lastMiniGameIndex = -1;
-    private string lastMiniGameSceneName = null;
 
     public void LoadRandomScene()
     {
         if (miniGameSceneNames != null && miniGameSceneNames.Count > 0)
         {
             int randomIndex = Random.Range(0, miniGameSceneNames.Count);
-            string selectedScene = miniGameSceneNames[randomIndex];
-
-            if (miniGameSceneNames.Count > 1 && !string.IsNullOrEmpty(lastMiniGameSceneName))
+            if (miniGameSceneNames.Count > 1)
             {
-                int safety = 0;
-                while (selectedScene == lastMiniGameSceneName && safety < 20)
+                while (randomIndex == lastMiniGameIndex)
                 {
                     randomIndex = Random.Range(0, miniGameSceneNames.Count);
-                    selectedScene = miniGameSceneNames[randomIndex];
-                    safety++;
                 }
             }
 
             lastMiniGameIndex = randomIndex;
+            string selectedScene = miniGameSceneNames[randomIndex];
+
             if (!string.IsNullOrEmpty(selectedScene))
             {
-                lastMiniGameSceneName = selectedScene;
                 SceneManager.LoadScene(selectedScene);
                 Debug.Log("BOB charge la scène : " + selectedScene);
             }
