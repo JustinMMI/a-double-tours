@@ -530,7 +530,7 @@ MonoBehaviour:
   texteJoueurRouge: {fileID: 2126087901}
   boutonBleu: {fileID: 1648833256}
   boutonRouge: {fileID: 279323866}
-  boutonRejouer: {fileID: 2137512438}
+  boutonRejouer: {fileID: 2137512440}
   scoreGlobal: 50
   forceImpact: 5
 --- !u!1 &744018704
