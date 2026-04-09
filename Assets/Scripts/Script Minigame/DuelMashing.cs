@@ -12,22 +12,22 @@ public class DuelMashing : MonoBehaviour
     public TextMeshProUGUI texteJoueurRouge;
     public Button boutonBleu;
     public Button boutonRouge;
-    public GameObject boutonRejouer;
+    public Button boutonRejouer;
 
     [Header("Réglages")]
     public float scoreGlobal = 50f;
     public float forceImpact = 10f;
 
     private const string ReturnSceneName = "GameScene";
-    private const string DuelWinnerKey = "DuelWinner";
-    private const string FromDuelKey = "FromDuel";
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuel = "FromDuel";
 
     private string nomJoueurBleu = "Joueur Bleu";
     private string nomJoueurRouge = "Joueur Rouge";
 
     void Start()
     {
-        ChargerJoueurs();
+        InitializePlayers();
         InitialiserJeu();
     }
 
@@ -36,21 +36,15 @@ public class DuelMashing : MonoBehaviour
 
 
 
-    private void ChargerJoueurs()
+    private void InitializePlayers()
     {
-        int duelPlayerCount = PlayerPrefs.GetInt("DuelPlayerCount", 0);
+        int count = PlayerPrefs.GetInt("DuelPlayerCount", 0);
 
-        if (duelPlayerCount >= 2)
+        if (count >= 2)
         {
             nomJoueurBleu = PlayerPrefs.GetString("DuelPlayer_0", "Joueur Bleu");
             nomJoueurRouge = PlayerPrefs.GetString("DuelPlayer_1", "Joueur Rouge");
         }
-        else
-        {
-            Debug.LogWarning("[DuelMashing] Aucun joueur de duel trouvé dans PlayerPrefs. Noms par défaut utilisés.");
-        }
-
-        Debug.Log($"[DuelMashing] Joueur Bleu : {nomJoueurBleu} | Joueur Rouge : {nomJoueurRouge}");
     }
 
     public void InitialiserJeu()
@@ -65,8 +59,7 @@ public class DuelMashing : MonoBehaviour
         if (texteJoueurBleu != null) texteJoueurBleu.text = nomJoueurBleu;
         if (texteJoueurRouge != null) texteJoueurRouge.text = nomJoueurRouge;
 
-        boutonRejouer.SetActive(false);
-        AppuiyeBoutonsJeu(true);
+        boutonRejouer.gameObject.SetActive(false);
     }
 
     public void ClickBleu()
@@ -81,7 +74,7 @@ public class DuelMashing : MonoBehaviour
 
     void ModifierScore(float valeur)
     {
-        if (boutonRejouer.activeSelf) return;
+        if (boutonRejouer.gameObject.activeSelf) return;
 
         scoreGlobal += valeur;
         scoreGlobal = Mathf.Clamp(scoreGlobal, 0, 100);
@@ -95,26 +88,17 @@ public class DuelMashing : MonoBehaviour
     {
         texteInfo.text = $"{nomGagnant} A GAGNÉ !";
 
-        PlayerPrefs.SetString(DuelWinnerKey, nomGagnant);
-        PlayerPrefs.SetInt(FromDuelKey, 1);
+        PlayerPrefs.SetString(WinnerKey, nomGagnant);
+        PlayerPrefs.SetInt(FromDuel, 1);
         PlayerPrefs.Save();
 
-        Debug.Log($"[DuelMashing] Vainqueur : {nomGagnant}");
-
-        boutonRejouer.SetActive(true);
-        AppuiyeBoutonsJeu(false);
+        boutonRejouer.gameObject.SetActive(true);
         boutonBleu.gameObject.SetActive(false);
         boutonRouge.gameObject.SetActive(false);
-    }
 
-    public void RetournerAuJeu()
-    {
-        SceneManager.LoadScene(ReturnSceneName);
-    }
-
-    void AppuiyeBoutonsJeu(bool etat)
-    {
-        boutonBleu.interactable = etat;
-        boutonRouge.interactable = etat;
+        boutonRejouer.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("GameScene");
+        });
     }
 }
