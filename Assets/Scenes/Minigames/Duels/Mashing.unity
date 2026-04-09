@@ -398,7 +398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Rejouer
+  m_text: 'Continuer
 
 '
   m_isRightToLeft: 0
