@@ -131,12 +131,9 @@ public class GameFlowManager : MonoBehaviour
     [Header("Events Settings")]
     public string[] randomClassicEvent;
 
-    /// <summary>
-    /// Assign SceneAsset objects here in the Inspector. Scene names are synced automatically for runtime use.
-    /// </summary>
+
     public List<Object> MiniGamePool;
 
-    // Stores scene names extracted from MiniGamePool in the Editor, serialized for use in builds.
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
 
 #if UNITY_EDITOR
@@ -191,30 +188,26 @@ public class GameFlowManager : MonoBehaviour
             return;
         }
 
-        int eventRoll = Random.Range(0, 100); // 0..99
+        int eventRoll = Random.Range(0, 100); 
 
         if (eventRoll < 30)
         {
-            // 30%
             bobText.text = "BOB : 'Aucun événement aléatoire cette fois-ci...'";
             return;
         }
 
         if (eventRoll < 55)
         {
-            // 25%
             bobText.text = GenerateRandomObstacle();
             return;
         }
 
         if (eventRoll < 80)
         {
-            // 25%
             bobText.text = GetRandomClassicEventOrFallback();
             return;
         }
 
-        // 20%
         bobText.text = "BOB : 'Un mini-jeu est lancé !'";
         LoadRandomScene();
     }
@@ -242,7 +235,6 @@ public class GameFlowManager : MonoBehaviour
 
     private string GenerateRandomObstacle()
     {
-        // Sécurité : vérifier que obsGen existe
         if (obsGen == null)
         {
             Debug.LogError("ObstacleGenerator n'est pas assigné !");
@@ -252,7 +244,6 @@ public class GameFlowManager : MonoBehaviour
         List<string> initialObstacles = obsGen.GetInitialObstacles();
         List<int> initialFloors = obsGen.GetInitialFloors();
 
-        // Sécurité : vérifier que les listes ne sont pas nulles
         if (initialObstacles == null || initialFloors == null)
         {
             Debug.LogError("Les obstacles initiaux n'ont pas pu être récupérés !");
@@ -261,26 +252,21 @@ public class GameFlowManager : MonoBehaviour
 
         List<string> allObstacles = new List<string> { "Surcharge", "Eboulement", "Inondation", "Incendie", "Tentacule de BOB", "Serpents" };
 
-        // Exclure les obstacles déjà placés au début
         foreach (string initialObstacle in initialObstacles)
         {
             allObstacles.Remove(initialObstacle);
         }
 
-        // Sécurité : vérifier qu'il reste des obstacles disponibles
         if (allObstacles.Count == 0)
         {
             Debug.LogWarning("Aucun obstacle disponible pour générer un événement !");
             return "BOB : 'Tous les dangers sont déjà placés...'";
         }
 
-        // Sélectionner un obstacle aléatoire parmi les restants
         string selectedObstacle = allObstacles[Random.Range(0, allObstacles.Count)];
 
-        // Exclure uniquement les positions exactes déjà occupées au début.
         HashSet<int> occupiedFloors = new HashSet<int>(initialFloors);
 
-        // Étages valides
         List<int> possibleFloors = new List<int> { 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };
         List<int> availableFloors = new List<int>();
 
@@ -292,14 +278,12 @@ public class GameFlowManager : MonoBehaviour
             }
         }
 
-        // Sécurité : vérifier qu'il reste des étages disponibles
         if (availableFloors.Count == 0)
         {
             Debug.LogWarning("Aucun étage disponible pour placer l'obstacle !");
             return "BOB : 'Tous les étages sont occupés...'";
         }
 
-        // Sélectionner un étage aléatoire
         int selectedFloor = availableFloors[Random.Range(0, availableFloors.Count)];
         string towerName = selectedFloor <= 15 ? "Tour 1" : "Tour 2";
         int floorDisplay = selectedFloor <= 15 ? selectedFloor : selectedFloor - 15;
