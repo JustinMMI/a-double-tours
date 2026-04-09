@@ -22,28 +22,36 @@ public class RoueWheel : MonoBehaviour
         new RoueSection { nom = "Bien",     points = 3, couleur = new Color(0.56f, 0.93f, 0.56f) },
     };
 
+    private SpriteRenderer spriteRenderer;
     private float vitesseActuelle;
     private bool isStopped = false;
     private bool isDecelerating = false;
+    private float startAngleOffset = 0f; 
 
     public bool IsStopped => isStopped;
 
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     private void Start()
     {
-        vitesseActuelle = Random.Range(vitesseMin, vitesseMax);
-        transform.eulerAngles = new Vector3(0f, 0f, Random.Range(0f, 360f));
+        Restart();
     }
 
     private void Update()
     {
-        if (isStopped) return;
-        transform.Rotate(0f, 0f, -vitesseActuelle * Time.deltaTime);
+        if (!isStopped)
+        {
+            float delta = vitesseActuelle * Time.deltaTime;
+            transform.Rotate(delta, 0f, 0f);
+        }
+
+        if (spriteRenderer != null && sections.Length > 0)
+            spriteRenderer.color = GetCurrentSection().couleur;
     }
 
-    /// <summary>
-    /// Décélère progressivement la roue jusqu'à l'arrêt complet,
-    /// puis appelle onArretee avec la section finale.
-    /// </summary>
     public void Decelerate(System.Action<RoueSection> onArretee)
     {
         if (isDecelerating || isStopped) return;
@@ -64,29 +72,36 @@ public class RoueWheel : MonoBehaviour
         isStopped = true;
         isDecelerating = false;
 
-        onArretee?.Invoke(GetCurrentSection());
+        RoueSection finalSection = GetCurrentSection();
+        if (spriteRenderer != null && finalSection != null)
+            spriteRenderer.color = finalSection.couleur;
+
+        onArretee?.Invoke(finalSection);
     }
 
-    /// <summary>Remet la roue en rotation avec une vitesse et un angle de départ aléatoires.</summary>
     public void Restart()
     {
         StopAllCoroutines();
         isStopped = false;
         isDecelerating = false;
         vitesseActuelle = Random.Range(vitesseMin, vitesseMax);
-        transform.eulerAngles = new Vector3(0f, 0f, Random.Range(0f, 360f));
+
+        float initialAngle = Random.Range(0f, 360f);
+        transform.eulerAngles = new Vector3(initialAngle, 0f, 0f);
+        startAngleOffset = initialAngle;
     }
 
-    /// <summary>Retourne la section actuellement pointée par l'indicateur (haut = 0°).</summary>
     public RoueSection GetCurrentSection()
     {
         if (sections == null || sections.Length == 0) return null;
 
         float sectionAngle = 360f / sections.Length;
-        float eulerZ = transform.eulerAngles.z;
-        float normalizedAngle = (((-eulerZ) % 360f) + 360f) % 360f;
-        int index = Mathf.FloorToInt(normalizedAngle / sectionAngle) % sections.Length;
 
+
+        float rawAngle = transform.eulerAngles.x;
+        float relativeAngle = (rawAngle - startAngleOffset + 360f) % 360f;
+
+        int index = Mathf.FloorToInt(relativeAngle / sectionAngle) % sections.Length;
         return sections[index];
     }
 }

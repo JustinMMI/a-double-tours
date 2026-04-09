@@ -1,150 +1,196 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.SceneManagement; // Pour retourner au HUB
+//using UnityEngine;
+//using TMPro;
+//using UnityEngine.UI;
+//using System.Collections.Generic;
+//using System.Linq;
+//using UnityEngine.SceneManagement;
 
-public class MultiMiner : MonoBehaviour
-{
-    [Header("UI Elements")]
-    public TextMeshProUGUI texteEcran;
-    public GameObject panneauClassement;
-    public TextMeshProUGUI texteClassement;
-    public Button boutonPret;
+//public class MultiMiner : MonoBehaviour
+//{
+//    private const string fromRerollKey = "fromRerollKey";
 
-    [Header("Réglages")]
-    public float tempsInitial = 10f;
-    public int scoreObjectif = 30;
+//    [Header("UI Elements")]
+//    public TextMeshProUGUI texteEcran;       // Texte principal (Score/Chrono)
+//    public GameObject panneauClassement;    // Le Panel qui contient le classement
+//    public TextMeshProUGUI texteClassement;  // Le texte de la liste finale
+//    public Button boutonPret;               // Le bouton pour Start / Joueur suivant
 
-    private float tempsRestant;
-    private int scoreActuel;
-    private bool jeuEnCours = false;
-    private bool peutFrapper = true;
+//    [Header("Réglages Gameplay")]
+//    public float tempsDeJeu = 10f;          // Temps imparti par joueur
+//    public float seuilSensibilite = 15f;    // Force de la secousse (15 est une bonne base)
+//    public float delaiEntreCoups = 0.12f;   // Empêche de compter trop de coups d'un coup
 
-    // --- SYSTÈME AUTOMATIQUE ---
-    private List<string> nomsDesDuellistes = new List<string>();
-    private int indexJoueurActuel = 0;
+//    // Variables de jeu internes
+//    private float tempsRestant;
+//    private int scoreActuel;
+//    private bool jeuEnCours = false;
+//    private float prochainCoupAutorise;
+//    private Vector3 derniereAcceleration;
 
-    struct Resultat
-    {
-        public string nom;
-        public float temps;
-        public bool succes;
-    }
-    List<Resultat> resultats = new List<Resultat>();
+//    // Gestion Dynamique des joueurs
+//    private List<string> nomsDesDuellistes = new List<string>();
+//    private int indexJoueurActuel = 0;
 
-    void Awake()
-    {
-        // 1. On récupère AUTOMATIQUEMENT les joueurs envoyés par le DuelManager
-        int count = PlayerPrefs.GetInt("DuelPlayerCount", 0);
-        if (count == 0)
-        {
-            Debug.LogError("Aucun joueur trouvé dans PlayerPrefs !");
-            nomsDesDuellistes.Add("Joueur 1");
-            nomsDesDuellistes.Add("Joueur 2");
-        }
-        else
-        {
-            for (int i = 0; i < count; i++)
-            {
-                nomsDesDuellistes.Add(PlayerPrefs.GetString("DuelPlayer_" + i));
-            }
-        }
-    }
+//    struct Resultat
+//    {
+//        public string nom;
+//        public int score;
+//    }
+//    List<Resultat> historiqueResultats = new List<Resultat>();
 
-    void Start()
-    {
-        panneauClassement.SetActive(false);
-        boutonPret.onClick.AddListener(DemarrerManche);
-        AfficherPretSuivant();
-    }
+//    public void OnRerollClicked()
+//    {
+//        // Réinitialiser les données pour un nouveau jeu
+//        Debug.Log("Reroll cliqué, réinitialisation du jeu.");
+//        PlayerPrefs.SetInt(fromRerollKey, 1); // Indique au HUB que c'est un reroll
+//        PlayerPrefs.Save();
+//        SceneManager.LoadScene("GameScene");
+//    }
+//    void Awake()
+//    {
+//        // 1. On récupère le nombre exact de joueurs envoyés par le DuelManager
+//        // "DuelPlayerCount" est la clé que tu as définie dans ton DuelManager
+//        int count = PlayerPrefs.GetInt("DuelPlayerCount", 0);
 
-    void AfficherPretSuivant()
-    {
-        texteEcran.text = $"À TON TOUR :\n<color=yellow>{nomsDesDuellistes[indexJoueurActuel]}</color>";
-        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "JE SUIS PRÊT !";
-    }
+//        if (count > 0)
+//        {
+//            for (int i = 0; i < count; i++)
+//            {
+//                // On récupère Player_0, Player_1, Player_2, Player_3... à l'infini
+//                string nomDuJoueur = PlayerPrefs.GetString("DuelPlayer_" + i);
+//                nomsDesDuellistes.Add(nomDuJoueur);
+//            }
+//        }
+//        else
+//        {
+//            // Sécurité si tu testes la scène Miner sans passer par le HUB
+//            nomsDesDuellistes.Add("Joueur de Test 1");
+//            nomsDesDuellistes.Add("Joueur de Test 2");
+//        }
+//    }
 
-    void DemarrerManche()
-    {
-        scoreActuel = 0;
-        tempsRestant = tempsInitial;
-        jeuEnCours = true;
-        boutonPret.gameObject.SetActive(false);
-        panneauClassement.SetActive(false);
-    }
+//    void Start()
+//    {
+//        panneauClassement.SetActive(false);
+//        boutonPret.onClick.AddListener(DemarrerManche);
+//        AfficherEcranAttente();
+//    }
 
-    void Update()
-    {
-        if (!jeuEnCours) return;
+//    void AfficherEcranAttente()
+//    {
+//        jeuEnCours = false;
+//        boutonPret.gameObject.SetActive(true);
+//        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "JE SUIS PRÊT !";
 
-        tempsRestant -= Time.deltaTime;
-        float force = Input.acceleration.magnitude;
+//        string nomAffiche = nomsDesDuellistes[indexJoueurActuel];
+//        // On affiche qui doit jouer
+//        texteEcran.text = $"AU TOUR DE :\n<color=#FFD700>{nomAffiche}</color>\n\nSecoue le plus vite possible !";
+//    }
 
-        if (force > 2.5f && peutFrapper)
-        {
-            scoreActuel++;
-            peutFrapper = false;
-        }
-        if (force < 1.8f) peutFrapper = true;
+//    void DemarrerManche()
+//    {
+//        scoreActuel = 0;
+//        tempsRestant = tempsDeJeu;
+//        derniereAcceleration = Input.acceleration;
+//        prochainCoupAutorise = 0;
 
-        texteEcran.text = $"{nomsDesDuellistes[indexJoueurActuel]}\nScore: {scoreActuel}/{scoreObjectif}\nTemps: {tempsRestant:F1}s";
+//        boutonPret.gameObject.SetActive(false);
+//        panneauClassement.SetActive(false);
+//        jeuEnCours = true;
+//    }
 
-        if (scoreActuel >= scoreObjectif || tempsRestant <= 0)
-        {
-            FinDeManche(scoreActuel >= scoreObjectif);
-        }
-    }
+//    void Update()
+//    {
+//        if (!jeuEnCours) return;
 
-    void FinDeManche(bool victoire)
-    {
-        jeuEnCours = false;
-        resultats.Add(new Resultat
-        {
-            nom = nomsDesDuellistes[indexJoueurActuel],
-            temps = tempsInitial - tempsRestant,
-            succes = victoire
-        });
+//        tempsRestant -= Time.deltaTime;
 
-        indexJoueurActuel++;
+//        // --- DÉTECTION DE SECOUSSE FLUIDE (Delta-Velocity) ---
+//        Vector3 accelerationActuelle = Input.acceleration;
+//        float mouvementSoudain = (accelerationActuelle - derniereAcceleration).magnitude;
+//        derniereAcceleration = accelerationActuelle;
 
-        if (indexJoueurActuel < nomsDesDuellistes.Count)
-        {
-            // Joueur suivant
-            boutonPret.gameObject.SetActive(true);
-            AfficherPretSuivant();
-        }
-        else
-        {
-            // Tout le monde a fini
-            TerminerLeJeuComplet();
-        }
-    }
+//        // Si le mouvement est assez brusque et que le délai est respecté
+//        if (mouvementSoudain > (seuilSensibilite / 10f) && Time.time > prochainCoupAutorise)
+//        {
+//            scoreActuel++;
+//            prochainCoupAutorise = Time.time + delaiEntreCoups;
 
-    void TerminerLeJeuComplet()
-    {
-        panneauClassement.SetActive(true);
-        // Tri : Les gagnants d'abord, puis les plus rapides
-        var classement = resultats.OrderByDescending(r => r.succes).ThenBy(r => r.temps).ToList();
+//            // Vibration pour plus de sensation
+//#if !UNITY_EDITOR
+//            Handheld.Vibrate();
+//#endif
+//        }
 
-        string str = "FIN DU DUEL !\n\n";
-        for (int i = 0; i < classement.Count; i++)
-        {
-            str += $"{i + 1}. {classement[i].nom} : {(classement[i].succes ? classement[i].temps.ToString("F2") + "s" : "ÉCHEC")}\n";
-        }
-        texteClassement.text = str;
+//        // Mise à jour de l'UI pendant que le joueur secoue
+//        string nomAffiche = nomsDesDuellistes[indexJoueurActuel];
+//        texteEcran.text = $"{nomAffiche}\n<size=160%>{scoreActuel}</size> MINES\n<color=red>{tempsRestant:F1}s</color>";
 
-        // --- RETOUR AUTOMATIQUE AU HUB ---
-        boutonPret.gameObject.SetActive(true);
-        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "RETOURNER AU HUB";
-        boutonPret.onClick.RemoveAllListeners();
-        boutonPret.onClick.AddListener(() => {
-            // On informe qui a gagné pour le HUB (Bob)
-            PlayerPrefs.SetString("DuelWinner", classement[0].nom);
-            PlayerPrefs.SetInt("FromDuel", 1);
-            PlayerPrefs.Save();
-            SceneManager.LoadScene("GameScene"); // Mets ici le nom de ta scène HUB
-        });
-    }
-}
+//        // Quand le temps est fini
+//        if (tempsRestant <= 0)
+//        {
+//            EnregistrerResultat();
+//        }
+//    }
+
+//    void EnregistrerResultat()
+//    {
+//        jeuEnCours = false;
+
+//        // Stocke le score du joueur actuel
+//        historiqueResultats.Add(new Resultat
+//        {
+//            nom = nomsDesDuellistes[indexJoueurActuel],
+//            score = scoreActuel
+//        });
+
+//        indexJoueurActuel++;
+
+//        // Est-ce qu'il reste quelqu'un dans la liste ?
+//        if (indexJoueurActuel < nomsDesDuellistes.Count)
+//        {
+//            // Oui -> Au suivant !
+//            AfficherEcranAttente();
+//        }
+//        else
+//        {
+//            // Non -> Classement final
+//            AfficherClassementFinal();
+//        }
+//    }
+
+//    void AfficherClassementFinal()
+//    {
+//        panneauClassement.SetActive(true);
+
+//        // TRI AUTOMATIQUE : Celui qui a le plus gros score est 1er
+//        var classementTrié = historiqueResultats.OrderByDescending(r => r.score).ToList();
+
+//        string renduTexte = "<color=yellow>--- RÉSULTATS DUEL ---</color>\n\n";
+//        for (int i = 0; i < classementTrié.Count; i++)
+//        {
+//            // On met le gagnant en vert
+//            string couleur = (i == 0) ? "green" : "white";
+//            renduTexte += $"<color={couleur}>{i + 1}. {classementTrié[i].nom} : {classementTrié[i].score} mines</color>\n";
+//        }
+
+//        texteClassement.text = renduTexte;
+//        texteEcran.text = "DUEL TERMINÉ !";
+
+//        // Configuration du bouton final
+//        boutonPret.gameObject.SetActive(true);
+//        boutonPret.GetComponentInChildren<TextMeshProUGUI>().text = "RETOUR AU HUB";
+
+//        // On nettoie le bouton et on lui donne une nouvelle mission : rentrer à la maison
+//        boutonPret.onClick.RemoveAllListeners();
+//        boutonPret.onClick.AddListener(() => {
+//            // On informe le HUB de qui a gagné (le 1er de la liste triée)
+//            PlayerPrefs.SetString("DuelWinner", classementTrié[0].nom);
+//            PlayerPrefs.SetInt("FromDuel", 1);
+//            PlayerPrefs.Save();
+
+//            // Charge ton plateau de jeu (vérifie le nom de ta scène)
+//            SceneManager.LoadScene("GameScene");
+//        });
+//    }
+//}

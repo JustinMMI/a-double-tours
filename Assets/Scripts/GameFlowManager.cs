@@ -76,7 +76,7 @@ public class GameFlowManager : MonoBehaviour
             GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
-            bobText.text = "BOB : 'Le minijeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
+            bobText.text = "BOB : 'Le mini jeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromDuel", 0);
             nextButton.gameObject.SetActive(false);
             rerollButton.gameObject.SetActive(true);
@@ -95,6 +95,11 @@ public class GameFlowManager : MonoBehaviour
             rerollButton.gameObject.SetActive(true);
             okButton.gameObject.SetActive(true);
             consequenceSwitch = true;
+        }
+        else if (PlayerPrefs.GetInt("fromRerollKey", 0) == 1)
+        {
+            PlayerPrefs.SetInt("fromRerollKey", 0);
+            LoadRandomScene();
         }
         else
         {
@@ -132,7 +137,6 @@ public class GameFlowManager : MonoBehaviour
             return;
         }
 
-        // Mini-jeux exclus du reroll style : on force un event non-minijeu
         int forcedRoll = Random.Range(0, 80);
         if (forcedRoll < 30)
         {
@@ -223,20 +227,19 @@ public class GameFlowManager : MonoBehaviour
     [Header("Events Settings")]
     public string[] randomClassicEvent;
 
-
-    public List<Object> MiniGamePool;
-
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
+
+    private const string RandomMiniGameFolder = "Assets/Scenes/Minigames/Jeux Multis";
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
         miniGameSceneNames.Clear();
-        if (MiniGamePool == null) return;
-        foreach (Object obj in MiniGamePool)
+        string[] guids = UnityEditor.AssetDatabase.FindAssets("t:Scene", new[] { RandomMiniGameFolder });
+        foreach (string guid in guids)
         {
-            if (obj != null)
-                miniGameSceneNames.Add(obj.name);
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            miniGameSceneNames.Add(System.IO.Path.GetFileNameWithoutExtension(path));
         }
     }
 #endif
