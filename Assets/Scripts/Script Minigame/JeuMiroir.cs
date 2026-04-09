@@ -1,9 +1,9 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 
 public class JeuMiroir : MonoBehaviour
 {
@@ -14,48 +14,73 @@ public class JeuMiroir : MonoBehaviour
 
     [Header("Réglages du Jeu")]
     public float tempsAffichage = 2.0f;
+    public float delaiEntreJoueurs = 2.0f;
 
+    private const string WinnerKey = "DuelWinner";
+    private const string FromDuelKey = "FromDuel";
+    private const string ReturnSceneName = "GameScene";
+    private const int SequenceLongueurDepart = 2;
+
+    private List<string> joueurs = new List<string>();
+    private Dictionary<string, int> scores = new Dictionary<string, int>();
+
+    private int joueurActuelIndex = 0;
     private string sequenceActuelle = "";
     private string saisieActuelle = "";
-    private int score = 0;
+    private int scoreActuel = 0;
+    private int longueurSequence = SequenceLongueurDepart;
     private bool saisieActive = false;
-    public int scoreun = 0;
-    public int scoredeux = 0;
-    public int scoreTrois = 0;
-    public int scoreQuatre = 0;
-    public int defineplayer = 1;
 
-    void Start()
+    private void Start()
     {
         if (sequenceAffichée == null || saisieTexte == null || scoreTexte == null)
         {
-            defineplayer = 1;
             Debug.LogError("[JeuMiroir] Un ou plusieurs champs UI ne sont pas assignés dans l'Inspector.", this);
             return;
         }
 
+        ChargerJoueurs();
         saisieActuelle = "";
         RefreshSaisie();
         scoreTexte.text = "Score : 0";
         GenererNouvelleSequence();
     }
 
-    public int count = 2;
-    public void GenererNouvelleSequence()
+    private void ChargerJoueurs()
     {
-        string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        sequenceActuelle = "";
-        for (int i = 0; i < count; i++)
+        int count = PlayerPrefs.GetInt("PlayerCount", 0);
+
+        if (count == 0)
         {
-            sequenceActuelle += caracteres[Random.Range(0, caracteres.Length)];
+            Debug.LogWarning("[JeuMiroir] Aucun joueur trouvé dans PlayerPrefs. Joueurs par défaut utilisés.");
+            joueurs.Add("Joueur 1");
+            joueurs.Add("Joueur 2");
+        }
+        else
+        {
+            for (int i = 0; i < count; i++)
+                joueurs.Add(PlayerPrefs.GetString("Player_" + i, "Joueur " + (i + 1)));
         }
 
-        count = count + 1;
+        foreach (string j in joueurs)
+            scores[j] = 0;
+
+        Debug.Log($"[JeuMiroir] {joueurs.Count} joueur(s) : {string.Join(", ", joueurs)}");
+    }
+
+    public void GenererNouvelleSequence()
+    {
+        const string caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        sequenceActuelle = "";
+        for (int i = 0; i < longueurSequence; i++)
+            sequenceActuelle += caracteres[Random.Range(0, caracteres.Length)];
+
+        longueurSequence++;
         StopAllCoroutines();
         StartCoroutine(AfficherPuisCacher());
     }
 
-    IEnumerator AfficherPuisCacher()
+    private IEnumerator AfficherPuisCacher()
     {
         sequenceAffichée.text = "Bob dit : " + sequenceActuelle;
         saisieActuelle = "";
@@ -64,15 +89,16 @@ public class JeuMiroir : MonoBehaviour
 
         yield return new WaitForSeconds(tempsAffichage);
 
-        sequenceAffichée.text = "Joueur " + defineplayer + " à ton tour ! Recopie le code.";
+        string nomJoueur = joueurs[joueurActuelIndex];
+        sequenceAffichée.text = $"{nomJoueur}, à ton tour ! Recopie le code.";
         saisieActive = true;
     }
 
-    /// <summary>Appelée par chaque bouton lettre du clavier.</summary>
     public void AppuyerLettre(string lettre)
     {
         if (!saisieActive) return;
         if (saisieActuelle.Length >= sequenceActuelle.Length) return;
+
         saisieActuelle += lettre;
         RefreshSaisie();
 
@@ -80,7 +106,6 @@ public class JeuMiroir : MonoBehaviour
             VerifierReponse();
     }
 
-    /// <summary>Efface la dernière lettre saisie.</summary>
     public void Effacer()
     {
         if (!saisieActive || saisieActuelle.Length == 0) return;
@@ -88,7 +113,6 @@ public class JeuMiroir : MonoBehaviour
         RefreshSaisie();
     }
 
-    /// <summary>Valide manuellement la saisie courante si elle est complète.</summary>
     public void Valider()
     {
         if (!saisieActive || saisieActuelle.Length == 0) return;
@@ -100,66 +124,83 @@ public class JeuMiroir : MonoBehaviour
         saisieTexte.text = saisieActuelle;
     }
 
-    public void EndGame()
-    {
-        CancelInvoke();
-        StopAllCoroutines();
-
-        var scores = new List<KeyValuePair<int, int>>
-        {
-            new KeyValuePair<int, int>(1, scoreun),
-            new KeyValuePair<int, int>(2, scoredeux),
-            new KeyValuePair<int, int>(3, scoreTrois),
-            new KeyValuePair<int, int>(4, scoreQuatre)
-        };
-        scores.Sort((a, b) => b.Value.CompareTo(a.Value));
-
-        string result = "Résultats :\n";
-        for (int i = 0; i < scores.Count; i++)
-        {
-            result += (i + 1) + ". Joueur " + scores[i].Key + " : " + scores[i].Value + "\n";
-        }
-
-        sequenceAffichée.text = result;
-        saisieActive = false;
-        Time.timeScale = 0f;
-    }
-
-    public void VerifierReponse()
+    private void VerifierReponse()
     {
         if (saisieActuelle.ToUpper() == sequenceActuelle)
         {
-            score++;
-            scoreTexte.text = "Score : " + score;
+            scoreActuel++;
+            scoreTexte.text = "Score : " + scoreActuel;
             GenererNouvelleSequence();
         }
         else
         {
             saisieActive = false;
-            sequenceAffichée.text = "PERDU ! C'était : " + sequenceActuelle;
-            if (defineplayer == 1)
+            string nomJoueur = joueurs[joueurActuelIndex];
+            scores[nomJoueur] = scoreActuel;
+            sequenceAffichée.text = $"PERDU ! C'était : {sequenceActuelle}";
+
+            joueurActuelIndex++;
+
+            if (joueurActuelIndex >= joueurs.Count)
             {
-                scoreun = score;
-            }
-            else if (defineplayer == 2)
-            {
-                scoredeux = score;
-            }
-            else if (defineplayer == 3)
-            {
-                scoreTrois = score;
-            }
-            else if (defineplayer == 4)
-            {
-                scoreQuatre = score;
-                EndGame();
+                Invoke(nameof(EndGame), delaiEntreJoueurs);
                 return;
             }
-            defineplayer = defineplayer + 1;
-            scoreTexte.text = "Score : " + score;
-            count = 2;
-            score = 0;
-            Invoke("GenererNouvelleSequence", 2.0f);
+
+            scoreActuel = 0;
+            longueurSequence = SequenceLongueurDepart;
+            scoreTexte.text = "Score : 0";
+            Invoke(nameof(GenererNouvelleSequence), delaiEntreJoueurs);
         }
+    }
+
+    private void EndGame()
+    {
+        CancelInvoke();
+        StopAllCoroutines();
+        saisieActive = false;
+
+        var tri = scores.OrderByDescending(x => x.Value).ToList();
+        int topScore = tri[0].Value;
+
+        List<string> winners = tri
+            .Where(x => x.Value == topScore)
+            .Select(x => x.Key)
+            .ToList();
+
+        string winnerLabel = string.Join(", ", winners);
+        PlayerPrefs.SetString(WinnerKey, winnerLabel);
+        PlayerPrefs.SetInt(FromDuelKey, 1);
+        PlayerPrefs.Save();
+        Debug.Log($"[JeuMiroir] Vainqueur(s) : {winnerLabel}");
+
+        string[] couleurs = { "#FFD700", "#C0C0C0", "#CD7F32", "#FF4500" };
+        string result = "<b>Résultats :</b>\n\n";
+        int rang = 1, i = 0;
+
+        while (i < tri.Count)
+        {
+            int score = tri[i].Value;
+            List<string> groupe = tri
+                .Skip(i)
+                .TakeWhile(x => x.Value == score)
+                .Select(x => x.Key)
+                .ToList();
+
+            string c = (rang - 1) < couleurs.Length ? couleurs[rang - 1] : "#FFFFFF";
+            result += $"<color={c}>{rang}. {string.Join(" & ", groupe)}  —  {score} pt(s)</color>\n";
+
+            i += groupe.Count;
+            rang += groupe.Count;
+        }
+
+        sequenceAffichée.text = result;
+        Invoke(nameof(RetournerAuJeu), 5.0f);
+    }
+
+    public void RetournerAuJeu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(ReturnSceneName);
     }
 }
