@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Runtime.Serialization;
 
 public class ballon : MonoBehaviour
 {
@@ -31,6 +32,10 @@ public class ballon : MonoBehaviour
     private float timer;
     private bool timerStarted = false;
 
+    [Header("Panel d'introduction")]
+    public GameObject introPanel;
+    public Button quitterPanelButton;
+
     private const string WinnerKey = "DuelWinner";
     private const string FromDuel = "FromDuel";
 
@@ -38,25 +43,14 @@ public class ballon : MonoBehaviour
     {
         originalPosition = transform.position;
         timer = gameDuration;
-        timerStarted = true;
+        timerStarted = false;
 
+        button1.interactable = false;
 
-        button1.onClick.AddListener(() =>
-        {
-            transform.localScale += Vector3.one * airAdded;
-            if (!timerStarted)
-            {
-                StartCoroutine(AirLossVariation(2.5f));
-            }
-        });
-        button1.onClick.AddListener(() =>
-        {
-            transform.localScale += Vector3.one * airAdded;
-            if (timerStarted)
-            {
-                StartCoroutine(AirLossVariation(2.5f));
-            }
-        });
+        if (introPanel != null) introPanel.SetActive(true);
+
+        if (quitterPanelButton != null)
+            quitterPanelButton.onClick.AddListener(LancerJeu);
 
         returnButton.gameObject.SetActive(false);
         victoryText.text = "";
@@ -66,17 +60,16 @@ public class ballon : MonoBehaviour
     {
         if (isshriking) return;
 
-        if (timerStarted)
-        {
-            timer -= Time.deltaTime;
-            if (timerText != null)
-                timerText.text = Mathf.CeilToInt(timer).ToString();
+        if (!timerStarted) return;
 
-            if (timer <= 0f)
-            {
-                balloonManager.ResolveBySize();
-                return;
-            }
+        timer -= Time.deltaTime;
+        if (timerText != null)
+            timerText.text = Mathf.CeilToInt(timer).ToString();
+
+        if (timer <= 0f)
+        {
+            balloonManager.ResolveBySize();
+            return;
         }
 
         transform.localScale -= Vector3.one * Time.deltaTime * airLoss;
@@ -106,6 +99,20 @@ public class ballon : MonoBehaviour
             WhosWinner();
             return;
         }
+    }
+
+    private void LancerJeu()
+    {
+        if (introPanel != null) introPanel.SetActive(false);
+
+        timerStarted = true;
+        button1.interactable = true;
+
+        button1.onClick.AddListener(() =>
+        {
+            transform.localScale += Vector3.one * airAdded;
+            StartCoroutine(AirLossVariation(2.5f));
+        });
     }
 
     private void WhosWinner()

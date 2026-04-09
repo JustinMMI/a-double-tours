@@ -5,13 +5,8 @@ using System.Collections.Generic;
 public class DuelManager : MonoBehaviour
 {
     public List<PionSelector> duelPions;
-
-    /// <summary>
-    /// Assign SceneAsset objects here in the Inspector. Scene names are synced automatically for runtime use.
-    /// </summary>
     public List<Object> MiniGamePool;
 
-    // Stores scene names extracted from MiniGamePool in the Editor, serialized for use in builds.
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
 
 #if UNITY_EDITOR
