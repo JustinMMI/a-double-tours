@@ -227,20 +227,19 @@ public class GameFlowManager : MonoBehaviour
     [Header("Events Settings")]
     public string[] randomClassicEvent;
 
-
-    public List<Object> MiniGamePool;
-
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
+
+    private const string RandomMiniGameFolder = "Assets/Scenes/Minigames/Jeux Multis";
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
         miniGameSceneNames.Clear();
-        if (MiniGamePool == null) return;
-        foreach (Object obj in MiniGamePool)
+        string[] guids = UnityEditor.AssetDatabase.FindAssets("t:Scene", new[] { RandomMiniGameFolder });
+        foreach (string guid in guids)
         {
-            if (obj != null)
-                miniGameSceneNames.Add(obj.name);
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            miniGameSceneNames.Add(System.IO.Path.GetFileNameWithoutExtension(path));
         }
     }
 #endif

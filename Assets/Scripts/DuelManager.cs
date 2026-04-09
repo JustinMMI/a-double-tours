@@ -5,19 +5,24 @@ using System.Collections.Generic;
 public class DuelManager : MonoBehaviour
 {
     public List<PionSelector> duelPions;
-    public List<Object> MiniGamePool;
 
     [SerializeField] private List<string> miniGameSceneNames = new List<string>();
+
+    private static readonly string[] DuelFolders =
+    {
+        "Assets/Scenes/Minigames/Duels",
+        "Assets/Scenes/Minigames/Jeux Multis"
+    };
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
         miniGameSceneNames.Clear();
-        if (MiniGamePool == null) return;
-        foreach (Object obj in MiniGamePool)
+        string[] guids = UnityEditor.AssetDatabase.FindAssets("t:Scene", DuelFolders);
+        foreach (string guid in guids)
         {
-            if (obj != null)
-                miniGameSceneNames.Add(obj.name);
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            miniGameSceneNames.Add(System.IO.Path.GetFileNameWithoutExtension(path));
         }
     }
 #endif
