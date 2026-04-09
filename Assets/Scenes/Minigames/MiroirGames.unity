@@ -4511,12 +4511,7 @@ MonoBehaviour:
   saisieTexte: {fileID: 1996943722}
   scoreTexte: {fileID: 961486354}
   tempsAffichage: 2
-  scoreun: 0
-  scoredeux: 0
-  scoreTrois: 0
-  scoreQuatre: 0
-  defineplayer: 1
-  count: 2
+  delaiEntreJoueurs: 2
 --- !u!4 &1307425530
 Transform:
   m_ObjectHideFlags: 0
@@ -4526,7 +4521,7 @@ Transform:
   m_GameObject: {fileID: 1307425528}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 437.5852, y: 290.32068, z: 62.78492}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
