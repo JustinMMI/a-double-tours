@@ -225,6 +225,9 @@ public class GameFlowManager : MonoBehaviour
 
         int eventRoll = Random.Range(0, 100); // 0..99
 
+        rerollButton.gameObject.SetActive(true);
+        okButton.gameObject.SetActive(true);
+
         if (eventRoll < 30)
         {
             // 30%
