@@ -851,8 +851,8 @@ MonoBehaviour:
     Celui qui a le plus gros ballons \xE0 gagn\xE9.\nAttention \xE0 ne pas trop les
     gonfler."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
-  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
+  m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
