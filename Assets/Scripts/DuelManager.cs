@@ -10,8 +10,7 @@ public class DuelManager : MonoBehaviour
 
     private static readonly string[] DuelFolders =
     {
-        "Assets/Scenes/Minigames/Duels",
-        "Assets/Scenes/Minigames/Jeux Multis"
+        "Assets/Scenes/Minigames/Duels"
     };
 
 #if UNITY_EDITOR

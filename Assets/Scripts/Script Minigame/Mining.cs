@@ -40,9 +40,10 @@ public class MultiMiner : MonoBehaviour
 
     public void OnRerollClicked()
     {
-        // Réinitialiser les données pour un nouveau jeu
+        // autre jeu
         Debug.Log("Reroll cliqué, réinitialisation du jeu.");
-        PlayerPrefs.SetInt(fromRerollKey, 1); // Indique au HUB que c'est un reroll
+        PlayerPrefs.SetInt(fromRerollKey, 1);
+        PlayerPrefs.SetInt("fromDuel", 0);
         PlayerPrefs.Save();
         SceneManager.LoadScene("GameScene");
     }
