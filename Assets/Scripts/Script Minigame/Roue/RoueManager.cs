@@ -47,7 +47,6 @@ public class RoueManager : MonoBehaviour
         ShowCurrentPlayer();
     }
 
-    /// <summary>Charge les joueurs depuis PlayerPrefs ou utilise des noms par défaut.</summary>
     private void InitializePlayers()
     {
         int count = PlayerPrefs.GetInt("PlayerCount", 0);
@@ -83,7 +82,7 @@ public class RoueManager : MonoBehaviour
         if (gameOver) return;
 
         buttonStop.interactable = false;
-        textInstructions.text = "La roue ralentit...";
+        textInstructions.text = (Random.value < 0.5f) ? "La roue ralentit..." : "Houlala j'ai peur...";
 
         roue.Decelerate(OnRoueArretee);
     }
@@ -101,11 +100,11 @@ public class RoueManager : MonoBehaviour
         textResultatTour.text =
             $"<b>{currentPlayer}</b> tombe sur...\n" +
             $"<color={couleur}><size=120%>{section.nom}</size></color>\n" +
-            $"+{section.points} point(s) !";
+            $"+{section.points} point(s)";
 
         bool isLastPlayer = currentPlayerIndex >= playerNames.Count - 1;
         buttonSuivant.GetComponentInChildren<TextMeshProUGUI>().text =
-            isLastPlayer ? "Voir le résultat !" : "Joueur suivant →";
+            isLastPlayer ? "Voir le résultat !" : "Joueur suivant";
 
         panelResultatTour.SetActive(true);
     }
@@ -128,7 +127,6 @@ public class RoueManager : MonoBehaviour
         var tri = scores.OrderByDescending(x => x.Value).ToList();
         int topScore = tri[0].Value;
 
-        // Récupère tous les joueurs à égalité au sommet
         List<string> winners = tri
             .Where(x => x.Value == topScore)
             .Select(x => x.Key)
@@ -147,7 +145,6 @@ public class RoueManager : MonoBehaviour
         int i = 0;
         while (i < tri.Count)
         {
-            // Regroupe les joueurs à égalité sur le même rang
             int score = tri[i].Value;
             List<string> groupe = tri
                 .Skip(i)

@@ -76,7 +76,7 @@ public class GameFlowManager : MonoBehaviour
             GetRandomConsequence();
             canBobRollEvents = true;
             string winnerName = PlayerPrefs.GetString("DuelWinner");
-            bobText.text = "BOB : 'Le minijeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
+            bobText.text = "BOB : 'Le mini jeu est terminé ! Le sort en a décidé ainsi : le vainqueur est " + winnerName + " !' La consequence est : " + consequenceDuel + " !'";
             PlayerPrefs.SetInt("FromDuel", 0);
             nextButton.gameObject.SetActive(false);
             rerollButton.gameObject.SetActive(true);
@@ -132,7 +132,6 @@ public class GameFlowManager : MonoBehaviour
             return;
         }
 
-        // Mini-jeux exclus du reroll style : on force un event non-minijeu
         int forcedRoll = Random.Range(0, 80);
         if (forcedRoll < 30)
         {
