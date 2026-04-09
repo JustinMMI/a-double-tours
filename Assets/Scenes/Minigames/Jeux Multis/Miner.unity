@@ -935,7 +935,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 831665208}
+      - m_Target: {fileID: 831665210}
         m_TargetAssemblyTypeName: MultiMiner, Assembly-CSharp
         m_MethodName: OnRerollClicked
         m_Mode: 1
@@ -994,7 +994,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 831665209}
-  - component: {fileID: 831665208}
+  - component: {fileID: 831665210}
   m_Layer: 0
   m_Name: Script
   m_TagString: Untagged
@@ -1002,25 +1002,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &831665208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 831665207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5002ffbebe944104d870c803f6807f4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MultiMiner
-  texteEcran: {fileID: 0}
-  panneauClassement: {fileID: 0}
-  texteClassement: {fileID: 0}
-  boutonPret: {fileID: 0}
-  boutonReroll: {fileID: 815966220}
-  tempsInitial: 10
-  scoreObjectif: 30
 --- !u!4 &831665209
 Transform:
   m_ObjectHideFlags: 0
@@ -1036,6 +1017,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &831665210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831665207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c74e007ff28d54db160b671c9ff078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiMiner
+  texteEcran: {fileID: 0}
+  panneauClassement: {fileID: 0}
+  texteClassement: {fileID: 0}
+  boutonPret: {fileID: 0}
+  boutonReroll: {fileID: 815966220}
+  tempsDeJeu: 10
+  seuilSensibilite: 15
+  delaiEntreCoups: 0.12
 --- !u!1 &1522084269
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,9 +1191,9 @@ MonoBehaviour:
   panneauClassement: {fileID: 1661095245}
   texteClassement: {fileID: 681370296}
   boutonPret: {fileID: 1743646920}
-  boutonReroll: {fileID: 0}
-  tempsInitial: 10
-  scoreObjectif: 50
+  tempsDeJeu: 10
+  seuilSensibilite: 15
+  delaiEntreCoups: 0.12
 --- !u!1 &1661095245
 GameObject:
   m_ObjectHideFlags: 0

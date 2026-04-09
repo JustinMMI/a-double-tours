@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-public class MultiMiner : MonoBehaviour
+public class MultiMinerCapteur : MonoBehaviour
 {
     [Header("UI Elements")]
     public TextMeshProUGUI texteEcran;       // Texte principal (Score/Chrono)
