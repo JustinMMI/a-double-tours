@@ -40,11 +40,11 @@ public class ColorCatcherGame : MonoBehaviour // Cette classe gère le mini-jeu d
     public float timeLimit = 15f;    // Temps imparti pour chaque manche
     public float tolerance = 0.45f;  // Seuil de précision (plus c'est bas, plus c'est difficile)
     // pourquoi 0.45f ? 
-    // La valeur de 0.45 a été choisie après des tests pour offrir un
-    // bon équilibre entre accessibilité et défi.
+    // La valeur de 0.45 a été choisie après des tests pour offrir un bon équilibre entre accessibilité et défi.
     // Comment tu sais ?
-    // En testant différentes valeurs, j'ai constaté que 0.45 permettait aux joueurs de gagner même si la couleur capturée n'était pas parfaitement identique à la couleur cible, 
-    // ce qui est important pour compenser les variations d'éclairage et les différences de caméra.
+    // En testant différentes valeurs, j'ai constaté que 0.45 permettait aux joueurs de gagner même 
+    // si la couleur capturée n'était pas parfaitement identique à la couleur cible, ce qui est important 
+    // pour compenser les variations d'éclairage et les différences de caméra.
 
     // --- VARIABLES INTERNES ---
 

@@ -604,7 +604,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1104857409}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 054876b03fd45f341bda6f41c4380922, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c51ec7eca1ed8b40b857de67443e0a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorCatcherGame
   cameraDisplay: {fileID: 921143063}
@@ -612,7 +612,7 @@ MonoBehaviour:
   timerText: {fileID: 1945813041}
   colorPreview: {fileID: 1218945595}
   timeLimit: 15
-  tolerance: 0.4
+  tolerance: 0.45
 --- !u!1 &1218945593
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,15 +835,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1354390056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 054876b03fd45f341bda6f41c4380922, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c51ec7eca1ed8b40b857de67443e0a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColorCatcherGame
   cameraDisplay: {fileID: 0}
-  instructionText: {fileID: 0}
-  timerText: {fileID: 0}
-  colorPreview: {fileID: 0}
-  timeLimit: 10
-  tolerance: 0.35
+  instructionText: {fileID: 1042329360}
+  timerText: {fileID: 1945813041}
+  colorPreview: {fileID: 1218945595}
+  timeLimit: 15
+  tolerance: 0.45
 --- !u!1 &1945813039
 GameObject:
   m_ObjectHideFlags: 0
