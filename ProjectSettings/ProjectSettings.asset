@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: A Double Tours Games (MMI)
+  companyName: TTC
   productName: A Double Tours
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -268,7 +268,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 3
   AndroidAllowedArchitectures: -13
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
+  androidSplashScreen: {fileID: 2800000, guid: 564bb1d0bc7b8451fb6da23eb6f1eb19, type: 3}
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
   AndroidEnableArmv9SecurityFeatures: 0
@@ -298,7 +298,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 910ac963edb05476784930b20dd3c44f, type: 3}
+      m_Icon: {fileID: 2800000, guid: 564bb1d0bc7b8451fb6da23eb6f1eb19, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
