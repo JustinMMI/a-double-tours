@@ -2260,7 +2260,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 729463484}
         m_TargetAssemblyTypeName: DuelMashing, Assembly-CSharp
-        m_MethodName: InitialiserJeu
+        m_MethodName: Fin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -29,6 +29,11 @@ public class DuelMashing : MonoBehaviour
     {
         InitializePlayers();
         InitialiserJeu();
+        
+        if (boutonRejouer != null)
+        {
+            boutonRejouer.onClick.AddListener(Fin);
+        }
     }
 
 
@@ -84,7 +89,7 @@ public class DuelMashing : MonoBehaviour
         if (scoreGlobal >= 100) TerminerLEPartie(nomJoueurRouge);
     }
 
-    void TerminerLEPartie(string nomGagnant)
+    public void TerminerLEPartie(string nomGagnant)
     {
         texteInfo.text = $"{nomGagnant} A GAGNÉ !";
 
@@ -95,10 +100,11 @@ public class DuelMashing : MonoBehaviour
         boutonRejouer.gameObject.SetActive(true);
         boutonBleu.gameObject.SetActive(false);
         boutonRouge.gameObject.SetActive(false);
+    }
 
-        boutonRejouer.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("GameScene");
-        });
+    public void Fin()
+    {
+        Debug.Log("Retour au HUB depuis DuelMashing");
+        SceneManager.LoadScene(ReturnSceneName);
     }
 }
