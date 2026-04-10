@@ -1,17 +1,18 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class creditsbutton : MonoBehaviour
 {
-    public button
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Button credits;
+    public Canvas creditsCanvas;
+    public Canvas MainMenuCanvas;
+
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        credits.onClick.AddListener(() =>
+        {
+            creditsCanvas.gameObject.SetActive(true);
+            MainMenuCanvas.gameObject.SetActive(false);
+        });
     }
 }
