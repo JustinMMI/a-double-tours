@@ -214,6 +214,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1926569053}
+        m_TargetAssemblyTypeName: duelMenuAnim, Assembly-CSharp
+        m_MethodName: AnimatePersoButtonPress
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &43436138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,9 +314,6 @@ MonoBehaviour:
   - {fileID: 280501387}
   - {fileID: 43436140}
   - {fileID: 1739326362}
-  MiniGamePool:
-  - {fileID: 102900000, guid: 04d0d6bb9624e1d43b7217af48390d29, type: 3}
-  - {fileID: 102900000, guid: c0de2d6dcf2e59c4999e9641151fc113, type: 3}
   miniGameSceneNames:
   - Gonflement ballon
   - Mashing
@@ -410,6 +419,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
         m_MethodName: ToggleSelection
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1926569053}
+        m_TargetAssemblyTypeName: duelMenuAnim, Assembly-CSharp
+        m_MethodName: AnimatePersoButtonPress
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -730,7 +751,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -339, y: 175}
+  m_AnchoredPosition: {x: -339, y: 147}
   m_SizeDelta: {x: 250, y: 82}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &696286712
@@ -789,6 +810,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
+      - m_Target: {fileID: 1926569053}
+        m_TargetAssemblyTypeName: duelMenuAnim, Assembly-CSharp
+        m_MethodName: AnimateRetourButtonPress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &696286713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1077,8 +1110,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Menu de Duel
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
-  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
+  m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1242,6 +1275,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
         m_MethodName: ToggleSelection
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1926569053}
+        m_TargetAssemblyTypeName: duelMenuAnim, Assembly-CSharp
+        m_MethodName: AnimatePersoButtonPress
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1681,10 +1726,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Kijou ?
+  m_text: Qui joue ?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
-  m_sharedMaterial: {fileID: -7709608879073993422, guid: 5fe88afbdd0f74f598b943768bba69b7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
+  m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1848,6 +1893,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PionSelector, Assembly-CSharp
         m_MethodName: ToggleSelection
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1926569053}
+        m_TargetAssemblyTypeName: duelMenuAnim, Assembly-CSharp
+        m_MethodName: AnimatePersoButtonPress
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2043,6 +2100,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859427823}
   m_CullTransparentMesh: 1
+--- !u!1 &1926569051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1926569052}
+  - component: {fileID: 1926569053}
+  m_Layer: 0
+  m_Name: duelMenuAnim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1926569052
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926569051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.75516, y: 0.21846, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1926569053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926569051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66ee17642870a4147b406606685fcc7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::duelMenuAnim
+  title: {fileID: 1153126848}
+  subtitle: {fileID: 1624540536}
+  persoButtons:
+  - {fileID: 1224845630}
+  - {fileID: 280501383}
+  - {fileID: 43436136}
+  - {fileID: 1739326358}
+  startButton: {fileID: 1859427824}
+  retourButton: {fileID: 696286711}
+  introDuration: 0.45
+  staggerDelay: 0.08
+  buttonBounceDuration: 0.13
 --- !u!1 &2134218931
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,3 +2269,4 @@ SceneRoots:
   - {fileID: 1339534299}
   - {fileID: 98447910}
   - {fileID: 2134218935}
+  - {fileID: 1926569052}
