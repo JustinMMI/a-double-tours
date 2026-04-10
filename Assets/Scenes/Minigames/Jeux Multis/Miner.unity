@@ -1029,10 +1029,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8c74e007ff28d54db160b671c9ff078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiMiner
-  texteEcran: {fileID: 0}
-  panneauClassement: {fileID: 0}
-  texteClassement: {fileID: 0}
-  boutonPret: {fileID: 0}
+  texteEcran: {fileID: 598448482}
+  panneauClassement: {fileID: 1661095245}
+  texteClassement: {fileID: 681370296}
+  boutonPret: {fileID: 1743646920}
   boutonReroll: {fileID: 815966220}
   tempsDeJeu: 10
   seuilSensibilite: 15
