@@ -50,7 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Minigames/PerfectSplit.unity
     guid: 50f71268635e7ad489393b313791fc41
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Minigames/PenduBob.unity
     guid: 77c7b21fc41987940b3f8c5c88703fc4
   - enabled: 1
