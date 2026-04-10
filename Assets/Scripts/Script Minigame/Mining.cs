@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System.Collections;
+
 
 public class MultiMiner : MonoBehaviour
 {
@@ -72,12 +74,18 @@ public class MultiMiner : MonoBehaviour
             nomsDesDuellistes.Add("Joueur de Test 2");
         }
     }
-
+    IEnumerator SpawnButton()
+    {
+        yield return new WaitForSeconds(5f);
+        boutonReroll.gameObject.SetActive(true);
+    }
     void Start()
     {
         panneauClassement.SetActive(false);
         boutonPret.onClick.AddListener(DemarrerManche);
         AfficherEcranAttente();
+        boutonReroll.gameObject.SetActive(false);
+
     }
 
     void AfficherEcranAttente()
@@ -101,6 +109,8 @@ public class MultiMiner : MonoBehaviour
         boutonPret.gameObject.SetActive(false);
         panneauClassement.SetActive(false);
         jeuEnCours = true;
+        StartCoroutine(SpawnButton());
+
     }
 
     void Update()
