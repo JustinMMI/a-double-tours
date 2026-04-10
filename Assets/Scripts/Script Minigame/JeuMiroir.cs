@@ -4,13 +4,18 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using UnityEngine.UI;
+using Unity.VisualScripting;
 public class JeuMiroir : MonoBehaviour
 {
     [Header("Configuration UI")]
     public TMP_Text sequenceAffichée;
     public TMP_Text saisieTexte;
     public TMP_Text scoreTexte;
+    public Canvas CanvaInfo;
+    public Canvas CanvaJeu;
+    public Button LaunchGame;
+
 
     [Header("Réglages du Jeu")]
     public float tempsAffichage = 2.0f;
@@ -33,13 +38,21 @@ public class JeuMiroir : MonoBehaviour
 
     private void Start()
     {
+        CanvaInfo.enabled = true;
+        CanvaJeu.enabled = false;
+
         if (sequenceAffichée == null || saisieTexte == null || scoreTexte == null)
         {
             Debug.LogError("[JeuMiroir] Un ou plusieurs champs UI ne sont pas assignés dans l'Inspector.", this);
             return;
         }
-
-        ChargerJoueurs();
+        LaunchGame.onClick.AddListener(StartGame);
+    }
+    private void StartGame()
+    {
+        CanvaInfo.enabled = false;
+        CanvaJeu.enabled = true;
+                ChargerJoueurs();
         saisieActuelle = "";
         RefreshSaisie();
         scoreTexte.text = "Score : 0";
