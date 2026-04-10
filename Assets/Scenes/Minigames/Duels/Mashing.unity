@@ -669,7 +669,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1131,6 +1132,7 @@ RectTransform:
   - {fileID: 52175784}
   - {fileID: 1648833255}
   - {fileID: 279323865}
+  - {fileID: 2137512439}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1206,7 +1208,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 859018159}
-  - {fileID: 2137512439}
   m_Father: {fileID: 1207312015}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2099,7 +2100,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -2201,17 +2203,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137512438}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.4999999, y: 1.4999999, z: 1.4999999}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 607949029}
-  m_Father: {fileID: 1153886505}
+  m_Father: {fileID: 1069584031}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 30, y: 75}
+  m_AnchoredPosition: {x: -9, y: 74.99982}
   m_SizeDelta: {x: 250, y: 82}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2137512440
@@ -2260,7 +2262,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 729463484}
         m_TargetAssemblyTypeName: DuelMashing, Assembly-CSharp
-        m_MethodName: InitialiserJeu
+        m_MethodName: RetournerAuJeu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

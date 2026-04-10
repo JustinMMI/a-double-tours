@@ -29,6 +29,7 @@ public class DuelMashing : MonoBehaviour
     {
         InitializePlayers();
         InitialiserJeu();
+        boutonRejouer.onClick.AddListener(RetournerAuJeu);
     }
 
 
@@ -95,10 +96,10 @@ public class DuelMashing : MonoBehaviour
         boutonRejouer.gameObject.SetActive(true);
         boutonBleu.gameObject.SetActive(false);
         boutonRouge.gameObject.SetActive(false);
+    }
 
-        boutonRejouer.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("GameScene");
-        });
+    public void RetournerAuJeu()
+    {
+        SceneManager.LoadScene(ReturnSceneName);
     }
 }
