@@ -50,7 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Minigames/PerfectSplit.unity
     guid: 50f71268635e7ad489393b313791fc41
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Minigames/Duels/PenduBob.unity
     guid: 77c7b21fc41987940b3f8c5c88703fc4
   - enabled: 1
@@ -65,6 +65,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Minigames/Duels/Gonflement ballon.unity
     guid: 04d0d6bb9624e1d43b7217af48390d29
+  - enabled: 1
+    path: Assets/Scenes/AllRooms.unity
+    guid: 150a4383ec953a74dac1fdc0ac934fb6
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 8891074c19f252045a58786112f7a5d0, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 75bc786a1db3dde44a8db8f09abe2a57, type: 2}
