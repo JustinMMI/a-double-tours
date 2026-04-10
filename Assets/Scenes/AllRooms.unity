@@ -682,7 +682,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75cf5f28110728d4fad6131777d44e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  button1: {fileID: 0}
+  Main: {fileID: 306487850}
+  GameScene: {fileID: 1598514652}
+  DuelMenu: {fileID: 1961673214}
+  Gonflement: {fileID: 69958349}
+  Mashing: {fileID: 1182504825}
+  CacheCache: {fileID: 1464848086}
+  ChiffreDeBob: {fileID: 1216066145}
+  ChronoGame: {fileID: 500966629}
+  Miner: {fileID: 1833489551}
+  Miroir: {fileID: 283613110}
+  Roue: {fileID: 1275694189}
 --- !u!114 &134092678
 MonoBehaviour:
   m_ObjectHideFlags: 0
