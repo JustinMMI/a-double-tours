@@ -583,8 +583,8 @@ MonoBehaviour:
   joueur2Text: {fileID: 1722808057}
   timer: {fileID: 1078062535}
   victoryText: {fileID: 2016829409}
-  panel: {fileID: 0}
-  quitterButton: {fileID: 0}
+  panel: {fileID: 971374178}
+  quitterButton: {fileID: 469548214}
   ballon1: {fileID: 0}
   ballon2: {fileID: 0}
   introDuration: 0.4
@@ -672,19 +672,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 469548216}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 467948495}
-        m_TargetAssemblyTypeName: gonflementBallonAnim, Assembly-CSharp
-        m_MethodName: AnimateQuitterButtonPress
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &469548216
 MonoBehaviour:
   m_ObjectHideFlags: 0
