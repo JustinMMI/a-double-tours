@@ -36,14 +36,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Minigames/NumberSecret.unity
     guid: 84a30f2d20656b845a60909f17ea4d73
   - enabled: 1
+    path: Assets/Scenes/Minigames/Camera.unity
+    guid: ebfb85bb004fb5a488cdbf6471ae98af
+  - enabled: 1
+    path: Assets/Scenes/Minigames/Gyro.unity
+    guid: 4e3b9962c908b9e468800c6efe824b63
+  - enabled: 1
+    path: Assets/Scenes/Minigames/TableTilt.unity
+    guid: 5e386d10c5d3c9f47bcd9c9cd0ccea07
+  - enabled: 1
+    path: Assets/Scenes/Minigames/Jeux Multis/Roue.unity
+    guid: 7d8f221d880c8a04f8bc9a7952df13ee
+  - enabled: 1
     path: Assets/Scenes/Minigames/PerfectSplit.unity
     guid: 50f71268635e7ad489393b313791fc41
   - enabled: 1
     path: Assets/Scenes/Minigames/Duels/PenduBob.unity
     guid: 77c7b21fc41987940b3f8c5c88703fc4
-  - enabled: 1
-    path: Assets/Scenes/Minigames/Roue.unity
-    guid: bdbe5611e67d9fd4c9a61cd4b08607b9
   - enabled: 1
     path: Assets/Scenes/Minigames/Jeux Multis/ChronoGame.unity
     guid: 65dbe94d6f29d7d459cb189c855e19fc
