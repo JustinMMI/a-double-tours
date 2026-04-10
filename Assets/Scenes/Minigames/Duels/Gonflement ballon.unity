@@ -338,7 +338,7 @@ Transform:
   m_GameObject: {fileID: 272113484}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -595.68396, y: 57.000576, z: -9753.691}
+  m_LocalPosition: {x: -595.68396, y: 57.000576, z: 0}
   m_LocalScale: {x: 0.049999997, y: 0.049999997, z: 0.049999997}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -532,6 +532,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &467948493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 467948494}
+  - component: {fileID: 467948495}
+  m_Layer: 0
+  m_Name: gonflementBallonAnim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &467948494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467948493}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.75516, y: 0.21846, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &467948495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467948493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 677d61b6255244eb8a9d1967ed8d4e1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::gonflementBallonAnim
+  buttonJoueur1: {fileID: 2102138987}
+  buttonJoueur2: {fileID: 1751871969}
+  buttonValide: {fileID: 1756230118}
+  joueur1Text: {fileID: 924850609}
+  joueur2Text: {fileID: 1722808057}
+  timer: {fileID: 1078062535}
+  victoryText: {fileID: 2016829409}
+  panel: {fileID: 0}
+  quitterButton: {fileID: 0}
+  ballon1: {fileID: 0}
+  ballon2: {fileID: 0}
+  introDuration: 0.4
+  staggerDelay: 0.07
+  buttonBounceDuration: 0.12
 --- !u!1 &469548213
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,7 +672,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 469548216}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 467948495}
+        m_TargetAssemblyTypeName: gonflementBallonAnim, Assembly-CSharp
+        m_MethodName: AnimateQuitterButtonPress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &469548216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1207,7 +1277,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 971374177}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1296,7 +1366,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 15
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
   m_sharedMaterial: {fileID: -7752738704124274712, guid: 21699cd53777349a694be8a75e771b1a, type: 2}
@@ -1673,15 +1743,15 @@ RectTransform:
   m_GameObject: {fileID: 1751871968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.2109, y: 2.2109, z: 2.2109}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1675940813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -180, y: 272}
-  m_SizeDelta: {x: 159.99994, y: 30}
+  m_AnchoredPosition: {x: -240, y: 220}
+  m_SizeDelta: {x: 220, y: 500}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1751871970
 MonoBehaviour:
@@ -1726,7 +1796,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1751871971}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 467948495}
+        m_TargetAssemblyTypeName: gonflementBallonAnim, Assembly-CSharp
+        m_MethodName: AnimateButton2Press
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1751871971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1747,8 +1829,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: a38a90abf81574310841f027197b0d68, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1847,7 +1929,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1756230120}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 467948495}
+        m_TargetAssemblyTypeName: gonflementBallonAnim, Assembly-CSharp
+        m_MethodName: AnimateButtonValidePress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1756230120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2307,15 +2401,15 @@ RectTransform:
   m_GameObject: {fileID: 2102138986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.2109, y: 2.2109, z: 2.2109}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1675940813}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 188, y: 272}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 245, y: 220}
+  m_SizeDelta: {x: 220, y: 500}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2102138988
 MonoBehaviour:
@@ -2360,7 +2454,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2102138989}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 467948495}
+        m_TargetAssemblyTypeName: gonflementBallonAnim, Assembly-CSharp
+        m_MethodName: AnimateButton1Press
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2102138989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2381,8 +2487,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 0c396e12595384232a2f1dd35b5e91eb, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2407,3 +2513,4 @@ SceneRoots:
   - {fileID: 1675940813}
   - {fileID: 890262710}
   - {fileID: 439300595}
+  - {fileID: 467948494}
